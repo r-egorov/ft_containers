@@ -13,11 +13,11 @@ template<
     ** Member types
     */
     public:
-        typedef Container                   container_type;
-        typedef typename Container::value_type       value_type;
-        typedef typename Container::size_type        size_type;
-        typedef typename Container::reference        reference;
-        typedef typename Container::const_reference  const_reference;
+        typedef Container                           container_type;
+        typedef typename Container::value_type      value_type;
+        typedef typename Container::size_type       size_type;
+        typedef typename Container::reference       reference;
+        typedef typename Container::const_reference const_reference;
 
     /*
     ** Member objects
@@ -31,7 +31,7 @@ template<
     public:
         explicit stack(const Container& cont = Container()) : c(cont) {}
         stack(const stack& other) : c(other.c) {}
-        ~stack(void) {}
+        ~stack() {}
 
         stack& operator=(const stack& other)
         {
@@ -49,7 +49,7 @@ template<
         void            pop() { c.pop_back(); }
 
         /*
-        ** Non-member functions
+        ** Non-member functions prototypes
         */
         template<class type, class container>
         friend bool operator==(const ft::stack<type,container>& lhs, const ft::stack<type,container>& rhs);
@@ -70,6 +70,9 @@ template<
         friend bool operator>=(const ft::stack<type,container>& lhs, const ft::stack<type,container>& rhs);
 };
 
+/*
+** Non-member functions implementaion
+*/
 template<class T, class Container>
 bool operator==(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>& rhs)
 {
@@ -106,6 +109,6 @@ bool operator>=(const ft::stack<T,Container>& lhs, const ft::stack<T,Container>&
     return (lhs.c >= rhs.c);
 }
 
-}
+}  // namespace brace
 
 #endif

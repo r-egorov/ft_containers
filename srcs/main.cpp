@@ -1,8 +1,11 @@
 #include <iostream>
 #include <stack>
+#include <memory>
+#include "vector.hpp"
 #include "stack.hpp"
 #include "MyClass.hpp"
 #include "Timer.hpp"
+#include <vector>
 
 int main(void)
 {
@@ -88,4 +91,27 @@ int main(void)
     std::cout
         << "========================\n"
         << std::endl;
+
+    std::cout
+        << "=======================\nTESTING VECTOR\n======================="
+        << std::endl;
+
+    timer.start();
+
+    ft::vector<int>     my_vector_default;
+    
+    ft::vector<int>*     my_vector_second = new ft::vector<int>(4, 100);
+    
+    for (int i = 0; i < 4; i++) {
+        std::cout << *(my_vector_second->_array + i) << " ";
+    }
+
+    int a[4] = {1, 2, 3, 5};
+    std::vector<int> v(a, a + sizeof(a) / sizeof(a[0]));
+    ft::vector<int> my (v.begin(), v.end());
+
+    for (int i = 0; i < 4; i++) {
+        std::cout << *(my._array + i) << " ";
+    }
+    std::cout << std::endl;
 }
