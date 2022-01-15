@@ -11,12 +11,12 @@ class reverse_iterator {
     ** Member types
     */
     public:
-        typedef Iterator                                            iterator_type;
-        typedef ft::iterator_traits<Iterator>::iterator_category    iterator_category;
-        typedef ft::iterator_traits<Iterator>::value_type           value_type;
-        typedef ft::iterator_traits<Iterator>::difference_type      difference_type;
-        typedef ft::iterator_traits<Iterator>::pointer              pointer;
-        typedef ft::iterator_traits<Iterator>::reference            reference;
+        typedef Iterator                                                    iterator_type;
+        typedef typename ft::iterator_traits<Iterator>::iterator_category   iterator_category;
+        typedef typename ft::iterator_traits<Iterator>::value_type          value_type;
+        typedef typename ft::iterator_traits<Iterator>::difference_type     difference_type;
+        typedef typename ft::iterator_traits<Iterator>::pointer             pointer;
+        typedef typename ft::iterator_traits<Iterator>::reference           reference;
     
     /*
     ** Protected fields
@@ -35,12 +35,12 @@ class reverse_iterator {
         explicit reverse_iterator(iterator_type it) : _base(it) {}
 
         // Copy constructor
-        template <class Iterator>
-        reverse_iterator(const reverse_iterator<Iterator>& other) { *this = other; }
+        template <class OhterIter>
+        reverse_iterator(const reverse_iterator<OhterIter>& other) { *this = other; }
 
         // Assignation operator
-        template <class Iterator>
-        reverse_iterator&   operator=(const reverse_iterator<Iterator>& other) {
+        template <class OhterIter>
+        reverse_iterator&   operator=(const reverse_iterator<OhterIter>& other) {
             if (this != &other)
                 _base = other._base;
             return (*this);
@@ -51,7 +51,7 @@ class reverse_iterator {
         iterator_type       base() const { return (_base); }
 
         reference           operator*() const {
-            Iter tmp = current;
+            Iterator    tmp = _base;
             return (*--tmp);
         }
 
@@ -71,7 +71,7 @@ class reverse_iterator {
             return (temp);
         }
 
-        reverse_iterator&   operator+= (difference_type n); {
+        reverse_iterator&   operator+= (difference_type n) {
             _base -= n;
             return (*this);
         }
@@ -91,7 +91,7 @@ class reverse_iterator {
             return (temp);
         }
 
-        reverse_iterator&   operator-= (difference_type n); {
+        reverse_iterator&   operator-= (difference_type n) {
             _base += n;
             return (*this);
         }
