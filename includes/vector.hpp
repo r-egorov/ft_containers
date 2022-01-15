@@ -60,31 +60,6 @@ template <
                 _allocator.construct(_array + i, val);
             }
         }
-/*
-        vector(size_type count, 
-        const T & value = T(), 
-        const allocator_type & alloc = allocator_type())
-		: _capacity(count), _size(count), _allocator(alloc) {
-			_array = _allocator.allocate(_capacity);
-			for (size_type i = 0; i < _size; i++)
-				_allocator.construct(&(_array[i]), value);
-		};
-
-        template<class InputIt>
-		vector(InputIt first, 
-                InputIt last, 
-                const allocator_type & alloc = allocator_type())
-		: _size(0), _allocator(alloc) {
-			InputIt tmp(first);
-			while(tmp++ != last)
-				_size++;
-
-			_capacity = _size;
-			_array = _allocator.allocate(_capacity);
-			for(size_type i = 0;first != last; first++, i++)
-				_allocator.construct(&(_array[i]), *first);
-		}
-        */
 
         template <class InputIterator>
         vector (

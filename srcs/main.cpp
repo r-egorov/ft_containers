@@ -5,6 +5,7 @@
 #include "stack.hpp"
 #include "MyClass.hpp"
 #include "Timer.hpp"
+#include "iterator_traits.hpp"
 #include <vector>
 
 int main(void)
@@ -100,12 +101,18 @@ int main(void)
 
     ft::vector<int>     my_vector_default;
     
-    ft::vector<int>*     my_vector_second = new ft::vector<int>(4, 100);
+    // Should be working with enable_if
+    // ft::vector<int>*     my_vector_second = new ft::vector<int>(4, 100);
+    
+
+    ft::vector<int>*     my_vector_second = new ft::vector<int>(4);
     
     for (int i = 0; i < 4; i++) {
         std::cout << *(my_vector_second->_array + i) << " ";
     }
+    std::cout << std::endl;
 
+    // Test constructor with iterators
     int a[4] = {1, 2, 3, 5};
     std::vector<int> v(a, a + sizeof(a) / sizeof(a[0]));
     ft::vector<int> my (v.begin(), v.end());
@@ -114,4 +121,5 @@ int main(void)
         std::cout << *(my._array + i) << " ";
     }
     std::cout << std::endl;
+
 }
