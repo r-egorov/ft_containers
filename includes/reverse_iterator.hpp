@@ -46,6 +46,8 @@ class reverse_iterator {
             return (*this);
 	    };
 
+        virtual ~reverse_iterator() {}
+
         iterator_type       base() const { return (_base); }
 
         reference           operator*() const {
