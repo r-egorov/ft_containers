@@ -2,6 +2,7 @@
 # define VECTOR_HPP
 
 # include <memory>
+# include "ft_utilities.hpp" // enable_if
 
 namespace ft {
 
@@ -65,7 +66,8 @@ template <
         vector (
             InputIterator first,
             InputIterator last,
-            const allocator_type& alloc = allocator_type()
+            const allocator_type& alloc = allocator_type(),
+            typename ft::enable_if<!is_integral<InputIterator>::value>::type* = 0
         ) : _allocator(alloc) {
             _size = last - first;
             _capacity = last - first;

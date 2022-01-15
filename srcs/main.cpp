@@ -6,7 +6,17 @@
 #include "MyClass.hpp"
 #include "Timer.hpp"
 #include "iterator_traits.hpp"
+#include "ft_utilities.hpp"
+#include "pair.hpp"
+
+#include "reverse_iterator.hpp"
+
 #include <vector>
+
+
+// a case-insensitive comparison function:
+bool mycomp (char c1, char c2)
+{ return std::tolower(c1)<std::tolower(c2); }
 
 int main(void)
 {
@@ -105,7 +115,7 @@ int main(void)
     // ft::vector<int>*     my_vector_second = new ft::vector<int>(4, 100);
     
 
-    ft::vector<int>*     my_vector_second = new ft::vector<int>(4);
+    ft::vector<int>*     my_vector_second = new ft::vector<int>(4, 100);
     
     for (int i = 0; i < 4; i++) {
         std::cout << *(my_vector_second->_array + i) << " ";
@@ -121,5 +131,5 @@ int main(void)
         std::cout << *(my._array + i) << " ";
     }
     std::cout << std::endl;
-
+    return 0;
 }
