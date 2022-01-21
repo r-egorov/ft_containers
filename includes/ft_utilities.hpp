@@ -16,14 +16,20 @@ struct enable_if<true, T> { typedef T type; };
 ** is_integral implementation
 */ 
 
-typedef std::integral_constant<bool, true>   true_type;
-typedef std::integral_constant<bool, false>  false_type;
+template<typename T, T v>
+struct integral_constant {
+    typedef integral_constant<T, v> type;
+    typedef T                       value_type;
+    static const T                  value = v;
+    operator value_type() const { return value; }
+};
+
+typedef ft::integral_constant<bool, true>   true_type;
+typedef ft::integral_constant<bool, false>  false_type;
 
 template<typename> struct is_integral : ft::false_type {};
 template<> struct is_integral<bool> : ft::true_type {};
 template<> struct is_integral<char> : ft::true_type {};
-template<> struct is_integral<char16_t> : ft::true_type {};
-template<> struct is_integral<char32_t> : ft::true_type {};
 template<> struct is_integral<wchar_t> : ft::true_type {};
 template<> struct is_integral<short> : ft::true_type {};
 template<> struct is_integral<int> : ft::true_type {};
@@ -36,8 +42,6 @@ template<> struct is_integral<unsigned long> : ft::true_type {};
 template<> struct is_integral<unsigned long long> : ft::true_type {};
 template<> struct is_integral<const bool> : ft::true_type {};
 template<> struct is_integral<const char> : ft::true_type {};
-template<> struct is_integral<const char16_t> : ft::true_type {};
-template<> struct is_integral<const char32_t> : ft::true_type {};
 template<> struct is_integral<const wchar_t> : ft::true_type {};
 template<> struct is_integral<const short> : ft::true_type {};
 template<> struct is_integral<const int> : ft::true_type {};
