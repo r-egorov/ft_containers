@@ -44,13 +44,14 @@ template <
     public:
         pointer                                 _array; // FIXME
 
+        // Default constructor
         explicit vector(const allocator_type& alloc = allocator_type()) :
             _capacity(0), _size(0), _allocator(alloc) {
             _array = _allocator.allocate(_capacity);
         }
         
         
-        // FIXME
+        // Fill constructor
         explicit vector(
             size_type n,
             const value_type& val = value_type(),
@@ -62,12 +63,13 @@ template <
             }
         }
 
+        // Range constructor
         template <class InputIterator>
-        vector (
+        vector(
             InputIterator first,
             InputIterator last,
             const allocator_type& alloc = allocator_type(),
-            typename ft::enable_if<!is_integral<InputIterator>::value>::type* = 0
+            typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0
         ) : _allocator(alloc) {
             _size = last - first;
             _capacity = last - first;
@@ -77,8 +79,46 @@ template <
             }
         }
         
+        // Operator= (needed for copy constructor)
+        vector& operator= (const vector& x) {
+            if (this == &x)
+                return (*this);
 
-        vector (const vector& x);
+            allocator_type      old_alloc = _allocator;
+             _allocator = x._allocator;
+
+            for (size_type i = 0; i < _size; i++) {
+                old_alloc.destroy(_array + i);
+            }
+
+            _size = x._size;
+            if (_capacity < _size) {
+                if (_capacity != 0) {
+                    old_alloc.deallocate(_array, _capacity);
+                }
+                _capacity = _size;
+                _array = _allocator.allocate(_capacity);
+            }
+
+            
+            for (size_type i = 0; i < _size; i++) {
+                _allocator.construct(_array + i, x[i]);
+            }
+            return (*this);
+
+        }
+
+        // Copy constructor
+        vector(const vector& x) {
+            *this = x;
+        }
+
+        reference       operator[] (size_type n) {
+			return(_array[n]);
+		}
+		const_reference operator[] (size_type n) const {
+			return(_array[n]);
+		}
         
         
     

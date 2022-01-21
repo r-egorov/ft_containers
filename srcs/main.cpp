@@ -131,5 +131,12 @@ int main(void)
         std::cout << *(my._array + i) << " ";
     }
     std::cout << std::endl;
-    return 0;
+
+    // Test copy constructor
+    ft::vector<int> my_copy(my);
+    for (int i = 0; i < 4; i++) {
+        std::cout << *(my_copy._array + i) << " ";
+    }
+    std::cout << std::endl;
+
 }
