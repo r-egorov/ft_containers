@@ -139,4 +139,10 @@ int main(void)
     }
     std::cout << std::endl;
 
+    ft::vector<int> new_copy = my_copy;
+    for (int i = 0; i < 4; i++) {
+        std::cout << *(new_copy._array + i) << " ";
+    }
+    std::cout << std::endl;
+
 }

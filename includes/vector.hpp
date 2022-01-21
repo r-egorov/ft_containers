@@ -100,7 +100,6 @@ template <
                 _array = _allocator.allocate(_capacity);
             }
 
-            
             for (size_type i = 0; i < _size; i++) {
                 _allocator.construct(_array + i, x[i]);
             }
@@ -109,7 +108,7 @@ template <
         }
 
         // Copy constructor
-        vector(const vector& x) {
+        vector(const vector& x) : _capacity(0), _size(0) {
             *this = x;
         }
 
