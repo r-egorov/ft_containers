@@ -87,6 +87,10 @@ class vector_iterator {
             return (vector_iterator(_p - n));
         }
 
+        difference_type     operator-(const vector_iterator& other) {
+            return (_p - other._p);
+        }
+
         vector_iterator&     operator+=(const difference_type n) {
             _p += n;
             return (*this);
@@ -369,7 +373,37 @@ template <
             return ( *(_array + _size - 1) );
         }
         
+        /*
+        ** Modifiers
+        */
+        template <class InputIterator>
+        void       assign (InputIterator first, InputIterator last) {
+            clear();
+
+            size_type   new_size = static_cast<size_type>(last - first);
+
+            if (new_size > _capacity) {
+                _allocator.deallocate(_array, _capacity);
+                _array = _allocator.allocate(new_size);
+                _capacity = new_size;
+            }
+
+            size_type   i = 0;
+            for (; first != last; ++first) {
+                _allocator.construct(_array + i, *first);
+                i++;
+            }
+            _size = new_size;
+        }
+        
+        void    assign (size_type n, const value_type& val);
     
+        void    clear() {
+            for (size_type i = 0; i < _size; i++) {
+                _allocator.destroy(_array + i);
+            }
+            _size = 0;
+        }
 };
 
 }  // namespace brace

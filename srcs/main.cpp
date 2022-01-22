@@ -174,4 +174,24 @@ int main(void)
     std::cout << std::endl;
 
     std::cout << vector_myclass1.at(5) << std::endl;
+
+    ft::vector<MyClass> vector_myclass_2(5);
+    for (ft::vector<MyClass>::const_iterator it = vector_myclass_2.begin(); it != vector_myclass_2.end(); it++) {
+        std::cout << *it << ", ";
+    }
+    std::cout << std::endl;
+    
+
+    std::cout << "SSSSSSSSSSSSSSS" << std::endl;
+
+    vector_myclass_2.assign(vector_myclass1.begin(), vector_myclass1.end());
+    for (ft::vector<MyClass>::const_iterator it = vector_myclass_2.begin(); it != vector_myclass_2.end(); it++) {
+        std::cout << *it << ", ";
+    }
+    std::cout << std::endl;
+
+    ft::vector<MyClass>::iterator itv = vector_myclass_2.begin();
+    ft::vector<MyClass>::iterator itv2 = itv + 9;
+    std::cout << "v = " << *itv << " v2 = " << *itv2;
+    std::cout << std::endl;
 }
