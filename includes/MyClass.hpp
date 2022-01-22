@@ -22,6 +22,12 @@ class MyClass
 
         void    setN(int n);
         void    setS(std::string s);
+
+        class CustomException : public std::exception
+        {
+            public:
+                const char	*what(void) const throw();
+        };
 };
 
 std::ostream	&operator << (std::ostream &o, MyClass const &obj);

@@ -7,7 +7,9 @@ MyClass::MyClass(void) : _n(0), _s("") {}
 MyClass::MyClass(int n, std::string s) : _n(n), _s(s) {}
 
 MyClass::MyClass(const MyClass& other)
-{
+{   
+    if (other._n == 42)
+        throw CustomException();
     _n = other._n;
     _s = other._s;
 }
@@ -30,6 +32,10 @@ void        MyClass::setN(int n) { _n = n; }
 
 void        MyClass::setS(std::string s) { _s = s; }
 
+const char			*MyClass::CustomException::what(void) const throw()
+{
+	return ("MyClass exception!");
+}
 
 std::ostream		&operator<<(std::ostream &o, MyClass const &obj)
 {
