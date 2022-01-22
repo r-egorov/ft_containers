@@ -396,7 +396,20 @@ template <
             _size = new_size;
         }
         
-        void    assign (size_type n, const value_type& val);
+        void    assign (size_type n, const value_type& val) {
+            clear();
+            _size = n;
+
+            if (n > _capacity) {
+                _allocator.deallocate(_array, _capacity);
+                _array = _allocator.allocate(n);
+                _capacity = n;
+            }
+
+            for (size_type i = 0; i < _size; ++i) {
+                _allocator.construct(_array + i, val);
+            }
+        }
     
         void    clear() {
             for (size_type i = 0; i < _size; i++) {
