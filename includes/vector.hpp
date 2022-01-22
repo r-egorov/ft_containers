@@ -417,6 +417,51 @@ template <
             }
             _size = 0;
         }
+
+        void    push_back (const value_type& val) {
+            if (_size == _capacity) {
+                reserve(_capacity == 0 ? 1 : _capacity * 2);
+            }
+            _allocator.construct(_array + _size, val);
+            _size++;
+        }
+
+        void    pop_back() {
+            _allocator.destroy(_array + _size - 1);
+            _size--;
+        }
+
+        // void        insert (iterator position, size_type n, const value_type& val) {
+        //     if (position < begin() || position > end())
+        //         throw std::out_of_range("inserting position is out of range")
+        //     if (_size + n > _capacity) {
+        //         reserve(_size + n);
+        //     }
+        // }
+
+        iterator    insert (iterator position, const value_type& val) {
+            if (position < begin() || position > end())
+                throw std::out_of_range("inserting position is out of range")
+
+            pointer     new_arr;
+            size_type   border = static_cast<size_type>(position - begin());
+
+            if (_size < _capacity) {
+                size_type   i = _size;
+                while (i >= border) {
+                    --i;
+                    _allocator.construct(_array + i + 1, *(_array + i));
+                    _allocator.destroy(_array + i);
+                }
+                _allocator.construct(_array + i, val);
+                _size++;
+            } else {
+                // reallocate and insert
+            }
+        }
+
+        // template <class InputIterator>
+        // void        insert (iterator position, InputIterator first, InputIterator last);
 };
 
 }  // namespace brace
