@@ -4,6 +4,24 @@
 namespace ft {
 
 /*
+** This `choose` struct is needed for non-const and const iterator
+** implementation without duplicating the code.
+** copyright - Matt Austern. Generic Programming and the STL
+*/
+template<bool flag, class IsTrue, class IsFalse>
+struct choose;
+
+template<class IsTrue, class IsFalse>
+struct choose<true, IsTrue, IsFalse> {
+   typedef IsTrue type;
+};
+
+template<class IsTrue, class IsFalse>
+struct choose<false, IsTrue, IsFalse> {
+   typedef IsFalse type;
+};
+
+/*
 ** enable_if implementation
 */ 
 template<bool Cond, class T = void>

@@ -2,9 +2,126 @@
 # define VECTOR_HPP
 
 # include <memory>
+# include "iterator_traits.hpp"
+# include "reverse_iterator.hpp"
 # include "ft_utilities.hpp" // enable_if
 
 namespace ft {
+
+template <class T, bool is_const>
+class vector_iterator {
+    /*
+    ** Member types
+    */
+    public:
+        typedef typename ft::iterator_traits<T*>::iterator_category   iterator_category;
+        typedef typename ft::iterator_traits<T*>::value_type          value_type;
+        typedef typename ft::iterator_traits<T*>::difference_type     difference_type;
+        typedef typename choose<
+            is_const,
+            typename ft::iterator_traits<const T*>::pointer,
+            typename ft::iterator_traits<T*>::pointer
+        >::type                                                             pointer;
+        typedef typename choose<
+            is_const,
+            typename ft::iterator_traits<const T*>::reference,
+            typename ft::iterator_traits<T*>::reference
+        >::type                                                             reference;
+
+    protected:
+        pointer      _p;
+
+    /*
+    ** Member functions
+    */
+    public:
+        // Constructors
+        vector_iterator() : _p(nullptr) {}
+        vector_iterator(pointer p) : _p(p) {}
+        vector_iterator(const vector_iterator<T, false>& other) : _p( &(*other) ) {}
+        
+        // Destructor
+        virtual ~vector_iterator() {}
+
+        // Operators
+        vector_iterator&    operator=(const vector_iterator& other) {
+            if (this != &other) {
+                this->_p = other._p;
+            }
+            return (*this);
+        }
+
+        // Access operators
+        reference           operator*() const { return *_p; }
+        pointer             operator->() const { return _p; }
+        reference           operator[](const difference_type n) const { return (_p + n); }
+
+        // Increment/Decrement
+        vector_iterator&    operator++() {
+            ++_p;
+            return (*this);
+        }
+
+        vector_iterator     operator++(int) {
+            vector_iterator tmp(*this);
+            ++_p;
+            return (tmp);
+        }
+
+        vector_iterator&    operator--() {
+            --_p;
+            return (*this);
+        }
+
+        vector_iterator     operator--(int) {
+            vector_iterator tmp(*this);
+            --_p;
+            return (tmp);
+        }
+
+        vector_iterator     operator+(const difference_type n) {
+            return (vector_iterator(_p + n));
+        }
+
+        vector_iterator     operator-(const difference_type n) {
+            return (vector_iterator(_p - n));
+        }
+
+        vector_iterator&     operator+=(const difference_type n) {
+            _p += n;
+            return (*this);
+        }
+
+        vector_iterator     operator-=(const difference_type n) {
+            _p -= n;
+            return (*this);
+        }
+
+        // Comparison operators 
+        bool                operator==(const vector_iterator<T, is_const>& rhs) {
+            return (this->_p == rhs._p);
+        }
+
+        bool                operator!=(const vector_iterator<T, is_const>& rhs) {
+            return (this->_p != rhs._p);
+        }
+
+        bool                operator>=(const vector_iterator<T, is_const>& rhs) {
+            return (this->_p >= rhs._p);
+        }
+
+        bool                operator<=(const vector_iterator<T, is_const>& rhs) {
+            return (this->_p <= rhs._p);
+        }
+
+        bool                operator>(const vector_iterator<T, is_const>& rhs) {
+            return (this->_p > rhs._p);
+        }
+
+        bool                operator<(const vector_iterator<T, is_const>& rhs) {
+            return (this->_p < rhs._p);
+        }
+};
 
 template <
     class T,
@@ -22,13 +139,10 @@ template <
         typedef const value_type&                       const_reference;
         typedef typename allocator_type::pointer        pointer;
         typedef typename allocator_type::const_pointer  const_pointer;
-        /* FIXME
-        typedef iterator
-        typedef const_iterator
-        typedef reverse_iterator
-        typedef const_reverse_iterator
-        */  
-    
+        typedef ft::vector_iterator<T, false>           iterator;
+        typedef ft::vector_iterator<T, true>            const_iterator;
+        typedef ft::reverse_iterator<iterator>          reverse_iterator;
+        typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
     /*
     ** Private fields
     */
@@ -122,8 +236,107 @@ template <
         /*
         ** Iterators
         */
-       
+        iterator                 begin() {
+            return (iterator(_array));
+        }
 
+        const_iterator           begin() const {
+            return (const_iterator(_array));
+        }
+        
+        iterator                 end() {
+            return (iterator(_array + _size));
+        }
+
+        const_iterator           end() const {
+            return (const_iterator(_array + _size));
+        }
+
+        reverse_iterator     rbegin() {
+            return ( reverse_iterator(end()) );
+        }
+
+        const_reverse_iterator     rbegin() const {
+            return ( const_reverse_iterator(end()) );
+        }
+
+        reverse_iterator     rend() {
+            return ( reverse_iterator(begin()) );
+        }
+
+        const_reverse_iterator     rend() const {
+            return ( const_reverse_iterator(begin()) );
+        }
+
+        /*
+        ** Capacity
+        */
+        size_type   size() const {
+            return (_size);
+        }
+
+        void        resize(size_type n, value_type val = value_type()) {
+            if (n == _size)
+                return ;
+            
+            if (n < _size) {
+                // reduces to its firs n elements, destroying elements beyond
+                for (size_type i = _size - 1; i > n - 1; --i) {
+                    _allocator.destroy(_array + i);
+                }
+            } else {
+                if (n > _capacity) {
+                    // reallocates the storage to fit n elements
+                    reserve(n);
+                }
+                // content expanded, inserting n-_size elements at the end (copies of val)
+                for (size_type i = _size; i < n; ++i) {
+                    _allocator.construct(_array + i, val);
+                }
+            }
+            _size = n;
+        }
+
+        size_type   max_size() const {
+            return (_allocator.max_size());
+        }
+
+        size_type   capacity() const {
+            return (_capacity);
+        }
+
+        bool        empty() const {
+            return (_size == 0);
+        }
+
+        void        reserve(size_type n) {
+            if (n <= _capacity)
+                return ;
+            
+            pointer new_array = _allocator.allocate(n);
+            try {
+                std::uninitialized_copy(_array, _array + _size, new_array);
+            } catch (std::exception &e) {
+                _allocator.deallocate(new_array, n);
+                throw;
+            }
+
+            for (size_type i = 0; i < _size; i++) {
+                _allocator.destroy(_array + i);
+            }
+            _allocator.deallocate(_array, _capacity);
+
+            _capacity = n;
+            _array = new_array;
+        }
+
+
+
+    
+
+        /*
+        ** Element access
+        */
         reference       operator[] (size_type n) {
 			return(_array[n]);
 		}

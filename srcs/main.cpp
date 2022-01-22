@@ -12,7 +12,7 @@
 #include "reverse_iterator.hpp"
 
 #include <vector>
-
+#include <unistd.h>
 
 // a case-insensitive comparison function:
 bool mycomp (char c1, char c2)
@@ -145,4 +145,23 @@ int main(void)
     }
     std::cout << std::endl;
 
+    ft::vector<int> *n_copy = new ft::vector<int>(new_copy);
+
+    for (int i = 0; i < 4; i++) {
+        std::cout << *(n_copy->_array + i) << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "s = " << n_copy->size() << " c = " << n_copy->capacity() << std::endl;
+    n_copy->resize(10, 100);
+    for (ft::vector<int>::iterator it = n_copy->begin(); it != n_copy->end(); it++) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    n_copy->reserve(100);
+    std::cout << "s = " << n_copy->size() << " c = " << n_copy->capacity() << std::endl;
+
+    delete n_copy;
+    sleep(10);
 }
