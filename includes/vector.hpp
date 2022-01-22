@@ -112,6 +112,18 @@ template <
             *this = x;
         }
 
+        ~vector() {
+            for (size_type i = 0; i < _size; i++) {
+                _allocator.destroy(_array + i);
+            }
+            _allocator.deallocate(_array, _capacity);
+        }
+
+        /*
+        ** Iterators
+        */
+       
+
         reference       operator[] (size_type n) {
 			return(_array[n]);
 		}
