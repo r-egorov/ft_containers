@@ -152,9 +152,26 @@ int main(void)
     }
     std::cout << std::endl;
 
-    ft::vector<MyClass> vector_myclass(10);
-    for (ft::vector<MyClass>::iterator it = vector_myclass.begin(); it != vector_myclass.end(); it++) {
+    ft::vector<MyClass> vector_myclass1(10);
+
+    MyClass& mc = vector_myclass1.front();
+    mc.setN(15);
+    mc.setS("front");
+
+    MyClass& mc1 = vector_myclass1.back();
+    mc1.setN(51);
+    mc1.setS("back");
+
+    const ft::vector<MyClass> vector_myclass(vector_myclass1);
+
+    for (ft::vector<MyClass>::const_reverse_iterator it = vector_myclass.rbegin(); it != vector_myclass.rend(); it++) {
         std::cout << *it << ", ";
     }
     std::cout << std::endl;
+    for (ft::vector<MyClass>::const_iterator it = vector_myclass.begin(); it != vector_myclass.end(); it++) {
+        std::cout << *it << ", ";
+    }
+    std::cout << std::endl;
+
+    std::cout << vector_myclass1.at(5) << std::endl;
 }

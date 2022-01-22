@@ -328,11 +328,7 @@ template <
 
             _capacity = n;
             _array = new_array;
-        }
-
-
-
-    
+        }   
 
         /*
         ** Element access
@@ -340,10 +336,38 @@ template <
         reference       operator[] (size_type n) {
 			return(_array[n]);
 		}
+
 		const_reference operator[] (size_type n) const {
 			return(_array[n]);
 		}
-        
+
+        reference at (size_type n) {
+            if (n >= _size)
+                throw std::out_of_range("No element with such index!");
+            return (_array[n]);
+        }
+
+        const_reference at (size_type n) const {
+            if (n >= _size)
+                throw std::out_of_range("No element with such index!");
+            return (_array[n]);
+        }
+
+        reference front() {
+            return (*_array);
+        }
+
+        const_reference front() const {
+            return (*_array);
+        }
+
+        reference back() {
+            return ( *(_array + _size - 1) );
+        }
+
+        const_reference back() const {
+            return ( *(_array + _size - 1) );
+        }
         
     
 };
