@@ -18,6 +18,33 @@
 bool mycomp (char c1, char c2)
 { return std::tolower(c1)<std::tolower(c2); }
 
+
+template <typename T>
+void    print_vector(ft::vector<T> &vec, typename ft::vector<T>::iterator& in_it) {
+    size_t i = 0;
+    std::cout << "+-------------------PRINTING VECTOR-------------------+" << std::endl;
+    std::cout << "ft::vector, s = " << vec.size() << ", c = " << vec.capacity() << std::endl;
+    for (typename ft::vector<T>::const_iterator it = vec.begin(); it != vec.end(); it++) {
+        if (&(*in_it) == &(*it)) {
+            std::cout << "|" << i++ << "\t| " << *it << " <------ INPUT ITERATOR \n";
+        } else {
+            std::cout << "|" << i++ << "\t| " << *it << "\n";
+        }
+    }
+    std::cout << "+-----------------------------------------------------+"  << std::endl;
+}
+
+template <typename T>
+void    print_vector(ft::vector<T> &vec) {
+    size_t i = 0;
+    std::cout << "+-------------------PRINTING VECTOR-------------------+" << std::endl;
+    std::cout << "ft::vector, s = " << vec.size() << ", c = " << vec.capacity() << std::endl;
+    for (typename ft::vector<T>::const_iterator it = vec.begin(); it != vec.end(); it++) {
+        std::cout << "|" << i++ << "\t| " << *it << "\n";
+    }
+    std::cout << "+-----------------------------------------------------+"  << std::endl;
+}
+
 int main(void)
 {
     Timer   timer;
@@ -190,8 +217,19 @@ int main(void)
     }
     std::cout << std::endl;
 
-    ft::vector<MyClass>::iterator itv = vector_myclass_2.begin();
-    ft::vector<MyClass>::iterator itv2 = itv + 9;
-    std::cout << "v = " << *itv << " v2 = " << *itv2;
-    std::cout << std::endl;
+    std::cout << "s = " << vector_myclass_2.size() << " c = " << vector_myclass_2.capacity() << std::endl;
+
+    std::cout << "SSSSSSSSSSSSSSS" << std::endl;
+    print_vector(vector_myclass_2);
+    MyClass     new_val(7777, "new Class value!");
+    ft::vector<MyClass>::iterator ps = vector_myclass_2.insert(vector_myclass_2.end(), new_val);
+    print_vector(vector_myclass_2, ps);
+
+    print_vector(vector_myclass_2);
+    vector_myclass_2.push_back(MyClass(189, "Kvartira"));
+    vector_myclass_2.push_back(MyClass(40, "Dom"));
+    vector_myclass_2.push_back(MyClass(2, "Korpus"));
+    print_vector(vector_myclass_2);
+    ft::vector<MyClass>::iterator p = vector_myclass_2.insert(vector_myclass_2.begin() + 4, new_val);
+    print_vector(vector_myclass_2, p);
 }

@@ -436,21 +436,36 @@ template <
             if (position < begin() || position > end())
                 throw std::out_of_range("inserting position is out of range");
 
-            pointer     new_arr;
             size_type   border = static_cast<size_type>(position - begin());
 
             if (_size < _capacity) {
                 size_type   i = _size;
-                while (i >= border) {
+                while (i > border) {
                     --i;
                     _allocator.construct(_array + i + 1, *(_array + i));
                     _allocator.destroy(_array + i);
                 }
                 _allocator.construct(_array + i, val);
-                _size++;
-            } else {
-                // reallocate and insert
+            } else {  // _size == _capacity, needs to reallocate array
+                _capacity = (_capacity == 0) ? 1 : _capacity * 2;
+
+                pointer new_array = _allocator.allocate(_capacity);
+                try {
+                    std::uninitialized_copy(begin(), position, new_array);
+                    _allocator.construct(new_array + border, val);
+                    std::uninitialized_copy(position, end(), new_array + border + 1);
+                } catch (std::exception &e) {
+                    _allocator.deallocate(new_array, _capacity);
+                }
+                for (size_type i = 0; i < _size; i++) {
+                    _allocator.destroy(_array + i);
+                }
+                _allocator.deallocate(_array, _size);
+                _array = new_array;
             }
+            _size++;
+
+            return (begin() + border);
         }
 
         // template <class InputIterator>
