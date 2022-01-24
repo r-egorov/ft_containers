@@ -211,28 +211,35 @@ int main(void)
 
     std::cout << "SSSSSSSSSSSSSSS" << std::endl;
 
-    vector_myclass_2.assign(vector_myclass1.begin(), vector_myclass1.end());
+    ft::vector<MyClass> newnewnew;
+    for (int i = 0; i < 15; i++) {
+        newnewnew.push_back(MyClass(i, strs[i % 10]));
+    }
+    vector_myclass_2.assign(newnewnew.begin(), newnewnew.end());
     for (ft::vector<MyClass>::const_iterator it = vector_myclass_2.begin(); it != vector_myclass_2.end(); it++) {
         std::cout << *it << ", ";
     }
     std::cout << std::endl;
 
-    std::cout << "s = " << vector_myclass_2.size() << " c = " << vector_myclass_2.capacity() << std::endl;
-
     std::cout << "SSSSSSSSSSSSSSS" << std::endl;
     print_vector(vector_myclass_2);
-    MyClass     new_val(7777, "new Class value!");
-    ft::vector<MyClass>::iterator ps = vector_myclass_2.insert(vector_myclass_2.end(), new_val);
-    print_vector(vector_myclass_2, ps);
 
-    print_vector(vector_myclass_2);
+    MyClass     new_val(7777, "new Class value!");
+    // ft::vector<MyClass>::iterator ps = vector_myclass_2.insert(vector_myclass_2.begin() + 4, new_val);
+    // print_vector(vector_myclass_2, ps);
+
+    // print_vector(vector_myclass_2);
     vector_myclass_2.push_back(MyClass(189, "Kvartira"));
     vector_myclass_2.push_back(MyClass(40, "Dom"));
     vector_myclass_2.push_back(MyClass(2, "Korpus"));
-    print_vector(vector_myclass_2);
-    ft::vector<MyClass>::iterator p = vector_myclass_2.insert(vector_myclass_2.begin() + 4, new_val);
-    print_vector(vector_myclass_2, p);
+    // print_vector(vector_myclass_2);
+    // ft::vector<MyClass>::iterator p = vector_myclass_2.insert(vector_myclass_2.begin() + 4, new_val);
+    // print_vector(vector_myclass_2, p);
 
-    vector_myclass_2.insert(vector_myclass_2.begin() + 5, 2, MyClass(999, "SOMETHING NEW"));
+    
+    std::cout << "aaaaa" << std::endl;
+    
+    print_vector(vector_myclass_2); 
+    vector_myclass_2.insert(vector_myclass_2.begin() + 5, 20, MyClass(999, "SOMETHING NEW"));
     print_vector(vector_myclass_2); 
 }
