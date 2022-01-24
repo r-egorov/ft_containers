@@ -36,7 +36,7 @@ class vector_iterator {
     */
     public:
         // Constructors
-        vector_iterator() : _p(nullptr) {}
+        vector_iterator() : _p(NULL) {}
         vector_iterator(pointer p) : _p(p) {}
         vector_iterator(const vector_iterator<T, false>& other) : _p( &(*other) ) {}
         
@@ -431,17 +431,10 @@ template <
             _size--;
         }
 
-        // void        insert (iterator position, size_type n, const value_type& val) {
-        //     if (position < begin() || position > end())
-        //         throw std::out_of_range("inserting position is out of range")
-        //     if (_size + n > _capacity) {
-        //         reserve(_size + n);
-        //     }
-        // }
-
+        // Insert single element
         iterator    insert (iterator position, const value_type& val) {
             if (position < begin() || position > end())
-                throw std::out_of_range("inserting position is out of range")
+                throw std::out_of_range("inserting position is out of range");
 
             pointer     new_arr;
             size_type   border = static_cast<size_type>(position - begin());
@@ -462,6 +455,15 @@ template <
 
         // template <class InputIterator>
         // void        insert (iterator position, InputIterator first, InputIterator last);
+
+        
+        // void        insert (iterator position, size_type n, const value_type& val) {
+        //     if (position < begin() || position > end())
+        //         throw std::out_of_range("inserting position is out of range")
+        //     if (_size + n > _capacity) {
+        //         reserve(_size + n);
+        //     }
+        // }
 };
 
 }  // namespace brace
