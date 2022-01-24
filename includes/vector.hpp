@@ -447,38 +447,85 @@ template <
                 }
                 _allocator.construct(_array + i, val);
             } else {  // _size == _capacity, needs to reallocate array
-                _capacity = (_capacity == 0) ? 1 : _capacity * 2;
+                size_type   new_capacity =  (_capacity == 0) ? 1 : _capacity * 2;
+                pointer new_array = _allocator.allocate(new_capacity);
 
-                pointer new_array = _allocator.allocate(_capacity);
                 try {
                     std::uninitialized_copy(begin(), position, new_array);
                     _allocator.construct(new_array + border, val);
                     std::uninitialized_copy(position, end(), new_array + border + 1);
                 } catch (std::exception &e) {
-                    _allocator.deallocate(new_array, _capacity);
+                    _allocator.deallocate(new_array, new_capacity);
+                    throw ;
                 }
+
                 for (size_type i = 0; i < _size; i++) {
                     _allocator.destroy(_array + i);
                 }
-                _allocator.deallocate(_array, _size);
+                _allocator.deallocate(_array, _capacity);
+
                 _array = new_array;
+                _capacity = new_capacity;
             }
             _size++;
 
             return (begin() + border);
         }
 
+        
+        void        insert (iterator position, size_type n, const value_type& val) {
+            if (position < begin() || position > end())
+                throw std::out_of_range("inserting position is out of range");
+
+            size_type   border = static_cast<size_type>(position - begin());
+
+            if (_size + n <= _capacity) {
+                size_type i = _size - 1; // index of the last element
+
+                while (i > border + n - 1) {
+                    _allocator.construct(_array + i + n, *(_array + i));
+                    _allocator.destroy(_array + i);
+                    --i;
+                }
+                while (i >= border) {
+                    _allocator.construct(_array + i, val);
+                    --i;
+                }
+            } else {
+                // reallocate, construct new array
+                size_type   new_capacity;
+                pointer     new_array;
+
+                new_capacity = (_capacity * 2 < _capacity + n) ?
+                               _capacity + n : new_capacity = _capacity * 2;
+
+                new_array = _allocator.allocate(new_capacity);
+                try {
+                    std::uninitialized_copy(begin(), position, new_array);
+                    for (size_type i = border; i < border + n; i++) {
+                        _allocator.construct(new_array + i, val);
+                    }
+                    std::uninitialized_copy(position, end(), new_array + border + n);
+                } catch (std::exception &e) {
+                    _allocator.deallocate(new_array, new_capacity);
+                    throw ;
+                }
+                
+                for (size_type i = 0; i < _size; i++) {
+                    _allocator.destroy(_array + i);
+                }
+                _allocator.deallocate(_array, _capacity);
+
+                _array = new_array;
+                _capacity = new_capacity;
+            }
+            _size += n;
+        }
+
         // template <class InputIterator>
         // void        insert (iterator position, InputIterator first, InputIterator last);
 
         
-        // void        insert (iterator position, size_type n, const value_type& val) {
-        //     if (position < begin() || position > end())
-        //         throw std::out_of_range("inserting position is out of range")
-        //     if (_size + n > _capacity) {
-        //         reserve(_size + n);
-        //     }
-        // }
 };
 
 }  // namespace brace

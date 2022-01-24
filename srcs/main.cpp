@@ -232,4 +232,7 @@ int main(void)
     print_vector(vector_myclass_2);
     ft::vector<MyClass>::iterator p = vector_myclass_2.insert(vector_myclass_2.begin() + 4, new_val);
     print_vector(vector_myclass_2, p);
+
+    vector_myclass_2.insert(vector_myclass_2.begin() + 5, 2, MyClass(999, "SOMETHING NEW"));
+    print_vector(vector_myclass_2); 
 }
