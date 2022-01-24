@@ -483,7 +483,7 @@ template <
                 size_type i = _size; // index of the last element
                 while (i > border) {
                     _allocator.construct(_array + i + n - 1, *(_array + i - 1));
-                    _allocator.destroy(_array + i - 1);
+                    _allocator.destroy(_array + i + n - 1);
                     i--;
                 }
                 i = 0;
@@ -522,30 +522,33 @@ template <
             _size += n;
         }
 
-        template <class InputIterator>
-        void        insert(
-            iterator position,
-            InputIterator first,
-            InputIterator last,
-            typename ft::enable_if<!is_integral<InputIterator>::value>::type* = 0)
-        {
-            if (position < begin() || position > end())
-                throw std::out_of_range("inserting position is out of range");
+        // template <class InputIterator>
+        // void        insert(
+        //     iterator position,
+        //     InputIterator first,
+        //     InputIterator last,
+        //     typename ft::enable_if<!is_integral<InputIterator>::value>::type* = 0)
+        // {
+        //     if (position < begin() || position > end())
+        //         throw std::out_of_range("inserting position is out of range");
                 
-            size_type   border = static_cast<size_type>(position - begin());
-            size_type   n = static_cast<size_type>(last - first);
+        //     size_type   border = static_cast<size_type>(position - begin());
+        //     size_type   n = static_cast<size_type>(last - first);
 
-            if (_size + n <= _capacity) {
-                size_type i = _size - 1; // index of the last element
+        //     if (_size + n <= _capacity) {
+        //         size_type i = _size; // index of the last element
+        //         while (i > border) {
+        //             _allocator.construct(_array + i + n - 1, *(_array + i - 1));
+        //             _allocator.destroy(_array + i - 1);
+        //             i--;
+        //         }
+        //         i = 0;
+        //         while (i < n) {
+        //             _allocator.construct(_array + border + i, val);
+        //             i++;
 
-                while (i > border + n - 1) {
-                    _allocator.construct(_array + i + n, *(_array + i));
-                    _allocator.destroy(_array + i);
-                    --i;
-                }
-
-            }
-        }
+        //     }
+        // }
 
         
 };
