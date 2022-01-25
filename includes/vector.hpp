@@ -222,7 +222,6 @@ template <
                 _allocator.construct(_array + i, x[i]);
             }
             return (*this);
-
         }
 
         // Copy constructor
@@ -234,7 +233,9 @@ template <
             for (size_type i = 0; i < _size; i++) {
                 _allocator.destroy(_array + i);
             }
-            _allocator.deallocate(_array, _capacity);
+            if (_capacity > 0) {
+                _allocator.deallocate(_array, _capacity);
+            }
         }
 
         /*
@@ -328,7 +329,9 @@ template <
             for (size_type i = 0; i < _size; i++) {
                 _allocator.destroy(_array + i);
             }
-            _allocator.deallocate(_array, _capacity);
+            if (_capacity > 0) {
+                _allocator.deallocate(_array, _capacity);
+            }
 
             _capacity = n;
             _array = new_array;
@@ -611,8 +614,71 @@ template <
             return erase(position, position + 1);
         }
 
-        void swap (vector& x);
+        void swap (vector& x) {
+			std::swap(_array, x._array);
+			std::swap(_size, x._size);
+			std::swap(_capacity, x._capacity);
+			std::swap(_allocator, x._allocator);
+        }
+
+        
+        /*
+        ** Allocator
+        */
+        allocator_type get_allocator() const {
+            return (_allocator);
+        }
 };
+
+/*
+** Non-member function implementation
+*/
+template <class T, class Alloc>
+bool operator==(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+    if (lhs.size() != rhs.size()) {
+        return (false);
+    }
+    typename ft::vector<T, Alloc>::const_iterator  lhs_it, rhs_it;
+    lhs_it = lhs.begin();
+    rhs_it = rhs.begin();
+    while (lhs_it != lhs.end() || rhs_it != rhs.end()) {
+        if (*lhs_it != *rhs_it) {
+            return (false);
+        }
+        lhs_it++; rhs_it++;
+    }
+    return (true);
+}
+
+template <class T, class Alloc>
+bool operator!=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+    return (!(lhs == rhs));
+}
+
+template <class T, class Alloc>
+bool operator<(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+    return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+}
+
+template <class T, class Alloc>
+bool operator<=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+    return (!(rhs < lhs));
+}
+
+template <class T, class Alloc>
+bool operator>(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+    return (rhs < lhs);
+}
+
+template <class T, class Alloc>
+bool operator>=(const ft::vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs) {
+    return (!(lhs < rhs));
+}
+
+template <class T, class Alloc>
+void swap(ft::vector<T,Alloc>& x, ft::vector<T,Alloc>& y) {
+    x.swap(y);
+}
 
 }  // namespace brace
 

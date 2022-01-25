@@ -2,12 +2,13 @@
 # define STACK_HPP
 
 # include <vector> // FIXME
+# include "vector.hpp"
 
 namespace ft {
 
 template<
     class T,
-    class Container = std::vector<T> // FIXME
+    class Container = ft::vector<T> // FIXME
 > class stack {
     /*
     ** Member types
@@ -29,7 +30,9 @@ template<
     ** Member functions
     */
     public:
-        explicit stack(const Container& cont = Container()) : c(cont) {}
+        explicit stack(const Container& cont = Container()) : c(cont) {
+            std::cout << "stack constructor";
+        }
         stack(const stack& other) : c(other.c) {}
         ~stack() {}
 
