@@ -19,27 +19,30 @@ bool mycomp (char c1, char c2)
 { return std::tolower(c1)<std::tolower(c2); }
 
 
-template <typename T>
-void    print_vector(const ft::vector<T> &vec, typename ft::vector<T>::iterator& in_it) {
+template <class C>
+void    print_vector(const C &vec, typename C::iterator& in_it) {
     size_t i = 0;
     std::cout << "+-------------------PRINTING VECTOR-------------------+" << std::endl;
     std::cout << "ft::vector, s = " << vec.size() << ", c = " << vec.capacity() << std::endl;
-    for (typename ft::vector<T>::const_iterator it = vec.begin(); it != vec.end(); it++) {
+    for (typename C::const_iterator it = vec.begin(); it != vec.end(); it++) {
         if (&(*in_it) == &(*it)) {
             std::cout << "|" << i++ << "\t| " << *it << " <------ INPUT ITERATOR \n";
         } else {
             std::cout << "|" << i++ << "\t| " << *it << "\n";
         }
     }
+    if (&(*in_it) == &(*vec.end())) {
+        std::cout << "end() <------ INPUT ITERATOR"  << std::endl;
+    }
     std::cout << "+-----------------------------------------------------+"  << std::endl;
 }
 
-template <typename T>
-void    print_vector(const ft::vector<T> &vec) {
+template <class C>
+void    print_vector(const C &vec) {
     size_t i = 0;
     std::cout << "+-------------------PRINTING VECTOR-------------------+" << std::endl;
     std::cout << "ft::vector, s = " << vec.size() << ", c = " << vec.capacity() << std::endl;
-    for (typename ft::vector<T>::const_iterator it = vec.begin(); it != vec.end(); it++) {
+    for (typename C::const_iterator it = vec.begin(); it != vec.end(); it++) {
         std::cout << "|" << i++ << "\t| " << *it << "\n";
     }
     std::cout << "+-----------------------------------------------------+"  << std::endl;
@@ -227,14 +230,10 @@ int main(void)
     print_vector(vector_myclass);
     print_vector(vector_myclass_2);
     vector_myclass.insert(vector_myclass.end(), vector_myclass_2.begin(), vector_myclass_2.begin() + 2);
-    print_vector(vector_myclass);
-    // ft::vector<MyClass>::iterator p = vector_myclass_2.insert(vector_myclass_2.end(), new_val);
-    // print_vector(vector_myclass_2, p);
+    print_vector(vector_myclass_2);
 
+    // ft::vector<MyClass>::iterator erit = vector_myclass_2.erase(vector_myclass_2.begin() + 4, vector_myclass_2.begin() + 10);
     
-    // std::cout << "aaaaa" << std::endl;
-    
-    // print_vector(vector_myclass_2); 
-    // vector_myclass_2.insert(vector_myclass_2.begin() + 5, 20, MyClass(999, "SOMETHING NEW"));
-    // print_vector(vector_myclass_2); 
+    ft::vector<MyClass>::iterator erit = vector_myclass_2.erase(vector_myclass_2.end() - 1);
+    print_vector(vector_myclass_2, erit);
 }

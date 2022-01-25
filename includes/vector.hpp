@@ -580,6 +580,38 @@ template <
             }
             _size += n;
         }
+
+        iterator erase (iterator first, iterator last) {
+            size_type   left_border = static_cast<size_type>(first - begin());
+            size_type   right_border = static_cast<size_type>(last - begin());
+            size_type   n = static_cast<size_type>(last - first);
+
+            size_type   i = left_border;
+            for (; i < right_border; i++) {
+                _allocator.destroy(_array + i);
+            }
+
+            try {
+                for (; i < _size; i++) {
+                    _allocator.construct(_array + i - n, *(_array + i));
+                    _allocator.destroy(_array + i);
+                }
+            } catch (std::exception &e) {
+                for (; i >= right_border; i--) {
+                    _allocator.destroy(_array + i - n);
+                }
+                throw ;
+            }
+
+            _size -= n;
+            return (begin() + left_border);
+        }
+
+        iterator erase (iterator position) {
+            return erase(position, position + 1);
+        }
+
+        void swap (vector& x);
 };
 
 }  // namespace brace
