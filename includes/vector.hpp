@@ -455,6 +455,7 @@ template <
                     _allocator.construct(new_array + border, val);
                     std::uninitialized_copy(position, end(), new_array + border + 1);
                 } catch (std::exception &e) {
+                    _allocator.destroy(new_array + border);
                     _allocator.deallocate(new_array, new_capacity);
                     throw ;
                 }
@@ -497,7 +498,7 @@ template <
                 pointer     new_array;
 
                 new_capacity = (_capacity * 2 < _capacity + n) ?
-                               _capacity + n : new_capacity = _capacity * 2;
+                               _capacity + n : _capacity * 2;
 
                 new_array = _allocator.allocate(new_capacity);
                 try {
@@ -522,35 +523,63 @@ template <
             _size += n;
         }
 
-        // template <class InputIterator>
-        // void        insert(
-        //     iterator position,
-        //     InputIterator first,
-        //     InputIterator last,
-        //     typename ft::enable_if<!is_integral<InputIterator>::value>::type* = 0)
-        // {
-        //     if (position < begin() || position > end())
-        //         throw std::out_of_range("inserting position is out of range");
+        // Range-type insert
+        template <class InputIterator>
+        void        insert(
+            iterator position,
+            InputIterator first,
+            InputIterator last,
+            typename ft::enable_if<!is_integral<InputIterator>::value>::type* = 0)
+        {
+            if (position < begin() || position > end())
+                throw std::out_of_range("inserting position is out of range");
                 
-        //     size_type   border = static_cast<size_type>(position - begin());
-        //     size_type   n = static_cast<size_type>(last - first);
+            size_type   border = static_cast<size_type>(position - begin());
+            size_type   n = static_cast<size_type>(last - first);
 
-        //     if (_size + n <= _capacity) {
-        //         size_type i = _size; // index of the last element
-        //         while (i > border) {
-        //             _allocator.construct(_array + i + n - 1, *(_array + i - 1));
-        //             _allocator.destroy(_array + i - 1);
-        //             i--;
-        //         }
-        //         i = 0;
-        //         while (i < n) {
-        //             _allocator.construct(_array + border + i, val);
-        //             i++;
+            if (_size + n <= _capacity) {
+                size_type i = _size; // index of the last element
+                while (i > border) {
+                    _allocator.construct(_array + i + n - 1, *(_array + i - 1));
+                    _allocator.destroy(_array + i + n - 1);
+                    i--;
+                }
+                i = 0;
+                while (i < n) {
+                    _allocator.construct(_array + border + i, *first);
+                    i++;
+                    first++;
+                }
+            } else {
+                // reallocate and fill range
+                size_type   new_capacity;
+                pointer     new_array;
 
-        //     }
-        // }
+                new_capacity = (_capacity * 2 < _capacity + n) ?
+                               _capacity + n : _capacity * 2;
 
-        
+                new_array = _allocator.allocate(new_capacity);
+                try {
+                    std::uninitialized_copy(begin(), position, new_array);
+                    for (size_type i = border; i < border + n; i++, first++) {
+                        _allocator.construct(new_array + i, *first);
+                    }
+                    std::uninitialized_copy(position, end(), new_array + border + n);
+                } catch (std::exception &e) {
+                    _allocator.deallocate(new_array, new_capacity);
+                    throw ;
+                }
+                
+                for (size_type i = 0; i < _size; i++) {
+                    _allocator.destroy(_array + i);
+                }
+                _allocator.deallocate(_array, _capacity);
+
+                _array = new_array;
+                _capacity = new_capacity;
+            }
+            _size += n;
+        }
 };
 
 }  // namespace brace
