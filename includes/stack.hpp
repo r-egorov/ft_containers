@@ -30,9 +30,7 @@ template<
     ** Member functions
     */
     public:
-        explicit stack(const Container& cont = Container()) : c(cont) {
-            std::cout << "stack constructor";
-        }
+        explicit stack(const Container& cont = Container()) : c(cont) {}
         stack(const stack& other) : c(other.c) {}
         ~stack() {}
 

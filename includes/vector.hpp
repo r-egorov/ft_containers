@@ -211,9 +211,7 @@ template <
 
             _size = x._size;
             if (_capacity < _size) {
-                if (_capacity != 0) {
-                    old_alloc.deallocate(_array, _capacity);
-                }
+                old_alloc.deallocate(_array, _capacity);
                 _capacity = _size;
                 _array = _allocator.allocate(_capacity);
             }
@@ -225,7 +223,8 @@ template <
         }
 
         // Copy constructor
-        vector(const vector& x) : _capacity(0), _size(0) {
+        vector(const vector& x) : _capacity(0), _size(0), _allocator(Allocator()) {
+            _array = _allocator.allocate(_capacity);
             *this = x;
         }
 
@@ -233,9 +232,7 @@ template <
             for (size_type i = 0; i < _size; i++) {
                 _allocator.destroy(_array + i);
             }
-            if (_capacity > 0) {
-                _allocator.deallocate(_array, _capacity);
-            }
+            _allocator.deallocate(_array, _capacity);
         }
 
         /*
@@ -329,9 +326,7 @@ template <
             for (size_type i = 0; i < _size; i++) {
                 _allocator.destroy(_array + i);
             }
-            if (_capacity > 0) {
-                _allocator.deallocate(_array, _capacity);
-            }
+            _allocator.deallocate(_array, _capacity);
 
             _capacity = n;
             _array = new_array;
