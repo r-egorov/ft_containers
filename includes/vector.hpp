@@ -196,8 +196,18 @@ template <
                 _allocator.construct(_array + i, *first);
             }
         }
+
+        // Copy constructor
+        vector(const vector& x) :
+            _capacity(x._capacity), _size(x._size), _allocator(x._allocator) {
+            _array = _allocator.allocate(_capacity);
+            
+            for (size_type i = 0; i < _size; i++) {
+                _allocator.construct(_array + i, x[i]);
+            }
+        }
         
-        // Operator= (needed for copy constructor)
+        // Operator=
         vector& operator= (const vector& x) {
             if (this == &x)
                 return (*this);
@@ -220,12 +230,6 @@ template <
                 _allocator.construct(_array + i, x[i]);
             }
             return (*this);
-        }
-
-        // Copy constructor
-        vector(const vector& x) : _capacity(0), _size(0), _allocator(Allocator()) {
-            _array = _allocator.allocate(_capacity);
-            *this = x;
         }
 
         ~vector() {
