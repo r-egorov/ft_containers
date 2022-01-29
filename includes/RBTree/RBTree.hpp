@@ -35,7 +35,7 @@ class RBTreeNode {
             : is_nil(is_nil), color(RED), key(NULL), left(NULL), right(NULL), p(NULL) {}
 
         RBTreeNode(pointer key)
-            : is_nil(is_nil), color(RED), key(key), left(NULL), right(NULL), p(NULL) {}
+            : is_nil(false), color(RED), key(key), left(NULL), right(NULL), p(NULL) {}
 
         ~RBTreeNode() {}
 
@@ -118,7 +118,7 @@ class RBTreeNode {
                 }
 
                 RBTreeNode*     pred = this;
-                while ((!pred->is_nil) && succ->is_a_left_son()) {
+                while ((!pred->is_nil) && pred->is_a_left_son()) {
                     pred = pred->p;
                 }
                 return (pred);
@@ -132,10 +132,10 @@ class RBTreeIterator {
     ** Member types
     */
     public:
-        typedef RBTreeNode<T>                                               node_type;
-        typedef typename std::bidirectional_iterator_tag                    iterator_category;
-        typedef typename ft::iterator_traits<T*>::value_type                value_type;
-        typedef typename ft::iterator_traits<T*>::difference_type           difference_type;
+        typedef RBTreeNode<T>                                            node_type;
+        typedef typename std::bidirectional_iterator_tag                 iterator_category;
+        typedef typename ft::iterator_traits<T*>::value_type             value_type;
+        typedef typename ft::iterator_traits<T*>::difference_type        difference_type;
         typedef typename choose<
             is_const,
             typename ft::iterator_traits<const T*>::pointer,
@@ -157,14 +157,6 @@ class RBTreeIterator {
     */
     protected:
         node_pointer      _p;
-
-    /*
-    ** Helper functions
-    */
-    private:
-        node_pointer     tree_min(node_pointer root) {
-
-        }     
 
     /*
     ** Member functions
@@ -213,6 +205,9 @@ class RBTreeIterator {
             return (tmp);
         }
 
+        node_pointer        getNodePtr() const {
+            return (_p);
+        }
 };
 
 template <
@@ -223,18 +218,61 @@ template <
     /*
     ** Member types
     */
-   typedef T                                       value_type;
-    typedef Allocator                               allocator_type;
-    typedef std::size_t                             size_type;
-    typedef std::ptrdiff_t                          difference_type;
-    typedef value_type&                             reference;
-    typedef const value_type&                       const_reference;
-    typedef typename allocator_type::pointer        pointer;
-    typedef typename allocator_type::const_pointer  const_pointer;
-    typedef ft::vector_iterator<T, false>           iterator;
-    typedef ft::vector_iterator<T, true>            const_iterator;
-    typedef ft::reverse_iterator<iterator>          reverse_iterator;
-    typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
+    public:
+        typedef Key                                     value_type;
+        typedef Allocator                               allocator_type;
+        typedef Compare                                 comparator_type;
+        typedef RBTreeNode<value_type>                  node_type;
+        typedef typename allocator_type::
+            template rebind<node_type>::other           node_allocator_type;
+        typedef typename node_allocator_type::pointer   node_pointer;
+        typedef std::size_t                             size_type;
+        typedef std::ptrdiff_t                          difference_type;
+        typedef value_type&                             reference;
+        typedef const value_type&                       const_reference;
+        typedef typename allocator_type::pointer        pointer;
+        typedef typename allocator_type::const_pointer  const_pointer;
+        typedef ft::RBTreeIterator<node_type, false>    iterator;
+        typedef ft::vector_iterator<node_type, true>    const_iterator;
+        typedef ft::reverse_iterator<iterator>          reverse_iterator;
+        typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
+
+    private:
+        node_pointer                    _root;
+        node_pointer                    _nil;
+        size_type                       _size;
+        allocator_type                  _key_allocator;
+        node_allocator_type             _node_allocator;
+        comparator_type                 _comparator;
+
+    /*
+    ** Member functions
+    */
+    public:
+        // Constructors
+        RBTree(
+            const allocator_type& key_alloc = allocator_type(),
+            const node_allocator_type& node_alloc = node_allocator_type(),
+            const comparator_type& compar = comparator_type()
+        ) : _size(0), _key_allocator(key_alloc), _node_allocator(node_alloc), _comparator(compar) {
+            _nil = new node_type(true);
+            _nil->color = BLACK;
+            _root = _nil;
+        }
+        RBTree(const RBTree& other) : _nil(other._nil), _root(other._root) {}
+        // Destructor
+        ~RBTree() {
+            delete this->_nil;
+        }
+        // Operators
+        RBTree&     operator=(const RBTree& other) {
+            if (this != &other) {
+                delete this->_nil;
+                _root = other._root;
+                _nil = other._nil;
+            }
+            return (*this);
+        }
 };
 
 // template<

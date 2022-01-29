@@ -268,4 +268,8 @@ int main(void) {
     printNode(node_str);
     std::cout << "Node(k.first = " << node_pair.key->first << " k.second = " << node_pair.key->second
     << ", color = " << node_pair.color << ")" << std::endl;
+
+    ft::RBTreeNode<int> node_def(true);
+
+    std::cout << node_def.is_nil;
 }
