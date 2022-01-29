@@ -151,7 +151,7 @@ template <
     ** Private fields
     */
     private:
-        //pointer                                 _array;
+        pointer                                 _array;
         size_type                               _capacity;
         size_type                               _size;
         allocator_type                          _allocator;
@@ -160,8 +160,6 @@ template <
     ** Member functions
     */
     public:
-        pointer                                 _array; // FIXME
-
         // Default constructor
         explicit vector(const allocator_type& alloc = allocator_type()) :
             _capacity(0), _size(0), _allocator(alloc) {
