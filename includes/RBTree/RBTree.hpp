@@ -67,7 +67,7 @@ class RBTreeNode {
     /*
     ** Helper functions
     */
-    private:
+    public:
         static RBTreeNode*     tree_min(RBTreeNode* head) {
             if (!head->is_nil) {
                 while (!head->left->is_nil) {
@@ -305,7 +305,39 @@ template <
             return (*this);
         }
 
-        iterator   _iterativeSearch(node_pointer head, const value_type& val) {
+    private:
+        void    _print(node_type *head, int tabs_count) {
+            std::string tabs("");
+            for (int i = 0; i < tabs_count; i++)
+                tabs += " ";
+            std::cout << tabs;
+
+            if (!head->is_nil) {
+                if (!head->p->is_nil) {
+                    if (head == head->p->left) {
+                        std::cout << "L: ";
+                    } else {
+                        std::cout << "R: ";
+                    }
+                } else {
+                    std::cout << "*: ";
+                }
+                std::cout << *head << ", n: " << head << ", v: " << head->value << std::endl;
+
+                tabs_count += 2;
+                _print(head->left, tabs_count);
+                _print(head->right, tabs_count);
+            }
+            else {
+                std::cout << *head << std::endl;
+            }
+        }
+
+        iterator    _searchValue(node_pointer head, const_reference val) {
+            return (iterator(_iterativeSearch(head, val)));
+        }
+
+        node_pointer    _iterativeSearch(node_pointer head, const_reference val) {
             while (!head->is_nil) {
                 if (!(_comparator(val, *(head->value))) && !_comparator(*(head->value), val)) {
                     break ;
@@ -316,19 +348,19 @@ template <
                     head = head->right;
                 }
             }
-            return (iterator(head));
+            return (head);
         }
 
-//         void    _transplant(Node* u, Node* v) {
-//             if (u->p == this->nil) {
-//                 this->root = v;
-//             } else if (u == u->p->left) {
-//                 u->p->left = v;
-//             } else {
-//                 u->p->right = v;
-//             }
-//             v->p = u->p;
-//         }
+        void    _transplant(node_pointer u, node_pointer v) {
+            if (u->p->is_nil) {
+                this->_root = v;
+            } else if (u == u->p->left) {
+                u->p->left = v;
+            } else {
+                u->p->right = v;
+            }
+            v->p = u->p;
+        }
 
         void    _leftRotate(node_pointer node) {
 			node_pointer y = node->right;
@@ -406,34 +438,6 @@ template <
             this->_root->color = BLACK;
         }
 
-    private:
-        void    _print(node_type *head, int tabs_count) {
-            std::string tabs("");
-            for (int i = 0; i < tabs_count; i++)
-                tabs += " ";
-            std::cout << tabs;
-
-            if (!head->is_nil) {
-                if (!head->p->is_nil) {
-                    if (head == head->p->left) {
-                        std::cout << "L: ";
-                    } else {
-                        std::cout << "R: ";
-                    }
-                } else {
-                    std::cout << "*: ";
-                }
-                std::cout << *head << ", n: " << head << ", v: " << head->value << std::endl;
-
-                tabs_count += 2;
-                _print(head->left, tabs_count);
-                _print(head->right, tabs_count);
-            }
-            else {
-                std::cout << *head << std::endl;
-            }
-        }
-
         void    _insertNode(node_pointer to_insert) {
             node_pointer   previous = this->_nil;
             node_pointer   current = this->_root;
@@ -462,11 +466,116 @@ template <
             _insertFixup(to_insert);
         }
 
-        pointer   _value(const value_type& val) {
+        pointer   _value(const_reference val) {
             pointer     created = _value_allocator.allocate(1);
             _value_allocator.construct(created, val);
             return (created);
         }
+
+
+        node_pointer   _min(node_pointer head) {
+            return (node_type::tree_min(head));
+        }
+
+        node_pointer   _max(node_pointer head) {
+            return (node_type::tree_max(head));
+        }
+      
+        void    _deleteValue(const_reference val) {
+            node_pointer    to_delete = _iterativeSearch(this->_root, val);
+            if (!to_delete->is_nil) {
+                _deleteNode(to_delete);
+            }
+        }
+
+        void    _deleteNode(node_pointer to_delete) {
+            node_pointer   x;
+            node_pointer   y = to_delete;
+            bool    y_original_color = y->color;
+
+            if (to_delete->left->is_nil) {
+                x = to_delete->right;
+                _transplant(to_delete, x);
+            } else if (to_delete->right->is_nil) {
+                x = to_delete->left;
+                _transplant(to_delete, x);
+            } else {
+                y = _min(to_delete->right);
+                y_original_color = y->color;
+                x = y->right;
+                if (y->p == to_delete) {
+                    x->p = y;
+                } else {
+                    _transplant(y, y->right);
+                    y->right = to_delete->right;
+                    y->right->p = y;
+                }
+                _transplant(to_delete, y);
+                y->left = to_delete->left;
+                y->left->p = y;
+                y->color = to_delete->color;
+            }
+
+            if (y_original_color == BLACK) {
+                _deleteFixup(x);
+            }
+        }
+
+        void    _deleteFixup(node_pointer x) {
+            while (x != this->_root && x->color == BLACK) {
+                if (x == x->p->left) {
+                    node_pointer   w = x->p->right;
+                    if (w->color == RED) {
+                        w->color = BLACK;
+                        x->p->color = RED;
+                        _leftRotate(x->p);
+                        w = x->p->right;
+                    }
+                    if (w->left->color == BLACK && w->right->color == BLACK) {
+                        w->color = RED;
+                        x = x->p;
+                    } else {
+                        if (w->right->color == BLACK) {
+                            w->left->color = BLACK;
+                            w->color = RED;
+                            _rightRotate(w);
+                            w = x->p->right;
+                        }
+                        w->color = x->p->color;
+                        x->p->color = BLACK;
+                        w->right->color = BLACK;
+                        _leftRotate(x->p);
+                        x = this->_root;
+                    }
+                } else {
+                    node_pointer   w = x->p->left;
+                    if (w->color == RED) {
+                        w->color = BLACK;
+                        x->p->color = RED;
+                        _rightRotate(x->p);
+                        w = x->p->left;
+                    }
+                    if (w->right->color == BLACK && w->left->color == BLACK) {
+                        w->color = RED;
+                        x = x->p;
+                    } else {
+                        if (w->left->color == BLACK) {
+                            w->right->color = BLACK;
+                            w->color = RED;
+                            _leftRotate(w);
+                            w = x->p->left;
+                        }
+                        w->color = x->p->color;
+                        x->p->color = BLACK;
+                        w->left->color = BLACK;
+                        _rightRotate(x->p);
+                        x = this->_root;
+                    }
+                }
+            }
+            x->color = BLACK;
+        }
+
     public:
         void    print() {
             std::cout << "=========TREE=========" << std::endl;
@@ -474,7 +583,7 @@ template <
             std::cout << "======================" << std::endl;
         }
 
-        iterator  insert(const value_type& val) {
+        iterator  insert(const_reference val) {
             node_pointer  node;
             node = _node_allocator.allocate(1);
 
@@ -484,8 +593,8 @@ template <
             return (iterator(node));
         }
 
-        
-        iterator   search(const value_type& val) { return (_iterativeSearch(this->_root, val)); }
+        iterator    search(const_reference val) { return (_searchValue(this->_root, val)); }
+        void        remove(const_reference val) { return (_deleteValue(val)); }
 };
 
 // template<

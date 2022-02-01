@@ -288,4 +288,41 @@ int main(void) {
     tree.insert(8);
     tree.print();
 
+    std::cout << "\n\nremoving 8" << std::endl;
+    tree.remove(8);
+    tree.print();
+    std::cout << "\n\nremoving 12" << std::endl;
+    tree.remove(12);
+    tree.print();
+    std::cout << "\n\nremoving 19" << std::endl;
+    tree.remove(19);
+    tree.print();
+    std::cout << "\n\nremoving 31" << std::endl;
+    tree.remove(31);
+    tree.print();
+    std::cout << "\n\nremoving 38" << std::endl;
+    tree.remove(38);
+    tree.print();
+    std::cout << "\n\nremoving 41" << std::endl;
+    tree.remove(41);
+
+    // ft::RBTree< ft::pair<std::string, int> > pair_tree;
+    // std::string strings[10] = {
+    //     "zero",
+    //     "one",
+    //     "two",
+    //     "three",
+    //     "four",
+    //     "five",
+    //     "six",
+    //     "seven",
+    //     "eight",
+    //     "nine",
+    // };
+    // for (int i = 0; i < 10; i++) {
+    //     pair_tree.insert(ft::pair<std::string, int>(strings[i], i));
+    // }
+    // pair_tree.print();
+    // ft::RBTree< ft::pair<std::string, int> >::iterator it = pair_tree.search(ft::pair<std::string, int>("five", 5));
+    // std::cout << *it << "addr, " << &(*it) << std::endl;
 }
