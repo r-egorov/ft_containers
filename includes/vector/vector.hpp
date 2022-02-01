@@ -130,7 +130,7 @@ class vector_iterator {
 template <
     class T,
     class Allocator = std::allocator<T>
-    > class vector {
+> class vector {
     /*
     ** Member types
     */

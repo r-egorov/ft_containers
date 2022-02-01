@@ -1,14 +1,13 @@
 #ifndef STACK_HPP
 # define STACK_HPP
 
-# include <vector> // FIXME
 # include "vector.hpp"
 
 namespace ft {
 
 template<
     class T,
-    class Container = ft::vector<T> // FIXME
+    class Container = ft::vector<T>
 > class stack {
     /*
     ** Member types
