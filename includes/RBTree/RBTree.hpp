@@ -11,7 +11,6 @@
 # include <iostream>
 
 
-
 namespace ft {
 
 template<class T>
@@ -306,7 +305,7 @@ template <
         }
 
     private:
-        void    _print(node_type *head, int tabs_count) {
+        void    _print(node_type *head, int tabs_count) const {
             std::string tabs("");
             for (int i = 0; i < tabs_count; i++)
                 tabs += " ";
@@ -333,11 +332,11 @@ template <
             }
         }
 
-        iterator    _searchValue(node_pointer head, const_reference val) {
+        iterator    _searchValue(node_pointer head, const_reference val) const {
             return (iterator(_iterativeSearch(head, val)));
         }
 
-        node_pointer    _iterativeSearch(node_pointer head, const_reference val) {
+        node_pointer    _iterativeSearch(node_pointer head, const_reference val) const {
             while (!head->is_nil) {
                 if (!(_comparator(val, *(head->value))) && !_comparator(*(head->value), val)) {
                     break ;
@@ -473,11 +472,11 @@ template <
         }
 
 
-        node_pointer   _min(node_pointer head) {
+        node_pointer   _min(node_pointer head) const {
             return (node_type::tree_min(head));
         }
 
-        node_pointer   _max(node_pointer head) {
+        node_pointer   _max(node_pointer head) const {
             return (node_type::tree_max(head));
         }
       
@@ -593,7 +592,7 @@ template <
             return (iterator(node));
         }
 
-        iterator    search(const_reference val) { return (_searchValue(this->_root, val)); }
+        iterator    search(const_reference val) const { return (_searchValue(this->_root, val)); }
         void        remove(const_reference val) { return (_deleteValue(val)); }
 };
 
