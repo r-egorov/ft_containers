@@ -305,7 +305,7 @@ template <
             return (*this);
         }
 
-        iterator   _iterativeSearch(pointer head, const value_type& val) {
+        iterator   _iterativeSearch(node_pointer head, const value_type& val) {
             while (!head->is_nil) {
                 if (!(_comparator(val, *(head->value))) && !_comparator(*(head->value), val)) {
                     break ;
@@ -316,7 +316,7 @@ template <
                     head = head->right;
                 }
             }
-            return (head);
+            return (iterator(head));
         }
 
 //         void    _transplant(Node* u, Node* v) {
@@ -423,7 +423,7 @@ template <
                 } else {
                     std::cout << "*: ";
                 }
-                std::cout << *head << std::endl;
+                std::cout << *head << ", n: " << head << ", v: " << head->value << std::endl;
 
                 tabs_count += 2;
                 _print(head->left, tabs_count);
@@ -485,7 +485,7 @@ template <
         }
 
         
-        iterator   search(const value_type& val) { return (_iterativeSearch(this->root, val)); }
+        iterator   search(const value_type& val) { return (_iterativeSearch(this->_root, val)); }
 };
 
 // template<
