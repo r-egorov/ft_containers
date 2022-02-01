@@ -5,11 +5,20 @@
 # define BLACK true
 
 # include <memory>
+# include "ft_utilities.hpp"
 
 # include <string>
 # include <iostream>
 
+
+
 namespace ft {
+
+template<class T>
+class RBTreeNode;
+
+template<typename> struct is_rbtree_node : ft::false_type {};
+template<class T> struct is_rbtree_node<RBTreeNode<T> > : ft::true_type {};
 
 template<class T>
 class RBTreeNode {
@@ -18,6 +27,8 @@ class RBTreeNode {
     */
     public:
         typedef T                                       value_type;
+        typedef T&                                      reference;
+        typedef const T&                                const_reference;
         typedef T*                                      pointer;
 
     /*
@@ -26,28 +37,26 @@ class RBTreeNode {
     public:
         bool                                            is_nil;
         bool                                            color;
-        pointer                                         key;
+        pointer                                         value;
         RBTreeNode*                                     left;
         RBTreeNode*                                     right;
         RBTreeNode*                                     p;
         
-        RBTreeNode(bool is_nil = false)
-            : is_nil(is_nil), color(RED), key(NULL), left(NULL), right(NULL), p(NULL) {}
+        RBTreeNode()
+            : is_nil(false), color(is_nil), value(NULL), left(NULL), right(NULL), p(NULL) {}
 
-        RBTreeNode(pointer key)
-            : is_nil(false), color(RED), key(key), left(NULL), right(NULL), p(NULL) {}
+        explicit RBTreeNode(pointer value) : is_nil(false), color(RED), value(value), left(NULL), right(NULL), p(NULL) {}
 
         ~RBTreeNode() {}
 
-    private:  // Can't be copied
         RBTreeNode(const RBTreeNode& other)
-            : is_nil(other.is_nil), color(other.color), key(other.key), left(other.left), right(other.right), p(other.p) {}
+            : is_nil(other.is_nil), color(other.color), value(other.value), left(other.left), right(other.right), p(other.p) {}
 
         RBTreeNode&     operator=(const RBTreeNode& other) {
             if (this != &other) {
                 is_nil = other.is_nil;
                 color = other.color;
-                key = other.key;
+                value = other.value;
                 left = other.left;
                 right = other.right;
                 p = other.p;
@@ -107,7 +116,7 @@ class RBTreeNode {
             }
         }
 
-    RBTreeNode*     predecessor() const {
+        RBTreeNode*     predecessor() const {
             if (!is_nil) {
                 // if there is left subtree
                 if (!left->is_nil) {
@@ -124,7 +133,28 @@ class RBTreeNode {
                 return (pred);
             }
         }
+
+        template<class Type>
+        friend std::ostream	&operator << (std::ostream &o, RBTreeNode<Type> const &obj);
 };
+
+template<class Type>
+std::ostream	&operator << (std::ostream &o, RBTreeNode<Type> const &obj) {
+    if (obj.color == RED) {
+        o << "\e[0;31m";
+    }
+
+    o << "Node(";
+
+    if (obj.is_nil) {
+        o << "NIL)";
+    }
+    else {
+        o << *(obj.value) << ")";
+    }
+    o << "\e[0m";
+    return (o);
+}
 
 template <class T, bool is_const>
 class RBTreeIterator {
@@ -179,8 +209,8 @@ class RBTreeIterator {
         }
 
         // Access operators
-        reference           operator*() const { return (*(_p->key)); }
-        pointer             operator->() const { return (_p->key); }
+        reference           operator*() const { return (*(_p->value)); }
+        pointer             operator->() const { return (_p->value); }
 
         // Increment/Decrement
         RBTreeIterator&     operator++() {
@@ -232,8 +262,8 @@ template <
         typedef const value_type&                       const_reference;
         typedef typename allocator_type::pointer        pointer;
         typedef typename allocator_type::const_pointer  const_pointer;
-        typedef ft::RBTreeIterator<node_type, false>    iterator;
-        typedef ft::vector_iterator<node_type, true>    const_iterator;
+        typedef ft::RBTreeIterator<value_type, false>   iterator;
+        typedef ft::RBTreeIterator<value_type, true>    const_iterator;
         typedef ft::reverse_iterator<iterator>          reverse_iterator;
         typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
 
@@ -241,7 +271,7 @@ template <
         node_pointer                    _root;
         node_pointer                    _nil;
         size_type                       _size;
-        allocator_type                  _key_allocator;
+        allocator_type                  _value_allocator;
         node_allocator_type             _node_allocator;
         comparator_type                 _comparator;
 
@@ -254,8 +284,9 @@ template <
             const allocator_type& key_alloc = allocator_type(),
             const node_allocator_type& node_alloc = node_allocator_type(),
             const comparator_type& compar = comparator_type()
-        ) : _size(0), _key_allocator(key_alloc), _node_allocator(node_alloc), _comparator(compar) {
-            _nil = new node_type(true);
+        ) : _size(0), _value_allocator(key_alloc), _node_allocator(node_alloc), _comparator(compar) {
+            _nil = new node_type();
+            _nil->is_nil = true;
             _nil->color = BLACK;
             _root = _nil;
         }
@@ -273,6 +304,188 @@ template <
             }
             return (*this);
         }
+
+        iterator   _iterativeSearch(pointer head, const value_type& val) {
+            while (!head->is_nil) {
+                if (!(_comparator(val, *(head->value))) && !_comparator(*(head->value), val)) {
+                    break ;
+                }
+                if (_comparator(val, *(head->value))) {
+                    head = head->left;
+                } else {
+                    head = head->right;
+                }
+            }
+            return (head);
+        }
+
+//         void    _transplant(Node* u, Node* v) {
+//             if (u->p == this->nil) {
+//                 this->root = v;
+//             } else if (u == u->p->left) {
+//                 u->p->left = v;
+//             } else {
+//                 u->p->right = v;
+//             }
+//             v->p = u->p;
+//         }
+
+        void    _leftRotate(node_pointer node) {
+			node_pointer y = node->right;
+			node->right = y->left;
+
+			if (!y->left->is_nil)
+				y->left->p = node;
+
+			y->p = node->p;
+
+			if (node->p->is_nil)
+				this->_root = y;
+			else if (node == node->p->left)
+				node->p->left = y;
+			else
+				node->p->right = y;
+			y->left = node;
+			node->p = y;
+		}
+
+        void    _rightRotate(node_pointer node) {
+			node_pointer y;
+
+			y = node->left;
+			node->left = y->right;
+			if (!y->right->is_nil)
+				y->right->p = node;
+			y->p = node->p;
+			if (node->p->is_nil)
+				this->_root = y;
+			else if (node == node->p->left)
+				node->p->left = y;
+			else
+				node->p->right = y;
+			y->right = node;
+			node->p = y;
+		}
+        
+        void    _insertFixup(node_pointer z) {
+            while (z->p->color == RED) {
+                if (z->p == z->p->p->left) {
+                    node_pointer   uncle = z->p->p->right;
+                    if (uncle->color == RED) {
+                        z->p->color = BLACK;
+                        uncle->color = BLACK;
+                        z->p->p->color = RED;
+                        z = z->p->p;
+                    } else {
+                        if (z == z->p->right) {
+                            z = z->p;
+                            _leftRotate(z);
+                        }
+                        z->p->color = BLACK;
+                        z->p->p->color = RED;
+                        _rightRotate(z->p->p);
+                    }
+                } else {
+                    node_pointer   uncle = z->p->p->left;
+                    if (uncle->color == RED) {
+                        z->p->color = BLACK;
+                        uncle->color = BLACK;
+                        z->p->p->color = RED;
+                        z = z->p->p;
+                    } else {
+                        if (z == z->p->left) {
+                            z = z->p;
+                            _rightRotate(z);
+                        }
+                        z->p->color = BLACK;
+                        z->p->p->color = RED;
+                        _leftRotate(z->p->p);
+                    }
+                }
+            }
+            this->_root->color = BLACK;
+        }
+
+    private:
+        void    _print(node_type *head, int tabs_count) {
+            std::string tabs("");
+            for (int i = 0; i < tabs_count; i++)
+                tabs += " ";
+            std::cout << tabs;
+
+            if (!head->is_nil) {
+                if (!head->p->is_nil) {
+                    if (head == head->p->left) {
+                        std::cout << "L: ";
+                    } else {
+                        std::cout << "R: ";
+                    }
+                } else {
+                    std::cout << "*: ";
+                }
+                std::cout << *head << std::endl;
+
+                tabs_count += 2;
+                _print(head->left, tabs_count);
+                _print(head->right, tabs_count);
+            }
+            else {
+                std::cout << *head << std::endl;
+            }
+        }
+
+        void    _insertNode(node_pointer to_insert) {
+            node_pointer   previous = this->_nil;
+            node_pointer   current = this->_root;
+
+            while (!current->is_nil) {
+                previous = current;
+                if (_comparator(*(to_insert->value), *(current->value))) {
+                    current = current->left;
+                } else {
+                    current = current->right;
+                }
+            }
+            
+            to_insert->p = previous;
+
+            if (previous->is_nil) {
+                this->_root = to_insert;
+            } else if (_comparator(*(to_insert->value), *(previous->value))) {
+                previous->left = to_insert;
+            } else {
+                previous->right = to_insert;
+            }
+            to_insert->left = this->_nil;
+            to_insert->right = this->_nil;
+            to_insert->color = RED;
+            _insertFixup(to_insert);
+        }
+
+        pointer   _value(const value_type& val) {
+            pointer     created = _value_allocator.allocate(1);
+            _value_allocator.construct(created, val);
+            return (created);
+        }
+    public:
+        void    print() {
+            std::cout << "=========TREE=========" << std::endl;
+            _print(this->_root, 0);
+            std::cout << "======================" << std::endl;
+        }
+
+        iterator  insert(const value_type& val) {
+            node_pointer  node;
+            node = _node_allocator.allocate(1);
+
+            pointer  val_copy = _value(val);
+            _node_allocator.construct(node, node_type(val_copy));
+            _insertNode(node);
+            return (iterator(node));
+        }
+
+        
+        iterator   search(const value_type& val) { return (_iterativeSearch(this->root, val)); }
 };
 
 // template<

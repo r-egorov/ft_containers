@@ -247,9 +247,13 @@
 
 //typedef ft::RBTree::Node Node;
 
-template<class Node>
-void printNode(const Node& node) {
-    std::cout << "Node(k = " << *(node.key) << ", color = " << node.color << ")" << std::endl;
+
+namespace ft{
+    template<class T1, class T2>
+    std::ostream	&operator << (std::ostream &o, ft::pair<T1, T2> const &obj) {
+        o << "ft::pair(first = " << obj.first << ", second = " << obj.second << ")" ;
+        return (o);
+    }
 }
 
 int main(void) {
@@ -264,12 +268,24 @@ int main(void) {
     ft::pair<std::string, int>  p("six", 6);
     ft::RBTreeNode<ft::pair<std::string, int> > node_pair(&p);
 
-    printNode(node6);
-    printNode(node_str);
-    std::cout << "Node(k.first = " << node_pair.key->first << " k.second = " << node_pair.key->second
-    << ", color = " << node_pair.color << ")" << std::endl;
+    ft::RBTreeNode<int> node_def;
+    node_def.is_nil = true;
+    node_def.color = BLACK;
 
-    ft::RBTreeNode<int> node_def(true);
+    std::cout << node6 << std::endl;
+    std::cout << node_str << std::endl;
+    std::cout << node_pair << std::endl;
+    std::cout << node_def << std::endl;
 
-    std::cout << node_def.is_nil;
+    ft::RBTree<int> tree;
+
+    tree.print();
+    tree.insert(41);
+    tree.insert(38);
+    tree.insert(31);
+    tree.insert(12);
+    tree.insert(19);
+    tree.insert(8);
+    tree.print();
+
 }
