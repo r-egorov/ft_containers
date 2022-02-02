@@ -8,12 +8,21 @@
 #include "iterator_traits.hpp"
 #include "ft_utilities.hpp"
 #include "pair.hpp"
+#include "map.hpp"
 
 #include "reverse_iterator.hpp"
 
+#include <map>
 #include <vector>
 #include <unistd.h>
-
+template<typename Map>
+void print_map(Map& m)
+{
+   std::cout << '{';
+   for(typename Map::iterator it = m.begin(); it != m.end(); it++)
+        std::cout << (*it).first << ':' << (*it).second << ", ";
+   std::cout << "}\n";
+}
 // // a case-insensitive comparison function:
 // bool mycomp (char c1, char c2)
 // { return std::tolower(c1)<std::tolower(c2); }
@@ -306,6 +315,21 @@ int main(void) {
     std::cout << "\n\nremoving 41" << std::endl;
     tree.remove(41);
 
+    std::map<std::string, int> map1;
+    map1["something"] = 69;
+    map1["anything"] = 199;
+    map1["that thing"] = 50;
+    std::cout << "map1 = "; print_map(map1);
+    std::map<std::string, int> iter(map1.find("anything"), map1.end());
+    std::cout << "\niter = "; print_map(iter);
+    std::cout << "map1 = "; print_map(map1);
+
+    ft::pair<std::string, int> pairs[3] = {
+        ft::pair<std::string, int>("something", 69),
+        ft::pair<std::string, int>("anything", 199),
+        ft::pair<std::string, int>("that thing", 50),
+    };
+    ft::map<std::string, int> iter1(pairs, pairs + 3);
     // ft::RBTree< ft::pair<std::string, int> > pair_tree;
     // std::string strings[10] = {
     //     "zero",
