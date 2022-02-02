@@ -90,7 +90,23 @@ template<
         }
 
         // Copy
-        map (const map& x);
+        map(const ft::map& other)
+            : _tree(tree_type(other.alloc, other.comp)),
+              _comparator(other.comp), _allocator(alloc) {
+            for (iterator it = other.begin(); it != other.end(); it++) {
+                _tree.insert(*it);
+            }
+        }
+
+        // Iterators
+        iterator end();
+        const_iterator end() const;
+        iterator begin();
+        const_iterator begin() const;
+        reverse_iterator rbegin();
+        const_reverse_iterator rbegin() const;
+        reverse_iterator rend();
+        const_reverse_iterator rend() const;
 };
 
 } // Namespace brace
