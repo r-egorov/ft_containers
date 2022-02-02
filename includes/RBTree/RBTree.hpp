@@ -97,7 +97,8 @@ class RBTreeNode {
     ** Member functions
     */
     public:
-        RBTreeNode*     successor() const {
+        const RBTreeNode*     successor() const {
+            const RBTreeNode*     succ = this;
             if (!is_nil) {
                 // if there is right subtree
                 if (!right->is_nil) {
@@ -107,15 +108,33 @@ class RBTreeNode {
                     return (this->p);
                 }
 
-                RBTreeNode*     succ = this;
-                while ((!succ->is_nil) && succ->is_a_right_son()) {
+                while ((!succ->is_nil) && succ->is_right_son()) {
                     succ = succ->p;
                 }
-                return (succ);
             }
+            return (succ);
+        }
+        
+        RBTreeNode*     successor() {
+            RBTreeNode*     succ = this;
+            if (!is_nil) {
+                // if there is right subtree
+                if (!right->is_nil) {
+                    return (tree_min(right));
+                }
+                if (this->is_left_son()) {
+                    return (this->p);
+                }
+
+                while ((!succ->is_nil) && succ->is_right_son()) {
+                    succ = succ->p;
+                }
+            }
+            return (succ);
         }
 
-        RBTreeNode*     predecessor() const {
+        const RBTreeNode*     predecessor() const {
+            const RBTreeNode*     pred = this;
             if (!is_nil) {
                 // if there is left subtree
                 if (!left->is_nil) {
@@ -125,12 +144,29 @@ class RBTreeNode {
                     return (this->p);
                 }
 
-                RBTreeNode*     pred = this;
-                while ((!pred->is_nil) && pred->is_a_left_son()) {
+                while ((!pred->is_nil) && pred->is_left_son()) {
                     pred = pred->p;
                 }
-                return (pred);
             }
+            return (pred);
+        }
+        
+        RBTreeNode*     predecessor() {
+            RBTreeNode*     pred = this;
+            if (!is_nil) {
+                // if there is left subtree
+                if (!left->is_nil) {
+                    return (tree_max(left));
+                }
+                if (this->is_right_son()) {
+                    return (this->p);
+                }
+
+                while ((!pred->is_nil) && pred->is_left_son()) {
+                    pred = pred->p;
+                }
+            }
+            return (pred);
         }
 
         template<class Type>
@@ -237,6 +273,32 @@ class RBTreeIterator {
         node_pointer        getNodePtr() const {
             return (_p);
         }
+
+        
+        // Comparison operators 
+        bool                operator==(const RBTreeIterator<T, is_const>& rhs) {
+            return (this->_p == rhs._p);
+        }
+
+        bool                operator!=(const RBTreeIterator<T, is_const>& rhs) {
+            return (this->_p != rhs._p);
+        }
+
+        bool                operator>=(const RBTreeIterator<T, is_const>& rhs) {
+            return (this->_p >= rhs._p);
+        }
+
+        bool                operator<=(const RBTreeIterator<T, is_const>& rhs) {
+            return (this->_p <= rhs._p);
+        }
+
+        bool                operator>(const RBTreeIterator<T, is_const>& rhs) {
+            return (this->_p > rhs._p);
+        }
+
+        bool                operator<(const RBTreeIterator<T, is_const>& rhs) {
+            return (this->_p < rhs._p);
+        }
 };
 
 template <
@@ -267,8 +329,8 @@ template <
         typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
 
     private:
-        node_pointer                    _root;
         node_pointer                    _nil;
+        node_pointer                    _root;
         size_type                       _size;
         allocator_type                  _value_allocator;
         node_allocator_type             _node_allocator;
@@ -281,15 +343,24 @@ template <
         // Constructors
         RBTree(
             const allocator_type& key_alloc = allocator_type(),
-            const node_allocator_type& node_alloc = node_allocator_type(),
             const comparator_type& compar = comparator_type()
-        ) : _size(0), _value_allocator(key_alloc), _node_allocator(node_alloc), _comparator(compar) {
+        ) : _size(0), _value_allocator(key_alloc), _node_allocator(node_allocator_type()), _comparator(compar) {
             _nil = new node_type();
             _nil->is_nil = true;
             _nil->color = BLACK;
             _root = _nil;
         }
-        RBTree(const RBTree& other) : _nil(other._nil), _root(other._root) {}
+        RBTree(const RBTree& other)
+            : _size(other._size), _value_allocator(other._value_allocator),
+              _node_allocator(other._node_allocator), _comparator(other._comparator) {
+            _nil = new node_type();
+            _nil->is_nil = true;
+            _nil->color = BLACK;
+            _root = _nil;
+            for (const_iterator it = other.begin(); it != other.end(); it++) {
+                insert(*it);
+            }
+        }
         // Destructor
         ~RBTree() {
             delete this->_nil;
@@ -589,11 +660,61 @@ template <
             pointer  val_copy = _value(val);
             _node_allocator.construct(node, node_type(val_copy));
             _insertNode(node);
+            _size++;
             return (iterator(node));
         }
 
         iterator    search(const_reference val) const { return (_searchValue(this->_root, val)); }
-        void        remove(const_reference val) { return (_deleteValue(val)); }
+
+        void        remove(const_reference val) {
+            _deleteValue(val);
+            _size--;
+        }
+
+
+        iterator            end() {
+            return (iterator(_nil));
+        }
+
+        const_iterator      end() const {
+            return (const_iterator(_nil));
+        }
+
+        iterator            begin() {
+            if (_size == 0) {
+                return (iterator(_nil)); 
+            }
+            return(iterator(_min(_root)));
+        }
+
+        const_iterator      begin() const {
+            if (_size == 0) {
+                return (const_iterator(_nil)); 
+            }
+            return(const_iterator(_min(_root)));
+        }
+
+        reverse_iterator rbegin() {
+            if (_size == 0) {
+                return (reverse_iterator(_nil));
+            }
+            return (reverse_iterator(_max(_root)));
+        }
+
+        const_reverse_iterator rbegin() const {
+            if (_size == 0) {
+                return (const_reverse_iterator(_nil));
+            }
+            return (const_reverse_iterator(_max(_root)));
+        }
+
+        reverse_iterator rend() {
+            return (reverse_iterator(_nil));
+        }	
+
+        const_reverse_iterator rend() const {
+            return (const_reverse_iterator(_nil));
+        }	
 };
 
 }  // Namespace brace
