@@ -7,7 +7,7 @@ CC				=	clang++
 CFLAGS			=	-Wall -Wextra -Werror -std=c++98
 
 INCLUDES		=	includes/
-HEADERS_DIR		=	stack/ utils/ vector/ myclass/ timer/ RBTree/
+HEADERS_DIR		=	stack/ utils/ vector/ myclass/ timer/ RBTree/ map/
 HEADERS_DIR		:=	$(addprefix $(INCLUDES), $(HEADERS_DIR))
 INCLUDES_FLAGS	=	$(addprefix -I, $(HEADERS_DIR))
 
@@ -27,6 +27,10 @@ $(NAME):			$(OBJS)
 $(OBJSDIR)%.o:		$(SRCSDIR)%.cpp Makefile
 					@ mkdir -p $(OBJSDIR)
 					$(CC) $(CFLAGS) -MMD -c $< -o $@ $(INCLUDES_FLAGS)
+
+leaks:
+					$(CC) $(CFLAGS) -fsanitize=address $(SRCS) -o $(NAME)_leaks $(INCLUDES_FLAGS)
+
 info:
 					echo $(DEPS)
 					echo $(SRCS)
@@ -36,7 +40,7 @@ clean:
 					rm -rf $(OBJSDIR)
 
 fclean:				clean
-					rm -f $(NAME)
+					rm -f $(NAME) $(NAME)_leaks
 
 re:					fclean all
 

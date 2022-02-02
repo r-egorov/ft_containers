@@ -362,7 +362,21 @@ template <
             }
         }
         // Destructor
+        void    _destroyTree(node_pointer head) {
+            if (head->is_nil) {
+                return ;
+            }
+            _destroyTree(head->left);
+            _destroyTree(head->right);
+            _value_allocator.destroy(head->value);
+            _value_allocator.deallocate(head->value, 1);
+            _node_allocator.destroy(head);
+            _node_allocator.deallocate(head, 1);
+        }
+
         ~RBTree() {
+            // try to deallocate using walking around the tree
+            _destroyTree(this->_root);
             delete this->_nil;
         }
         // Operators
@@ -555,6 +569,10 @@ template <
             node_pointer    to_delete = _iterativeSearch(this->_root, val);
             if (!to_delete->is_nil) {
                 _deleteNode(to_delete);
+                _value_allocator.destroy(to_delete->value);
+                _value_allocator.deallocate(to_delete->value, 1);
+                _node_allocator.destroy(to_delete);
+                _node_allocator.deallocate(to_delete, 1);
             }
         }
 
@@ -655,9 +673,8 @@ template <
 
         iterator  insert(const_reference val) {
             node_pointer  node;
-            node = _node_allocator.allocate(1);
-
             pointer  val_copy = _value(val);
+            node = _node_allocator.allocate(1);
             _node_allocator.construct(node, node_type(val_copy));
             _insertNode(node);
             _size++;

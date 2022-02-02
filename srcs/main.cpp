@@ -330,23 +330,23 @@ int main(void) {
         ft::pair<std::string, int>("that thing", 50),
     };
     ft::map<std::string, int> iter1(pairs, pairs + 3);
-    // ft::RBTree< ft::pair<std::string, int> > pair_tree;
-    // std::string strings[10] = {
-    //     "zero",
-    //     "one",
-    //     "two",
-    //     "three",
-    //     "four",
-    //     "five",
-    //     "six",
-    //     "seven",
-    //     "eight",
-    //     "nine",
-    // };
-    // for (int i = 0; i < 10; i++) {
-    //     pair_tree.insert(ft::pair<std::string, int>(strings[i], i));
-    // }
-    // pair_tree.print();
-    // ft::RBTree< ft::pair<std::string, int> >::iterator it = pair_tree.search(ft::pair<std::string, int>("five", 5));
-    // std::cout << *it << "addr, " << &(*it) << std::endl;
+    ft::RBTree< ft::pair<std::string, int> > pair_tree;
+    std::string strings[10] = {
+        "zero",
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+    };
+    for (int i = 0; i < 10; i++) {
+        pair_tree.insert(ft::pair<std::string, int>(strings[i], i));
+    }
+    pair_tree.print();
+    ft::RBTree< ft::pair<std::string, int> >::iterator it = pair_tree.search(ft::pair<std::string, int>("five", 5));
+    std::cout << *it << "addr, " << &(*it) << std::endl;
 }

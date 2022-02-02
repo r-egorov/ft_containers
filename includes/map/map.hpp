@@ -87,7 +87,6 @@ template<
             for (; first != last; first++) {
                 _tree.insert(*first);
             }
-            _tree.print();
         }
 
         // Copy
