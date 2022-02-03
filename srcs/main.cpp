@@ -357,15 +357,24 @@ int main(void) {
     // ft::RBTree< ft::pair<std::string, int> >::iterator it = pair_tree.search(ft::pair<std::string, int>("five", 5));
     // std::cout << *it << "addr, " << &(*it) << std::endl;
 
-    // ft::pair<std::string, int> pairs[3] = {
-    //     ft::pair<std::string, int>("something", 69),
-    //     ft::pair<std::string, int>("anything", 199),
-    //     ft::pair<std::string, int>("that thing", 50),
-    // };
-    // ft::map<std::string, int> iter1(pairs, pairs + 3);
-    // // for (ft::map<std::string, int>::iterator it = iter1.begin(); it != iter1.end(); it++) {
-    // //     std::cout << *(it) << std::endl;
-    // // }
+    ft::pair<std::string, int> pairs[3] = {
+        ft::pair<std::string, int>("something", 69),
+        ft::pair<std::string, int>("anything", 199),
+        ft::pair<std::string, int>("that thing", 50),
+    };
+    ft::map<std::string, int> iter1(pairs, pairs + 3);
+    ft::map<std::string, int> copy1(iter1);
+
+    for (ft::map<std::string, int>::reverse_iterator it = iter1.rbegin(); it != iter1.rend(); it++) {
+        std::cout << *(it) << ", ";
+    }
+    std::cout << std::endl;
+
+    for (ft::map<std::string, int>::reverse_iterator it = copy1.rbegin(); it != copy1.rend(); it++) {
+        std::cout << *(it) << ", ";
+    }
+    std::cout << std::endl;
+
     
     // // for (ft::map<std::string, int>::reverse_iterator it = iter1.rbegin(); it != iter1.rend(); it++) {
     // //     std::cout << *(it) << std::endl;

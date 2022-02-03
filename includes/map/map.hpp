@@ -91,15 +91,25 @@ template<
 
         // Copy
         map(const map& other)
-            : _tree(tree_type(other.alloc, other.comp)),
-              _comparator(other.comp), _allocator(other._allocator) {
-            for (iterator it = other.begin(); it != other.end(); it++) {
+            : _tree(tree_type(other._allocator, other._comparator)),
+              _comparator(other._comparator), _allocator(other._allocator) {
+            for (const_iterator it = other.begin(); it != other.end(); it++) {
                 _tree.insert(*it);
             }
         }
         
         // Destructor (all allocations/deallocations are done in the tree)
         ~map() {}
+
+        // Assignation operator
+        map& operator= (const map& other) {
+            if (this != &other) {
+                this->_allocator = other._allocator;
+                this->_comparator = other._comparator;
+                this->_tree = other._tree;
+            }
+            return (*this);
+        }
 
         // Iterators
         iterator                    begin() {
