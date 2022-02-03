@@ -8,7 +8,6 @@
 #include "iterator_traits.hpp"
 #include "ft_utilities.hpp"
 #include "pair.hpp"
-#include "map.hpp"
 
 #include "reverse_iterator.hpp"
 
@@ -253,6 +252,7 @@ void print_map(Map& m)
 
 #include "RBTree.hpp"
 #include <iostream>
+#include "map.hpp"
 
 //typedef ft::RBTree::Node Node;
 
@@ -266,123 +266,66 @@ namespace ft{
 }
 
 int main(void) {
-    ft::RBTreeNode<int>     node;
-
-    int six = 6;
-    ft::RBTreeNode<int>     node6(&six);
-
-    std::string str = "string";
-    ft::RBTreeNode<std::string> node_str(&str);
-
-    ft::pair<std::string, int>  p("six", 6);
-    ft::RBTreeNode<ft::pair<std::string, int> > node_pair(&p);
-
-    ft::RBTreeNode<int> node_def;
-    node_def.is_nil = true;
-    node_def.color = BLACK;
-
-    std::cout << node6 << std::endl;
-    std::cout << node_str << std::endl;
-    std::cout << node_pair << std::endl;
-    std::cout << node_def << std::endl;
-
-    ft::RBTree<int> tree;
-
-    tree.print();
-    tree.insert(41);
-    tree.insert(38);
-    tree.insert(31);
-    tree.insert(12);
-    tree.insert(19);
-    tree.insert(8);
-    tree.print();
-    
-    
-    ft::RBTree<int> copy(tree);
-    copy.print();
-
-    for (ft::RBTree<int>::iterator it = tree.begin(); it != tree.end(); it++) {
-        std::cout << (*it) << ", ";
-    }
-    std::cout << std::endl;
-
-    for (ft::RBTree<int>::iterator it = copy.begin(); it != copy.end(); it++) {
-        std::cout << (*it) << ", ";
-    }
-    std::cout << std::endl;
-    // std::cout << "\n\nremoving 8" << std::endl;
-    // tree.remove(8);
-    // tree.print();
-    // std::cout << "\n\nremoving 12" << std::endl;
-    // tree.remove(12);
-    // tree.print();
-    // std::cout << "\n\nremoving 19" << std::endl;
-    // tree.remove(19);
-    // tree.print();
-    // std::cout << "\n\nremoving 31" << std::endl;
-    // tree.remove(31);
-    // tree.print();
-    // std::cout << "\n\nremoving 38" << std::endl;
-    // tree.remove(38);
-    // tree.print();
-    // std::cout << "\n\nremoving 41" << std::endl;
-    // tree.remove(41);
-
-    std::map<std::string, int> map1;
-    map1["something"] = 69;
-    map1["anything"] = 199;
-    map1["that thing"] = 50;
-    std::cout << "map1 = "; print_map(map1);
-    std::map<std::string, int> iter(map1.find("anything"), map1.end());
-    std::cout << "\niter = "; print_map(iter);
-    std::cout << "map1 = "; print_map(map1);
-
-    // ft::RBTree< ft::pair<std::string, int> > pair_tree;
-    // std::string strings[10] = {
-    //     "zero",
-    //     "one",
-    //     "two",
-    //     "three",
-    //     "four",
-    //     "five",
-    //     "six",
-    //     "seven",
-    //     "eight",
-    //     "nine",
-    // };
-    // for (int i = 0; i < 10; i++) {
-    //     pair_tree.insert(ft::pair<std::string, int>(strings[i], i));
-    // }
-    // pair_tree.print();
-    // ft::RBTree< ft::pair<std::string, int> >::iterator it = pair_tree.search(ft::pair<std::string, int>("five", 5));
-    // std::cout << *it << "addr, " << &(*it) << std::endl;
-
-    ft::pair<std::string, int> pairs[3] = {
-        ft::pair<std::string, int>("something", 69),
-        ft::pair<std::string, int>("anything", 199),
-        ft::pair<std::string, int>("that thing", 50),
+    ft::pair<const int, int> pairs[6] = {
+        ft::pair<const int, int>(41, 41),
+        ft::pair<const int, int>(38, 38),
+        ft::pair<const int, int>(31, 31),
+        ft::pair<const int, int>(12, 12),
+        ft::pair<const int, int>(19, 19),
+        ft::pair<const int, int>(8,8),
     };
-    ft::map<std::string, int> iter1(pairs, pairs + 3);
-    ft::map<std::string, int> copy1(iter1);
-
-    for (ft::map<std::string, int>::reverse_iterator it = iter1.rbegin(); it != iter1.rend(); it++) {
-        std::cout << *(it) << ", ";
+    ft::map<int, int> ftmap(pairs, pairs + 6);
+    for (ft::map<int, int>::iterator it = ftmap.begin(); it != ftmap.end(); it++) {
+        std::cout << *it << std::endl;
     }
-    std::cout << std::endl;
 
-    for (ft::map<std::string, int>::reverse_iterator it = copy1.rbegin(); it != copy1.rend(); it++) {
-        std::cout << *(it) << ", ";
-    }
-    std::cout << std::endl;
+    ft::map<int, int>::iterator pos;
+    pos = ftmap.insert(ft::pair<const int, int>(8,25)).first;
+    std::cout << *pos << std::endl;
 
+    pos = ftmap.insert(ft::pair<const int, int>(25,25)).first;
+    std::cout << *pos << std::endl;
+
+    ft::map<int, int>::iterator inserted = ftmap.insert(pos, ft::pair<const int, int>(8,25));
+    std::cout << *inserted << std::endl;
+
+    ft::pair<const int, int> another[3] = {
+        ft::pair<const int, int>(1, 1),
+        ft::pair<const int, int>(38, 256),
+        ft::pair<const int, int>(45, 45)
+    };
+    ft::map<int, int> ftmap2(another, another + 3);
+    ftmap.insert(another, another + 3);
+    print_map(ftmap);
+    ft::map<int, int>::iterator position = ftmap.begin();
+    position++;
+    position++;
+    position++;
+    position++;
     
-    // // for (ft::map<std::string, int>::reverse_iterator it = iter1.rbegin(); it != iter1.rend(); it++) {
-    // //     std::cout << *(it) << std::endl;
-    // // }
+    //ftmap.erase(ftmap.begin(), ftmap.end());
+    print_map(ftmap);
+    ftmap.print_tree();
 
+    ftmap.insert(ft::pair<const int, int>(361,361));
+    ftmap.insert(ft::pair<const int, int>(-25,-25));
+    ftmap.print_tree();
 
-    // ft::map<std::string, int>::iterator it = iter1.begin();
-    // const ft::map<std::string, int> iter2(pairs, pairs + 3);
-    // ft::map<std::string, int>::const_iterator it2 = it;
+    ftmap.erase(361);
+    ftmap.print_tree();
+    ftmap.erase(-25);
+    ftmap.print_tree();
 
+    // for (ft::map<int, int>::iterator it = ftmap.begin(); it != ftmap.end(); it++) {
+    //     std::cout << (*it) << std::endl;
+    // }
+    ft::map<int, int>::iterator itt = ftmap.begin();
+    itt++;
+    itt++;
+    itt++;
+    itt++;
+    
+    print_map(ftmap);
+    ftmap.erase(itt);
+    print_map(ftmap);
 }

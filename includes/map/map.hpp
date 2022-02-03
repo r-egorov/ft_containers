@@ -211,18 +211,10 @@ template<
         }
         
         void        erase(iterator first, iterator last) {
-            --last;
-            for (; first != last; first++) {
-                erase(first);
-            }
-            erase(last);
+            _tree.remove(first, last);
         }
 
-        //FIXME
-        tree_type* tree() const {
-            return (&_tree);
-        }
-
+    //FIXME
         void print_tree() const {
             _tree.print();
         }

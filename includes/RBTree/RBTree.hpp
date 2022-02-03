@@ -98,91 +98,75 @@ class RBTreeNode {
     */
     public:
         const RBTreeNode*     successor() const {
-            if (!is_nil) {
-                // if there is right subtree
-                if (!right->is_nil) {
-                    return (tree_min(right));
-                }
-                if (this->is_left_son()) {
-                    return (this->p);
-                }
-
-                const RBTreeNode*     tmp = this;
-                const RBTreeNode*     y = tmp->p;
-                while (!y->is_nil && tmp == y->right) {
-                    tmp = y;
-                    y = y->p;
-                }
-                return (y);
-            } else {
-                return (this);
+            // if there is right subtree
+            if (!right->is_nil) {
+                return (tree_min(right));
             }
+            if (this->is_left_son()) {
+                return (this->p);
+            }
+
+            const RBTreeNode*     tmp = this;
+            const RBTreeNode*     y = tmp->p;
+            while (!y->is_nil && tmp == y->right) {
+                tmp = y;
+                y = y->p;
+            }
+            return (y);
         }
         
         RBTreeNode*     successor() {
-            if (!is_nil) {
-                // if there is right subtree
-                if (!right->is_nil) {
-                    return (tree_min(right));
-                }
-                if (this->is_left_son()) {
-                    return (this->p);
-                }
-
-                RBTreeNode*     tmp = this;
-                RBTreeNode*     y = tmp->p;
-                while (!y->is_nil && tmp == y->right) {
-                    tmp = y;
-                    y = y->p;
-                }
-                return (y);
-            } else {
-                return (this);
+            // if there is right subtree
+            if (!right->is_nil) {
+                return (tree_min(right));
             }
+            if (this->is_left_son()) {
+                return (this->p);
+            }
+
+            RBTreeNode*     tmp = this;
+            RBTreeNode*     y = tmp->p;
+            while (!y->is_nil && tmp == y->right) {
+                tmp = y;
+                y = y->p;
+            }
+            return (y);
         }
 
         const RBTreeNode*     predecessor() const {
-            if (!is_nil) {
-                // if there is left subtree
-                if (!left->is_nil) {
-                    return (tree_max(left));
-                }
-                if (this->is_right_son()) {
-                    return (this->p);
-                }
-
-                const RBTreeNode*     tmp = this;
-                const RBTreeNode*     y = tmp->p;
-                while (!y->is_nil && tmp == y->left) {
-                    tmp = y;
-                    y = y->p;
-                }
-                return (y);
-            } else {
-                return (this);
+            // if there is left subtree
+            if (!left->is_nil) {
+                return (tree_max(left));
             }
+            if (this->is_right_son()) {
+                return (this->p);
+            }
+
+            const RBTreeNode*     tmp = this;
+            const RBTreeNode*     y = tmp->p;
+            while (!y->is_nil && tmp == y->left) {
+                tmp = y;
+                y = y->p;
+            }
+            return (y);
         }
         
         RBTreeNode*     predecessor() {
-            if (!is_nil) {
-                // if there is left subtree
-                if (!left->is_nil) {
-                    return (tree_max(left));
-                }
-                if (this->is_right_son()) {
-                    return (this->p);
-                }
-
-                RBTreeNode*     tmp = this;
-                RBTreeNode*     y = tmp->p;
-                while (!y->is_nil && tmp == y->left) {
-                    tmp = y;
-                    y = y->p;
-                }
-                return (y);
-            } else {
-                return (this);
+            // if there is left subtree
+            if (!left->is_nil) {
+                return (tree_max(left));
             }
+            if (this->is_right_son()) {
+                return (this->p);
+            }
+
+            RBTreeNode*     tmp = this;
+            RBTreeNode*     y = tmp->p;
+            while (!y->is_nil && tmp == y->left) {
+                tmp = y;
+                y = y->p;
+            }
+            return (y);
         }
 
         template<class Type>
@@ -372,8 +356,8 @@ template <
             for (const_iterator it = other.begin(); it != other.end(); it++) {
                 insert(*it);
             }
-            _nil->left = _min(_root);
-            _nil->right = _max(_root);
+            _nil->left = _max(_root);
+            _nil->right = _min(_root);
         }
         // Destructor
         void    _destroyTree(node_pointer head) {
@@ -405,8 +389,8 @@ template <
                 for (const_iterator it = other.begin(); it != other.end(); it++) {
                     insert(*it);
                 }
-                this->_nil->left = _min(_root);
-                this->_nil->right = _max(_root);
+                this->_nil->left = _max(_root);
+                this->_nil->right = _min(_root);
             }
             return (*this);
         }
@@ -420,14 +404,14 @@ template <
             _size++;
             // if first element to insert
             if (_size == 1) {
-                this->_nil->left = node;  // min element
-                this->_nil->right = node;  // max element
+                this->_nil->right = node;  // min element
+                this->_nil->left = node;  // max element
             } else {
                 // if less then minimum element
-                if (_comparator(*(node->value), *(_nil->left->value))) {
-                    this->_nil->left = node;
-                } else {
+                if (_comparator(*(node->value), *(_nil->right->value))) {
                     this->_nil->right = node;
+                } else {
+                    this->_nil->left = node;
                 }
             }
             return (iterator(node));
@@ -436,11 +420,25 @@ template <
         iterator    search(const_reference val) const { return (_searchValue(this->_root, val)); }
 
         bool        remove(const_reference val) {
-            return (_deleteValue(val));
+            node_pointer    to_delete = _iterativeSearch(this->_root, val);
+            return (_deleteNode(to_delete));
         }
 
         void        remove(iterator pos) {
-            _deletePosition(pos);
+            node_pointer    to_delete = pos.getNodePtr();
+            _deleteNode(to_delete);
+        }
+
+        void        remove(iterator first, iterator last) {
+            node_pointer    current = first.getNodePtr();
+            node_pointer    finish = (--last).getNodePtr();
+
+            while (current != finish) {
+                node_pointer    next = current->successor();
+                _deleteNode(current);
+                current = next;
+            }
+            _deleteNode(finish);
         }
 
         iterator            end() {
@@ -491,7 +489,7 @@ template <
             std::cout << "=========TREE=========" << std::endl;
             _print(this->_root, 0);
             if (_size > 0)
-                std::cout << "min = " << *(_nil->left->value) << " , max = " << *(_nil->right->value) << std::endl;
+                std::cout << "min = " << *(_nil->right->value) << " , max = " << *(_nil->left->value) << std::endl;
             std::cout << "======================" << std::endl;
         }
 
@@ -681,33 +679,15 @@ template <
         node_pointer   _max(node_pointer head) const {
             return (node_type::tree_max(head));
         }
-      
-        void    _deletePosition(iterator pos) {
-            node_pointer    to_delete = pos.getNodePtr();
-            if (!to_delete->is_nil) {
-                if (to_delete == _nil->left) {
-                    _nil->left = _nil->left->successor();
-                } else if (to_delete == _nil->right) {
-                    _nil->right = _nil->right->predecessor();
-                }
-                _deleteNode(to_delete);
-                _value_allocator.destroy(to_delete->value);
-                _value_allocator.deallocate(to_delete->value, 1);
-                _node_allocator.destroy(to_delete);
-                _node_allocator.deallocate(to_delete, 1);
-                _size--;
-            }
-        }
 
-        bool    _deleteValue(const_reference val) {
-            node_pointer    to_delete = _iterativeSearch(this->_root, val);
+        bool    _deleteNode(node_pointer to_delete) {
             if (!to_delete->is_nil) {
-                if (to_delete == _nil->left) {
-                    _nil->left = _nil->left->successor();
-                } else if (to_delete == _nil->right) {
-                    _nil->right = _nil->right->predecessor();
+                if (to_delete == _nil->right) {
+                    _nil->right = _nil->right->successor();
+                } else if (to_delete == _nil->left) {
+                    _nil->left = _nil->left->predecessor();
                 }
-                _deleteNode(to_delete);
+                _removeNode(to_delete);
                 _value_allocator.destroy(to_delete->value);
                 _value_allocator.deallocate(to_delete->value, 1);
                 _node_allocator.destroy(to_delete);
@@ -718,7 +698,7 @@ template <
             return (false);
         }
 
-        void    _deleteNode(node_pointer to_delete) {
+        void    _removeNode(node_pointer to_delete) {
             node_pointer   x;
             node_pointer   y = to_delete;
             bool    y_original_color = y->color;
