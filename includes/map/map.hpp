@@ -224,6 +224,9 @@ template<
             _tree.clear();
         }
 
+        /*
+        ** Observers
+        */
         key_compare     key_comp() const {
             return (_comparator);
         }
@@ -232,10 +235,53 @@ template<
             return (value_compare(_comparator));
         }
 
+        /*
+        ** Operations
+        */
+        iterator            find(const key_type& k) {
+            value_type      entry = ft::make_pair(k, mapped_type());
+            return (_tree.search(entry));
+        }
+
+        const_iterator      find(const key_type& k) const {
+            value_type      entry = ft::make_pair(k, mapped_type());
+            return (const_iterator(_tree.search(entry)));
+        }
+
+        size_type           count(const key_type& k) const {
+            const_iterator  found = find(k);
+            if (found != end()) {
+                return (1);
+            }
+            return (0);
+        }
+
+        iterator lower_bound (const key_type& k) {
+            iterator    found = find(k);
+            if (found != end()) {
+                return (++found);
+            } else {
+                return (found);
+            }
+        }
+
+        const_iterator lower_bound (const key_type& k) const {
+            const_iterator    found = find(k);
+            if (found != end()) {
+                return (++found);
+            } else {
+                return (found);
+            }
+        }
+
+        allocator_type  get_allocator() const {
+            return (_allocator);
+        }
     //FIXME
         void print_tree() const {
             _tree.print();
         }
+
 
 };
 

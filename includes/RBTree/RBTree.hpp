@@ -448,7 +448,7 @@ template <
             this->_nil->right = NULL;
             this->_size = 0;
         }
-
+        
         iterator            end() {
             return (iterator(_nil));
         }
@@ -503,10 +503,6 @@ template <
 
         size_type   size() const {
             return (_size);
-        }
-
-        node_pointer    nil() const {
-            return (_nil);
         }
 
     /*
