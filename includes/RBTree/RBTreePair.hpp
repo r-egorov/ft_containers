@@ -212,20 +212,20 @@ class RBTreeIterator {
     */
     public:
         typedef RBTreeNode<const Key, Value>                                        node_type;
+        typedef typename node_type::value_type                                      value_type;
         typedef typename std::bidirectional_iterator_tag                            iterator_category;
-        typedef typename ft::iterator_traits<Value*>::value_type                    value_type;
-        typedef typename ft::iterator_traits<Value*>::difference_type               difference_type;
+        typedef typename ft::iterator_traits<value_type*>::difference_type          difference_type;
         typedef typename choose<
             is_const,
-            typename ft::iterator_traits<const Value*>::pointer,
-            typename ft::iterator_traits<Value*>::pointer
+            typename ft::iterator_traits<const value_type*>::pointer,
+            typename ft::iterator_traits<value_type*>::pointer
         >::type                                                                     pointer;
         typedef typename choose<
             is_const,
-            typename ft::iterator_traits<const Value*>::reference,
-            typename ft::iterator_traits<Value*>::reference
+            typename ft::iterator_traits<const value_type*>::reference,
+            typename ft::iterator_traits<value_type*>::reference
         >::type                                                                     reference;
-        typedef RBTreeNode<const Key, typename ft::non_const<value_type>::type>*    node_pointer;
+        typedef RBTreeNode<const Key, typename ft::non_const<Value>::type>*         node_pointer;
 
     /*
     ** Member fields
@@ -409,13 +409,77 @@ template <
             return (iterator(node));
         }
 
-        iterator    search(const_reference val) const { return (_searchValue(this->_root, val)); }
-
-
-        void        remove(const_reference val) {
-            _deleteValue(val);
-            _size--;
+        iterator    _searchValueByKey(node_pointer head, const key_type& key) const {
+            return (iterator(_iterativeSearchByKey(head, key)));
         }
+
+        node_pointer    _iterativeSearchByKey(node_pointer head, const key_type& key) const {
+            while (!head->is_nil) {
+                if (!(_comparator(key, head->value->first)) && !_comparator(head->value->first, key)) {
+                    break ;
+                }
+                if (_comparator(key, head->value->first)) {
+                    head = head->left;
+                } else {
+                    head = head->right;
+                }
+            }
+            return (head);
+        }
+
+        iterator    search_node(const key_type& key) const {
+            return (_searchValueByKey(this->_root, key));
+        }
+
+        // void        remove(const_reference val) {
+        //     _deleteValue(val);
+        //     _size--;
+        // }
+        
+        iterator            end() {
+            return (iterator(_nil));
+        }
+
+        const_iterator      end() const {
+            return (const_iterator(_nil));
+        }
+
+        iterator            begin() {
+            if (_size == 0) {
+                return (iterator(_nil)); 
+            }
+            return(iterator(_min(_root)));
+        }
+
+        const_iterator           begin() const {
+            if (_size == 0) {
+                return (const_iterator(_nil)); 
+            }
+            return(const_iterator(_min(_root)));
+        }
+
+        reverse_iterator        rbegin() {
+            if (_size == 0) {
+                return (reverse_iterator(_nil));
+            }
+            return (reverse_iterator(_max(_root)));
+        }
+
+        const_reverse_iterator  rbegin() const {
+            if (_size == 0) {
+                return (const_reverse_iterator(_nil));
+            }
+            return (const_reverse_iterator(_max(_root)));
+        }
+
+        reverse_iterator        rend() {
+            return (reverse_iterator(_nil));
+        }	
+
+        const_reverse_iterator  rend() const {
+            return (const_reverse_iterator(_nil));
+        }
+
 
         
         void    print() {
@@ -575,6 +639,8 @@ template <
             }
             this->_root->color = BLACK;
         }
+
+        
     };
 
 }  // Namespace brace
