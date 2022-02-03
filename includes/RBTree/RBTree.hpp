@@ -387,18 +387,9 @@ template <
         }
 
         ~RBTree() {
-            // try to deallocate using walking around the tree
             _destroyTree(this->_root);
             delete this->_nil;
         }
-
-
-        // node_pointer                    _nil;
-        // node_pointer                    _root;
-        // size_type                       _size;
-        // allocator_type                  _value_allocator;
-        // node_allocator_type             _node_allocator;
-        // comparator_type                 _comparator;
 
         // Operators
         RBTree&     operator=(const RBTree& other) {
@@ -433,7 +424,6 @@ template <
             _size--;
         }
 
-
         iterator            end() {
             return (iterator(_nil));
         }
@@ -449,32 +439,32 @@ template <
             return(iterator(_min(_root)));
         }
 
-        const_iterator      begin() const {
+        const_iterator           begin() const {
             if (_size == 0) {
                 return (const_iterator(_nil)); 
             }
             return(const_iterator(_min(_root)));
         }
 
-        reverse_iterator rbegin() {
+        reverse_iterator        rbegin() {
             if (_size == 0) {
                 return (reverse_iterator(_nil));
             }
             return (reverse_iterator(_max(_root)));
         }
 
-        const_reverse_iterator rbegin() const {
+        const_reverse_iterator  rbegin() const {
             if (_size == 0) {
                 return (const_reverse_iterator(_nil));
             }
             return (const_reverse_iterator(_max(_root)));
         }
 
-        reverse_iterator rend() {
+        reverse_iterator        rend() {
             return (reverse_iterator(_nil));
         }	
 
-        const_reverse_iterator rend() const {
+        const_reverse_iterator  rend() const {
             return (const_reverse_iterator(_nil));
         }
 
@@ -482,6 +472,10 @@ template <
             std::cout << "=========TREE=========" << std::endl;
             _print(this->_root, 0);
             std::cout << "======================" << std::endl;
+        }
+
+        size_type   size() const {
+            return (_size);
         }
 
     /*
