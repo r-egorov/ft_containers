@@ -324,29 +324,42 @@ int main(void) {
     std::cout << "\niter = "; print_map(iter);
     std::cout << "map1 = "; print_map(map1);
 
+    // ft::RBTree< ft::pair<std::string, int> > pair_tree;
+    // std::string strings[10] = {
+    //     "zero",
+    //     "one",
+    //     "two",
+    //     "three",
+    //     "four",
+    //     "five",
+    //     "six",
+    //     "seven",
+    //     "eight",
+    //     "nine",
+    // };
+    // for (int i = 0; i < 10; i++) {
+    //     pair_tree.insert(ft::pair<std::string, int>(strings[i], i));
+    // }
+    // pair_tree.print();
+    // ft::RBTree< ft::pair<std::string, int> >::iterator it = pair_tree.search(ft::pair<std::string, int>("five", 5));
+    // std::cout << *it << "addr, " << &(*it) << std::endl;
     ft::pair<std::string, int> pairs[3] = {
         ft::pair<std::string, int>("something", 69),
         ft::pair<std::string, int>("anything", 199),
         ft::pair<std::string, int>("that thing", 50),
     };
     ft::map<std::string, int> iter1(pairs, pairs + 3);
-    ft::RBTree< ft::pair<std::string, int> > pair_tree;
-    std::string strings[10] = {
-        "zero",
-        "one",
-        "two",
-        "three",
-        "four",
-        "five",
-        "six",
-        "seven",
-        "eight",
-        "nine",
-    };
-    for (int i = 0; i < 10; i++) {
-        pair_tree.insert(ft::pair<std::string, int>(strings[i], i));
-    }
-    pair_tree.print();
-    ft::RBTree< ft::pair<std::string, int> >::iterator it = pair_tree.search(ft::pair<std::string, int>("five", 5));
-    std::cout << *it << "addr, " << &(*it) << std::endl;
+    // for (ft::map<std::string, int>::iterator it = iter1.begin(); it != iter1.end(); it++) {
+    //     std::cout << *(it) << std::endl;
+    // }
+    
+    // for (ft::map<std::string, int>::reverse_iterator it = iter1.rbegin(); it != iter1.rend(); it++) {
+    //     std::cout << *(it) << std::endl;
+    // }
+
+
+    ft::map<std::string, int>::iterator it = iter1.begin();
+    const ft::map<std::string, int> iter2(pairs, pairs + 3);
+    ft::map<std::string, int>::const_iterator it2 = it;
+
 }

@@ -98,7 +98,6 @@ class RBTreeNode {
     */
     public:
         const RBTreeNode*     successor() const {
-            const RBTreeNode*     succ = this;
             if (!is_nil) {
                 // if there is right subtree
                 if (!right->is_nil) {
@@ -108,15 +107,19 @@ class RBTreeNode {
                     return (this->p);
                 }
 
-                while ((!succ->is_nil) && succ->is_right_son()) {
-                    succ = succ->p;
+                const RBTreeNode*     tmp = this;
+                const RBTreeNode*     y = tmp->p;
+                while (!y->is_nil && tmp == y->right) {
+                    tmp = y;
+                    y = y->p;
                 }
+                return (y);
+            } else {
+                return (this);
             }
-            return (succ);
         }
         
         RBTreeNode*     successor() {
-            RBTreeNode*     succ = this;
             if (!is_nil) {
                 // if there is right subtree
                 if (!right->is_nil) {
@@ -126,15 +129,19 @@ class RBTreeNode {
                     return (this->p);
                 }
 
-                while ((!succ->is_nil) && succ->is_right_son()) {
-                    succ = succ->p;
+                RBTreeNode*     tmp = this;
+                RBTreeNode*     y = tmp->p;
+                while (!y->is_nil && tmp == y->right) {
+                    tmp = y;
+                    y = y->p;
                 }
+                return (y);
+            } else {
+                return (this);
             }
-            return (succ);
         }
 
         const RBTreeNode*     predecessor() const {
-            const RBTreeNode*     pred = this;
             if (!is_nil) {
                 // if there is left subtree
                 if (!left->is_nil) {
@@ -144,15 +151,19 @@ class RBTreeNode {
                     return (this->p);
                 }
 
-                while ((!pred->is_nil) && pred->is_left_son()) {
-                    pred = pred->p;
+                const RBTreeNode*     tmp = this;
+                const RBTreeNode*     y = tmp->p;
+                while (!y->is_nil && tmp == y->left) {
+                    tmp = y;
+                    y = y->p;
                 }
+                return (y);
+            } else {
+                return (this);
             }
-            return (pred);
         }
         
         RBTreeNode*     predecessor() {
-            RBTreeNode*     pred = this;
             if (!is_nil) {
                 // if there is left subtree
                 if (!left->is_nil) {
@@ -162,11 +173,16 @@ class RBTreeNode {
                     return (this->p);
                 }
 
-                while ((!pred->is_nil) && pred->is_left_son()) {
-                    pred = pred->p;
+                RBTreeNode*     tmp = this;
+                RBTreeNode*     y = tmp->p;
+                while (!y->is_nil && tmp == y->left) {
+                    tmp = y;
+                    y = y->p;
                 }
+                return (y);
+            } else {
+                return (this);
             }
-            return (pred);
         }
 
         template<class Type>
@@ -211,12 +227,8 @@ class RBTreeIterator {
             typename ft::iterator_traits<const T*>::reference,
             typename ft::iterator_traits<T*>::reference
         >::type                                                             reference;
-        typedef typename choose<
-            is_const,
-            const node_type*,
-            node_type*
-        >::type                                                             node_pointer;
-
+        typedef RBTreeNode<typename ft::non_const<value_type>::type>*       node_pointer;
+        
     /*
     ** Member fields
     */
@@ -230,7 +242,7 @@ class RBTreeIterator {
         // Constructors
         RBTreeIterator() : _p(NULL) {}
         RBTreeIterator(node_pointer p) : _p(p) {}
-        RBTreeIterator(const RBTreeIterator<T, false>& other) : _p( other._p ) {}
+        RBTreeIterator(const RBTreeIterator<T, false>& other) : _p( other.getNodePtr() ) {}
 
         // Destructor
         virtual ~RBTreeIterator() {}

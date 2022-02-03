@@ -4,6 +4,20 @@
 namespace ft {
 
 /*
+** This `non_const` struct is needed for removing
+** const constraint from type (used in the RBTreeIterator)
+*/
+template<class T>
+struct non_const { 
+    typedef T type;
+};
+
+template<class T>
+struct non_const <const T> {
+    typedef T type;
+};
+
+/*
 ** This `choose` struct is needed for non-const and const iterator
 ** implementation without duplicating the code.
 ** copyright - Matt Austern. Generic Programming and the STL
