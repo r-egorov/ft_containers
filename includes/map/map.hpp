@@ -214,14 +214,22 @@ template<
             _tree.remove(first, last);
         }
 
-        void swap (map& x) {
+        void        swap (map& x) {
             map     tmp = *this;
             *this = x;
             x = tmp;
         }
 
-        void clear() {
+        void        clear() {
             _tree.clear();
+        }
+
+        key_compare     key_comp() const {
+            return (_comparator);
+        }
+
+        value_compare value_comp() const {
+            return (value_compare(_comparator));
         }
 
     //FIXME

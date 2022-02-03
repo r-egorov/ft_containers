@@ -338,4 +338,10 @@ int main(void) {
     ftmap.clear();
     print_map(ftmap);
     std::cout << ftmap.size() << std::endl;
+
+    ft::map<int, int>::key_compare kc = ftmap.key_comp();
+    ft::map<int, int>::value_compare vc = ftmap.value_comp();
+
+    std::cout << kc(1, 2) << std::endl;
+    std::cout << vc(ft::pair<const int, int>(361,361), ft::pair<const int, int>(1000,361)) << std::endl;
 }
