@@ -409,33 +409,118 @@ template <
             return (iterator(node));
         }
 
-        iterator    _searchValueByKey(node_pointer head, const key_type& key) const {
-            return (iterator(_iterativeSearchByKey(head, key)));
-        }
-
-        node_pointer    _iterativeSearchByKey(node_pointer head, const key_type& key) const {
-            while (!head->is_nil) {
-                if (!(_comparator(key, head->value->first)) && !_comparator(head->value->first, key)) {
-                    break ;
-                }
-                if (_comparator(key, head->value->first)) {
-                    head = head->left;
-                } else {
-                    head = head->right;
-                }
-            }
-            return (head);
-        }
-
         iterator    search_node(const key_type& key) const {
             return (_searchValueByKey(this->_root, key));
         }
+           
+        void    _deleteValueByKey(const key_type& key) {
+            node_pointer    to_delete = _iterativeSearchByKey(_root, key);
+            if (!to_delete->is_nil) {
+                _deleteNode(to_delete);
+                _value_allocator.destroy(to_delete->value);
+                _value_allocator.deallocate(to_delete->value, 1);
+                _node_allocator.destroy(to_delete);
+                _node_allocator.deallocate(to_delete, 1);
+            }
+        }
 
-        // void        remove(const_reference val) {
-        //     _deleteValue(val);
-        //     _size--;
-        // }
+        void    _deleteNode(node_pointer to_delete) {
+            node_pointer   x;
+            node_pointer   y = to_delete;
+            bool    y_original_color = y->color;
+
+            if (to_delete->left->is_nil) {
+                x = to_delete->right;
+                _transplant(to_delete, x);
+            } else if (to_delete->right->is_nil) {
+                x = to_delete->left;
+                _transplant(to_delete, x);
+            } else {
+                y = _min(to_delete->right);
+                y_original_color = y->color;
+                x = y->right;
+                if (y->p == to_delete) {
+                    x->p = y;
+                } else {
+                    _transplant(y, y->right);
+                    y->right = to_delete->right;
+                    y->right->p = y;
+                }
+                _transplant(to_delete, y);
+                y->left = to_delete->left;
+                y->left->p = y;
+                y->color = to_delete->color;
+            }
+
+            if (y_original_color == BLACK) {
+                _deleteFixup(x);
+            }
+        }
+
+        void    _deleteFixup(node_pointer x) {
+            while (x != this->_root && x->color == BLACK) {
+                if (x == x->p->left) {
+                    node_pointer   w = x->p->right;
+                    if (w->color == RED) {
+                        w->color = BLACK;
+                        x->p->color = RED;
+                        _leftRotate(x->p);
+                        w = x->p->right;
+                    }
+                    if (w->left->color == BLACK && w->right->color == BLACK) {
+                        w->color = RED;
+                        x = x->p;
+                    } else {
+                        if (w->right->color == BLACK) {
+                            w->left->color = BLACK;
+                            w->color = RED;
+                            _rightRotate(w);
+                            w = x->p->right;
+                        }
+                        w->color = x->p->color;
+                        x->p->color = BLACK;
+                        w->right->color = BLACK;
+                        _leftRotate(x->p);
+                        x = this->_root;
+                    }
+                } else {
+                    node_pointer   w = x->p->left;
+                    if (w->color == RED) {
+                        w->color = BLACK;
+                        x->p->color = RED;
+                        _rightRotate(x->p);
+                        w = x->p->left;
+                    }
+                    if (w->right->color == BLACK && w->left->color == BLACK) {
+                        w->color = RED;
+                        x = x->p;
+                    } else {
+                        if (w->left->color == BLACK) {
+                            w->right->color = BLACK;
+                            w->color = RED;
+                            _leftRotate(w);
+                            w = x->p->left;
+                        }
+                        w->color = x->p->color;
+                        x->p->color = BLACK;
+                        w->left->color = BLACK;
+                        _rightRotate(x->p);
+                        x = this->_root;
+                    }
+                }
+            }
+            x->color = BLACK;
+        }
         
+        void        remove(const key_type& key) {
+            _deleteValueByKey(key);
+            _size--;
+        }
+        
+        size_type   size() const {
+            return (_size);
+        }
+
         iterator            end() {
             return (iterator(_nil));
         }
@@ -517,6 +602,32 @@ template <
             else {
                 std::cout << *head << std::endl;
             }
+        }
+        
+        node_pointer   _min(node_pointer head) const {
+            return (node_type::tree_min(head));
+        }
+
+        node_pointer   _max(node_pointer head) const {
+            return (node_type::tree_max(head));
+        }
+        
+        iterator    _searchValueByKey(node_pointer head, const key_type& key) const {
+            return (iterator(_iterativeSearchByKey(head, key)));
+        }
+
+        node_pointer    _iterativeSearchByKey(node_pointer head, const key_type& key) const {
+            while (!head->is_nil) {
+                if (!(_comparator(key, head->value->first)) && !_comparator(head->value->first, key)) {
+                    break ;
+                }
+                if (_comparator(key, head->value->first)) {
+                    head = head->left;
+                } else {
+                    head = head->right;
+                }
+            }
+            return (head);
         }
 
         void    _insertNode(node_pointer to_insert) {
