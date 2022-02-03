@@ -220,6 +220,9 @@ template<
             x = tmp;
         }
 
+        void clear() {
+            _tree.clear();
+        }
 
     //FIXME
         void print_tree() const {

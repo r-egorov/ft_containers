@@ -441,6 +441,14 @@ template <
             _deleteNode(finish);
         }
 
+        void        clear() {
+            _destroyTree(this->_root);
+            this->_root = this->_nil;
+            this->_nil->left = NULL;
+            this->_nil->right = NULL;
+            this->_size = 0;
+        }
+
         iterator            end() {
             return (iterator(_nil));
         }
