@@ -324,8 +324,14 @@ int main(void) {
     itt++;
     itt++;
     itt++;
-    
+
     print_map(ftmap);
-    ftmap.erase(itt);
+    std::cout << ftmap.size() << std::endl;
+    print_map(ftmap2);
+    std::cout << ftmap2.size() << std::endl;
+    ftmap.swap(ftmap2);
     print_map(ftmap);
+    std::cout << ftmap.size() << std::endl;
+    print_map(ftmap2);
+    std::cout << ftmap2.size() << std::endl;
 }

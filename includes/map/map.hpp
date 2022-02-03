@@ -214,6 +214,13 @@ template<
             _tree.remove(first, last);
         }
 
+        void swap (map& x) {
+            map     tmp = *this;
+            *this = x;
+            x = tmp;
+        }
+
+
     //FIXME
         void print_tree() const {
             _tree.print();

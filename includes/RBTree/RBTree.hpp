@@ -382,7 +382,7 @@ template <
             if (this != &other) {
                 _destroyTree(this->_root);
                 this->_root = this->_nil;
-                this->_size = other._size;
+                this->_size = 0;
                 this->_value_allocator = other._value_allocator;
                 this->_node_allocator = other._node_allocator;
                 this->_comparator = other._comparator;
