@@ -296,24 +296,37 @@ int main(void) {
     tree.insert(19);
     tree.insert(8);
     tree.print();
+    
+    
+    ft::RBTree<int> copy(tree);
+    copy.print();
 
-    std::cout << "\n\nremoving 8" << std::endl;
-    tree.remove(8);
-    tree.print();
-    std::cout << "\n\nremoving 12" << std::endl;
-    tree.remove(12);
-    tree.print();
-    std::cout << "\n\nremoving 19" << std::endl;
-    tree.remove(19);
-    tree.print();
-    std::cout << "\n\nremoving 31" << std::endl;
-    tree.remove(31);
-    tree.print();
-    std::cout << "\n\nremoving 38" << std::endl;
-    tree.remove(38);
-    tree.print();
-    std::cout << "\n\nremoving 41" << std::endl;
-    tree.remove(41);
+    for (ft::RBTree<int>::iterator it = tree.begin(); it != tree.end(); it++) {
+        std::cout << (*it) << ", ";
+    }
+    std::cout << std::endl;
+
+    for (ft::RBTree<int>::iterator it = copy.begin(); it != copy.end(); it++) {
+        std::cout << (*it) << ", ";
+    }
+    std::cout << std::endl;
+    // std::cout << "\n\nremoving 8" << std::endl;
+    // tree.remove(8);
+    // tree.print();
+    // std::cout << "\n\nremoving 12" << std::endl;
+    // tree.remove(12);
+    // tree.print();
+    // std::cout << "\n\nremoving 19" << std::endl;
+    // tree.remove(19);
+    // tree.print();
+    // std::cout << "\n\nremoving 31" << std::endl;
+    // tree.remove(31);
+    // tree.print();
+    // std::cout << "\n\nremoving 38" << std::endl;
+    // tree.remove(38);
+    // tree.print();
+    // std::cout << "\n\nremoving 41" << std::endl;
+    // tree.remove(41);
 
     std::map<std::string, int> map1;
     map1["something"] = 69;
@@ -343,23 +356,24 @@ int main(void) {
     // pair_tree.print();
     // ft::RBTree< ft::pair<std::string, int> >::iterator it = pair_tree.search(ft::pair<std::string, int>("five", 5));
     // std::cout << *it << "addr, " << &(*it) << std::endl;
-    ft::pair<std::string, int> pairs[3] = {
-        ft::pair<std::string, int>("something", 69),
-        ft::pair<std::string, int>("anything", 199),
-        ft::pair<std::string, int>("that thing", 50),
-    };
-    ft::map<std::string, int> iter1(pairs, pairs + 3);
-    // for (ft::map<std::string, int>::iterator it = iter1.begin(); it != iter1.end(); it++) {
-    //     std::cout << *(it) << std::endl;
-    // }
+
+    // ft::pair<std::string, int> pairs[3] = {
+    //     ft::pair<std::string, int>("something", 69),
+    //     ft::pair<std::string, int>("anything", 199),
+    //     ft::pair<std::string, int>("that thing", 50),
+    // };
+    // ft::map<std::string, int> iter1(pairs, pairs + 3);
+    // // for (ft::map<std::string, int>::iterator it = iter1.begin(); it != iter1.end(); it++) {
+    // //     std::cout << *(it) << std::endl;
+    // // }
     
-    // for (ft::map<std::string, int>::reverse_iterator it = iter1.rbegin(); it != iter1.rend(); it++) {
-    //     std::cout << *(it) << std::endl;
-    // }
+    // // for (ft::map<std::string, int>::reverse_iterator it = iter1.rbegin(); it != iter1.rend(); it++) {
+    // //     std::cout << *(it) << std::endl;
+    // // }
 
 
-    ft::map<std::string, int>::iterator it = iter1.begin();
-    const ft::map<std::string, int> iter2(pairs, pairs + 3);
-    ft::map<std::string, int>::const_iterator it2 = it;
+    // ft::map<std::string, int>::iterator it = iter1.begin();
+    // const ft::map<std::string, int> iter2(pairs, pairs + 3);
+    // ft::map<std::string, int>::const_iterator it2 = it;
 
 }

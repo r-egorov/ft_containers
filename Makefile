@@ -31,6 +31,8 @@ $(OBJSDIR)%.o:		$(SRCSDIR)%.cpp Makefile
 leaks:
 					$(CC) $(CFLAGS) -fsanitize=address $(SRCS) -o $(NAME)_leaks $(INCLUDES_FLAGS)
 
+releaks:			fclean leaks
+
 info:
 					echo $(DEPS)
 					echo $(SRCS)

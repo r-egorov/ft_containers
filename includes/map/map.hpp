@@ -97,6 +97,9 @@ template<
                 _tree.insert(*it);
             }
         }
+        
+        // Destructor (all allocations/deallocations are done in the tree)
+        ~map() {}
 
         // Iterators
         iterator                    begin() {

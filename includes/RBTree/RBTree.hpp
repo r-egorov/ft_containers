@@ -391,16 +391,102 @@ template <
             _destroyTree(this->_root);
             delete this->_nil;
         }
+
+
+        // node_pointer                    _nil;
+        // node_pointer                    _root;
+        // size_type                       _size;
+        // allocator_type                  _value_allocator;
+        // node_allocator_type             _node_allocator;
+        // comparator_type                 _comparator;
+
         // Operators
         RBTree&     operator=(const RBTree& other) {
             if (this != &other) {
-                delete this->_nil;
-                _root = other._root;
-                _nil = other._nil;
+                _destroyTree(this->_root);
+                this->root = this->_nil;
+                this->_size = other._size;
+                this->_value_allocator = other._value_allocator;
+                this->_node_allocator = other._node_allocator;
+                this->_comparator = other._comparator;
+                for (const_iterator it = other.begin(); it != other.end(); it++) {
+                    insert(*it);
+                }
             }
             return (*this);
         }
 
+        iterator  insert(const_reference val) {
+            node_pointer  node;
+            pointer  val_copy = _value(val);
+            node = _node_allocator.allocate(1);
+            _node_allocator.construct(node, node_type(val_copy));
+            _insertNode(node);
+            _size++;
+            return (iterator(node));
+        }
+
+        iterator    search(const_reference val) const { return (_searchValue(this->_root, val)); }
+
+        void        remove(const_reference val) {
+            _deleteValue(val);
+            _size--;
+        }
+
+
+        iterator            end() {
+            return (iterator(_nil));
+        }
+
+        const_iterator      end() const {
+            return (const_iterator(_nil));
+        }
+
+        iterator            begin() {
+            if (_size == 0) {
+                return (iterator(_nil)); 
+            }
+            return(iterator(_min(_root)));
+        }
+
+        const_iterator      begin() const {
+            if (_size == 0) {
+                return (const_iterator(_nil)); 
+            }
+            return(const_iterator(_min(_root)));
+        }
+
+        reverse_iterator rbegin() {
+            if (_size == 0) {
+                return (reverse_iterator(_nil));
+            }
+            return (reverse_iterator(_max(_root)));
+        }
+
+        const_reverse_iterator rbegin() const {
+            if (_size == 0) {
+                return (const_reverse_iterator(_nil));
+            }
+            return (const_reverse_iterator(_max(_root)));
+        }
+
+        reverse_iterator rend() {
+            return (reverse_iterator(_nil));
+        }	
+
+        const_reverse_iterator rend() const {
+            return (const_reverse_iterator(_nil));
+        }
+
+        void    print() {
+            std::cout << "=========TREE=========" << std::endl;
+            _print(this->_root, 0);
+            std::cout << "======================" << std::endl;
+        }
+
+    /*
+    ** Helper functions
+    */
     private:
         void    _print(node_type *head, int tabs_count) const {
             std::string tabs("");
@@ -675,75 +761,6 @@ template <
             }
             x->color = BLACK;
         }
-
-    public:
-        void    print() {
-            std::cout << "=========TREE=========" << std::endl;
-            _print(this->_root, 0);
-            std::cout << "======================" << std::endl;
-        }
-
-        iterator  insert(const_reference val) {
-            node_pointer  node;
-            pointer  val_copy = _value(val);
-            node = _node_allocator.allocate(1);
-            _node_allocator.construct(node, node_type(val_copy));
-            _insertNode(node);
-            _size++;
-            return (iterator(node));
-        }
-
-        iterator    search(const_reference val) const { return (_searchValue(this->_root, val)); }
-
-        void        remove(const_reference val) {
-            _deleteValue(val);
-            _size--;
-        }
-
-
-        iterator            end() {
-            return (iterator(_nil));
-        }
-
-        const_iterator      end() const {
-            return (const_iterator(_nil));
-        }
-
-        iterator            begin() {
-            if (_size == 0) {
-                return (iterator(_nil)); 
-            }
-            return(iterator(_min(_root)));
-        }
-
-        const_iterator      begin() const {
-            if (_size == 0) {
-                return (const_iterator(_nil)); 
-            }
-            return(const_iterator(_min(_root)));
-        }
-
-        reverse_iterator rbegin() {
-            if (_size == 0) {
-                return (reverse_iterator(_nil));
-            }
-            return (reverse_iterator(_max(_root)));
-        }
-
-        const_reverse_iterator rbegin() const {
-            if (_size == 0) {
-                return (const_reverse_iterator(_nil));
-            }
-            return (const_reverse_iterator(_max(_root)));
-        }
-
-        reverse_iterator rend() {
-            return (reverse_iterator(_nil));
-        }	
-
-        const_reverse_iterator rend() const {
-            return (const_reverse_iterator(_nil));
-        }	
 };
 
 }  // Namespace brace
