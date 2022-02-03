@@ -363,7 +363,7 @@ template <
             _root = _nil;
         }
         RBTree(const RBTree& other)
-            : _size(other._size), _value_allocator(other._value_allocator),
+            : _size(0), _value_allocator(other._value_allocator),
               _node_allocator(other._node_allocator), _comparator(other._comparator) {
             _nil = new node_type();
             _nil->is_nil = true;
@@ -372,6 +372,8 @@ template <
             for (const_iterator it = other.begin(); it != other.end(); it++) {
                 insert(*it);
             }
+            _nil->left = _min(_root);
+            _nil->right = _max(_root);
         }
         // Destructor
         void    _destroyTree(node_pointer head) {
@@ -395,7 +397,7 @@ template <
         RBTree&     operator=(const RBTree& other) {
             if (this != &other) {
                 _destroyTree(this->_root);
-                this->root = this->_nil;
+                this->_root = this->_nil;
                 this->_size = other._size;
                 this->_value_allocator = other._value_allocator;
                 this->_node_allocator = other._node_allocator;
@@ -403,6 +405,8 @@ template <
                 for (const_iterator it = other.begin(); it != other.end(); it++) {
                     insert(*it);
                 }
+                this->_nil->left = _min(_root);
+                this->_nil->right = _max(_root);
             }
             return (*this);
         }
@@ -414,14 +418,29 @@ template <
             _node_allocator.construct(node, node_type(val_copy));
             _insertNode(node);
             _size++;
+            // if first element to insert
+            if (_size == 1) {
+                this->_nil->left = node;  // min element
+                this->_nil->right = node;  // max element
+            } else {
+                // if less then minimum element
+                if (_comparator(*(node->value), *(_nil->left->value))) {
+                    this->_nil->left = node;
+                } else {
+                    this->_nil->right = node;
+                }
+            }
             return (iterator(node));
         }
 
         iterator    search(const_reference val) const { return (_searchValue(this->_root, val)); }
 
-        void        remove(const_reference val) {
-            _deleteValue(val);
-            _size--;
+        bool        remove(const_reference val) {
+            return (_deleteValue(val));
+        }
+
+        void        remove(iterator pos) {
+            _deletePosition(pos);
         }
 
         iterator            end() {
@@ -468,14 +487,20 @@ template <
             return (const_reverse_iterator(_nil));
         }
 
-        void    print() {
+        void    print() const {
             std::cout << "=========TREE=========" << std::endl;
             _print(this->_root, 0);
+            if (_size > 0)
+                std::cout << "min = " << *(_nil->left->value) << " , max = " << *(_nil->right->value) << std::endl;
             std::cout << "======================" << std::endl;
         }
 
         size_type   size() const {
             return (_size);
+        }
+
+        node_pointer    nil() const {
+            return (_nil);
         }
 
     /*
@@ -657,15 +682,40 @@ template <
             return (node_type::tree_max(head));
         }
       
-        void    _deleteValue(const_reference val) {
-            node_pointer    to_delete = _iterativeSearch(this->_root, val);
+        void    _deletePosition(iterator pos) {
+            node_pointer    to_delete = pos.getNodePtr();
             if (!to_delete->is_nil) {
+                if (to_delete == _nil->left) {
+                    _nil->left = _nil->left->successor();
+                } else if (to_delete == _nil->right) {
+                    _nil->right = _nil->right->predecessor();
+                }
                 _deleteNode(to_delete);
                 _value_allocator.destroy(to_delete->value);
                 _value_allocator.deallocate(to_delete->value, 1);
                 _node_allocator.destroy(to_delete);
                 _node_allocator.deallocate(to_delete, 1);
+                _size--;
             }
+        }
+
+        bool    _deleteValue(const_reference val) {
+            node_pointer    to_delete = _iterativeSearch(this->_root, val);
+            if (!to_delete->is_nil) {
+                if (to_delete == _nil->left) {
+                    _nil->left = _nil->left->successor();
+                } else if (to_delete == _nil->right) {
+                    _nil->right = _nil->right->predecessor();
+                }
+                _deleteNode(to_delete);
+                _value_allocator.destroy(to_delete->value);
+                _value_allocator.deallocate(to_delete->value, 1);
+                _node_allocator.destroy(to_delete);
+                _node_allocator.deallocate(to_delete, 1);
+                _size--;
+                return (true);
+            }
+            return (false);
         }
 
         void    _deleteNode(node_pointer to_delete) {
@@ -698,6 +748,10 @@ template <
 
             if (y_original_color == BLACK) {
                 _deleteFixup(x);
+            }
+            // If the removed element is the last
+            if (_size == 1) {
+                this->_root = this->_nil;
             }
         }
 

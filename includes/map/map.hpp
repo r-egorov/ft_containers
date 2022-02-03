@@ -52,7 +52,7 @@ template<
     */
     public:
         typedef value_comp                              value_compare;
-    private:
+    //private:
         typedef RBTree<value_type, allocator_type, value_compare>   tree_type;
     public:
         typedef typename tree_type::iterator                iterator;
@@ -68,16 +68,13 @@ template<
         allocator_type                                  _allocator;
 
     public:
-        /*
-        ** Constructors
-        */
-        // Default
+        // Default constructor
         explicit map(
             const key_compare& comp = key_compare(),
             const allocator_type& alloc = allocator_type()
         ) : _tree(tree_type(alloc, comp)), _comparator(comp), _allocator(alloc) {}
 
-        // Range
+        // Range constructor
         template <class InputIterator>
         map(
             InputIterator first, InputIterator last,
@@ -89,7 +86,7 @@ template<
             }
         }
 
-        // Copy
+        // Copy constructor
         map(const map& other)
             : _tree(tree_type(other._allocator, other._comparator)),
               _comparator(other._comparator), _allocator(other._allocator) {
@@ -111,7 +108,9 @@ template<
             return (*this);
         }
 
-        // Iterators
+        /*
+        ** Iterators
+        */
         iterator                    begin() {
             return (_tree.begin());
         }
@@ -141,6 +140,93 @@ template<
         const_reverse_iterator      rend() const {
             return (_tree.rend());
         }
+
+        /*
+        ** Capacity
+        */
+        bool             empty() const {
+            return (size() == 0);
+        }
+        size_type        size() const {
+            return (_tree.size());
+        }
+
+        size_type        max_size() const {
+                return (_allocator.max_size());
+        }
+
+        /*
+        ** Element access
+        */
+        mapped_type&    operator[](const key_type& k) {
+            return ((*((this->insert(ft::make_pair(k,mapped_type()))).first)).second);
+        }
+
+        /*
+        ** Modifiers
+        */
+        // Single element	
+        ft::pair<iterator,bool>     insert(const value_type& val) {
+            iterator found = _tree.search(val);
+            if (found != end()) {
+                return (ft::pair<iterator,bool>(found, false));
+            }
+            found = _tree.insert(val);
+            return (ft::pair<iterator,bool>(found, true));
+        }
+
+        // With hint
+        iterator                    insert(iterator position, const value_type& val) {
+            if (*position == val) {
+                return (position);
+            }
+            iterator inserted = _tree.search(val);
+            if (inserted != end()) {
+                return (inserted);
+            }
+            return(_tree.insert(val));
+        }
+        
+        // Range	
+        template <class InputIterator>
+        void                        insert(InputIterator first, InputIterator last) {
+            for (; first != last; first++) {
+                insert(*first);
+            }
+        }
+
+
+        void        erase(
+            iterator position,
+            typename ft::enable_if<!ft::is_integral<iterator>::value>::type* = 0
+        ) {
+            _tree.remove(position);
+        }
+
+        size_type   erase(const key_type& k) {
+            if (_tree.remove(ft::make_pair(k, mapped_type()))) {
+                return (1);
+            }
+            return (0);
+        }
+        
+        void        erase(iterator first, iterator last) {
+            --last;
+            for (; first != last; first++) {
+                erase(first);
+            }
+            erase(last);
+        }
+
+        //FIXME
+        tree_type* tree() const {
+            return (&_tree);
+        }
+
+        void print_tree() const {
+            _tree.print();
+        }
+
 };
 
 } // Namespace brace
