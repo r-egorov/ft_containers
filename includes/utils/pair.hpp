@@ -29,7 +29,7 @@ struct pair {
 
     ~pair() {}
 
-    pair&   operator=(pair& pr) {
+    pair&       operator=(const pair& pr) {
         first = pr.first;
         second = pr.second;
         return (*this);

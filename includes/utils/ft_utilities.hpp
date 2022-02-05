@@ -1,6 +1,10 @@
 #ifndef FT_UTILITIES_HPP
 # define FT_UTILITIES_HPP
 
+# include "./iterator_traits.hpp"
+# include "./pair.hpp"
+# include "./reverse_iterator.hpp"
+
 namespace ft {
 
 /*

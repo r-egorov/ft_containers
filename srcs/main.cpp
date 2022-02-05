@@ -354,10 +354,28 @@ int main(void) {
     std::cout << "std_map =\t";
     print_map(std_map);
 
-    
-   ft::map<std::string, int>::const_iterator ft_map_cit = ft_map.upper_bound("sssss");
-    std::map<std::string, int>::const_iterator std_map_cit = std_map.upper_bound("sssss");
+    std::pair<std::map<std::string,int>::iterator,std::map<std::string,int>::iterator> std_ret;
+    ft::pair<ft::map<std::string,int>::iterator,ft::map<std::string,int>::iterator> ft_ret;
 
-    std::cout << "std:\t" << std_map_cit->second << std::endl;
-    std::cout << "ft:\t" << ft_map_cit->second << std::endl;
+    std_ret = std_map.equal_range("ninety");
+    ft_ret = ft_map.equal_range("ninety");
+    // std::map<std::string,int>::iterator std_lower = std_map.lower_bound("zzzzzzzzzzzzz");
+    // std::cout << "stdlower bound points to: ";
+    // std::cout << std_lower->first << " => " << std_lower->second << '\n';
+
+    // ft::map<std::string,int>::iterator ft_lower = ft_map.lower_bound("zzzzzzzzzzzzz");
+    // std::cout << "ftlower bound points to: ";
+    // std::cout << ft_lower->first << " => " << ft_lower->second << '\n';
+
+    std::cout << "STD lower bound points to: ";
+    std::cout << std_ret.first->first << " => " << std_ret.first->second << '\n';
+
+    std::cout << "STD upper bound points to: ";
+    std::cout << std_ret.second->first << " => " << std_ret.second->second << '\n';
+
+    std::cout << "FT lower bound points to: ";
+    std::cout << ft_ret.first->first << " => " << ft_ret.first->second << '\n';
+
+    std::cout << "FT upper bound points to: ";
+    std::cout << ft_ret.second->first << " => " << ft_ret.second->second << '\n';
 }

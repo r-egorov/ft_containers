@@ -4,3 +4,5 @@ containers
 containers_leaks
 main
 .DS_Store
+ft_containers-unit-test
+main.dSYM

@@ -3,7 +3,6 @@
 
 # include <memory>
 # include "ft_utilities.hpp"
-# include "pair.hpp"
 # include "RBTree.hpp"
 
 namespace ft {
@@ -256,7 +255,7 @@ template<
             return (0);
         }
 
-        iterator lower_bound (const key_type& k) {
+        iterator                                lower_bound(const key_type& k) {
             iterator it = begin();
             while (_comparator(it->first, k)) {
                 it++;
@@ -264,7 +263,7 @@ template<
             return (it);
         }
 
-        const_iterator lower_bound (const key_type& k) const {
+        const_iterator                          lower_bound(const key_type& k) const {
             const_iterator it = begin();
             while (_comparator(it->first, k)) {
                 it++;
@@ -272,7 +271,7 @@ template<
             return (it);
         }
 
-        iterator        upper_bound (const key_type& k) {
+        iterator                                upper_bound(const key_type& k) {
             iterator it = begin();
             while (!(_comparator(k, it->first))) {
                 it++;
@@ -280,12 +279,30 @@ template<
             return (it);
         }
 
-        const_iterator  upper_bound (const key_type& k) const{
+        const_iterator                          upper_bound(const key_type& k) const{
             const_iterator it = begin();
             while (!(_comparator(k, it->first))) {
                 it++;
             }
             return (it);
+        }
+
+        ft::pair<iterator,iterator>             equal_range(const key_type& k) {
+            iterator    lower = lower_bound(k);
+            if (lower != end()) {
+                if (!_comparator(k, lower->first))
+                    return (ft::make_pair(lower, ++lower));
+            }
+            return (ft::make_pair(lower, lower));
+        }
+
+        ft::pair<const_iterator,const_iterator> equal_range(const key_type& k) const {
+            const_iterator    lower = lower_bound(k);
+            if (lower != end()) {
+                if (!_comparator(k, lower->first))
+                    return (ft::make_pair(lower, ++lower));
+            }
+            return (ft::make_pair(lower, lower));
         }
 
         allocator_type  get_allocator() const {
