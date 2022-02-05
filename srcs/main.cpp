@@ -266,116 +266,121 @@ namespace ft{
 }
 
 int main(void) {
-    ft::pair<const int, int> pairs[6] = {
-        ft::pair<const int, int>(41, 41),
-        ft::pair<const int, int>(38, 38),
-        ft::pair<const int, int>(31, 31),
-        ft::pair<const int, int>(12, 12),
-        ft::pair<const int, int>(19, 19),
-        ft::pair<const int, int>(8,8),
-    };
-    ft::map<int, int> ftmap(pairs, pairs + 6);
-    for (ft::map<int, int>::iterator it = ftmap.begin(); it != ftmap.end(); it++) {
-        std::cout << *it << std::endl;
-    }
-
-    ft::map<int, int>::iterator pos;
-    pos = ftmap.insert(ft::pair<const int, int>(8,25)).first;
-    std::cout << *pos << std::endl;
-
-    pos = ftmap.insert(ft::pair<const int, int>(25,25)).first;
-    std::cout << *pos << std::endl;
-
-    ft::map<int, int>::iterator inserted = ftmap.insert(pos, ft::pair<const int, int>(8,25));
-    std::cout << *inserted << std::endl;
-
-    ft::pair<const int, int> another[3] = {
-        ft::pair<const int, int>(1, 1),
-        ft::pair<const int, int>(38, 256),
-        ft::pair<const int, int>(45, 45)
-    };
-    ft::map<int, int> ftmap2(another, another + 3);
-    ftmap.insert(another, another + 3);
-    print_map(ftmap);
-    ft::map<int, int>::iterator position = ftmap.begin();
-    position++;
-    position++;
-    position++;
-    position++;
-    
-    //ftmap.erase(ftmap.begin(), ftmap.end());
-    print_map(ftmap);
-    ftmap.print_tree();
-
-    ftmap.insert(ft::pair<const int, int>(361,361));
-    ftmap.insert(ft::pair<const int, int>(-25,-25));
-    ftmap.print_tree();
-
-    ftmap.erase(361);
-    ftmap.print_tree();
-    ftmap.erase(-25);
-    ftmap.print_tree();
-
+    // ft::pair<const int, int> pairs[6] = {
+    //     ft::pair<const int, int>(41, 41),
+    //     ft::pair<const int, int>(38, 38),
+    //     ft::pair<const int, int>(31, 31),
+    //     ft::pair<const int, int>(12, 12),
+    //     ft::pair<const int, int>(19, 19),
+    //     ft::pair<const int, int>(8,8),
+    // };
+    // ft::map<int, int> ftmap(pairs, pairs + 6);
     // for (ft::map<int, int>::iterator it = ftmap.begin(); it != ftmap.end(); it++) {
-    //     std::cout << (*it) << std::endl;
+    //     std::cout << *it << std::endl;
     // }
-    ft::map<int, int>::iterator itt = ftmap.begin();
-    itt++;
-    itt++;
-    itt++;
-    itt++;
 
-    print_map(ftmap);
-    std::cout << ftmap.size() << std::endl;
-    print_map(ftmap2);
-    std::cout << ftmap2.size() << std::endl;
-    ftmap.swap(ftmap2);
-    print_map(ftmap);
-    std::cout << ftmap.size() << std::endl;
-    print_map(ftmap2);
-    std::cout << ftmap2.size() << std::endl;
+    // ft::map<int, int>::iterator pos;
+    // pos = ftmap.insert(ft::pair<const int, int>(8,25)).first;
+    // std::cout << *pos << std::endl;
 
-    ft::map<std::string, int> ft_map;
-    std::map<std::string, int> std_map;
+    // pos = ftmap.insert(ft::pair<const int, int>(25,25)).first;
+    // std::cout << *pos << std::endl;
 
-    std::string        strs[10] = {
-        "one", "three", "five", "six", "seven", "eighty", "ninety", "hundred", "thousand", "million"
-    };
-    int                 ints[10] = {
-        1, 3, 5, 6, 7, 80, 90, 100, 1000, 1000000
-    };
+    // ft::map<int, int>::iterator inserted = ftmap.insert(pos, ft::pair<const int, int>(8,25));
+    // std::cout << *inserted << std::endl;
 
-    for (size_t i = 0; i < 10; i++){
-        ft_map.insert(ft::make_pair(strs[i], ints[i]));
-        std_map.insert(std::make_pair(strs[i], ints[i]));
-    }
-    std::cout << "ft_map =\t";
-    print_map(ft_map);
-    std::cout << "std_map =\t";
-    print_map(std_map);
+    // ft::pair<const int, int> another[3] = {
+    //     ft::pair<const int, int>(1, 1),
+    //     ft::pair<const int, int>(38, 256),
+    //     ft::pair<const int, int>(45, 45)
+    // };
+    // ft::map<int, int> ftmap2(another, another + 3);
+    // ftmap.insert(another, another + 3);
+    // print_map(ftmap);
+    // ft::map<int, int>::iterator position = ftmap.begin();
+    // position++;
+    // position++;
+    // position++;
+    // position++;
+    
+    // //ftmap.erase(ftmap.begin(), ftmap.end());
+    // print_map(ftmap);
+    // ftmap.print_tree();
 
-    std::pair<std::map<std::string,int>::iterator,std::map<std::string,int>::iterator> std_ret;
-    ft::pair<ft::map<std::string,int>::iterator,ft::map<std::string,int>::iterator> ft_ret;
+    // ftmap.insert(ft::pair<const int, int>(361,361));
+    // ftmap.insert(ft::pair<const int, int>(-25,-25));
+    // ftmap.print_tree();
 
-    std_ret = std_map.equal_range("ninety");
-    ft_ret = ft_map.equal_range("ninety");
-    // std::map<std::string,int>::iterator std_lower = std_map.lower_bound("zzzzzzzzzzzzz");
-    // std::cout << "stdlower bound points to: ";
-    // std::cout << std_lower->first << " => " << std_lower->second << '\n';
+    // ftmap.erase(361);
+    // ftmap.print_tree();
+    // ftmap.erase(-25);
+    // ftmap.print_tree();
 
-    // ft::map<std::string,int>::iterator ft_lower = ft_map.lower_bound("zzzzzzzzzzzzz");
-    // std::cout << "ftlower bound points to: ";
-    // std::cout << ft_lower->first << " => " << ft_lower->second << '\n';
+    // // for (ft::map<int, int>::iterator it = ftmap.begin(); it != ftmap.end(); it++) {
+    // //     std::cout << (*it) << std::endl;
+    // // }
+    // ft::map<int, int>::iterator itt = ftmap.begin();
+    // itt++;
+    // itt++;
+    // itt++;
+    // itt++;
 
-    std::cout << "STD lower bound points to: ";
-    std::cout << std_ret.first->first << " => " << std_ret.first->second << '\n';
+    // print_map(ftmap);
+    // std::cout << ftmap.size() << std::endl;
+    // print_map(ftmap2);
+    // std::cout << ftmap2.size() << std::endl;
+    // ftmap.swap(ftmap2);
+    // print_map(ftmap);
+    // std::cout << ftmap.size() << std::endl;
+    // print_map(ftmap2);
+    // std::cout << ftmap2.size() << std::endl;
 
-    std::cout << "STD upper bound points to: ";
-    std::cout << std_ret.second->first << " => " << std_ret.second->second << '\n';
+    // ft::map<std::string, int> ft_map;
+    // std::map<std::string, int> std_map;
 
-    std::cout << "FT lower bound points to: ";
-    std::cout << ft_ret.first->first << " => " << ft_ret.first->second << '\n';
+    // std::string        strs[10] = {
+    //     "one", "three", "five", "six", "seven", "eighty", "ninety", "hundred", "thousand", "million"
+    // };
+    // int                 ints[10] = {
+    //     1, 3, 5, 6, 7, 80, 90, 100, 1000, 1000000
+    // };
 
-    std::cout << "FT upper bound points to: ";
-    std::cout << ft_ret.second->first << " => " << ft_ret.second->second << '\n';
+    // for (size_t i = 0; i < 10; i++){
+    //     ft_map.insert(ft::make_pair(strs[i], ints[i]));
+    //     std_map.insert(std::make_pair(strs[i], ints[i]));
+    // }
+    // std::cout << "ft_map =\t";
+    // print_map(ft_map);
+    // std::cout << "std_map =\t";
+    // print_map(std_map);
+
+    // std::pair<std::map<std::string,int>::iterator,std::map<std::string,int>::iterator> std_ret;
+    // ft::pair<ft::map<std::string,int>::iterator,ft::map<std::string,int>::iterator> ft_ret;
+
+    // std_ret = std_map.equal_range("ninety");
+    // ft_ret = ft_map.equal_range("ninety");
+
+    // std::cout << "STD lower bound points to: ";
+    // std::cout << std_ret.first->first << " => " << std_ret.first->second << '\n';
+
+    // std::cout << "STD upper bound points to: ";
+    // std::cout << std_ret.second->first << " => " << std_ret.second->second << '\n';
+
+    // std::cout << "FT lower bound points to: ";
+    // std::cout << ft_ret.first->first << " => " << ft_ret.first->second << '\n';
+
+    // std::cout << "FT upper bound points to: ";
+    // std::cout << ft_ret.second->first << " => " << ft_ret.second->second << '\n';
+
+    ft::vector<int>     ft_int_v;
+
+    ft_int_v.push_back(5);
+
+    ft::vector<int>::reverse_iterator    it;
+
+    it++;
+    it--;
+    it = it + 1;
+    it = it - 1;
+
 }

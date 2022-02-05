@@ -4,6 +4,7 @@
 # include <memory>
 // # include "iterator_traits.hpp"
 // # include "reverse_iterator.hpp"
+// # include "ft_utilities.hpp" // enable_if
 # include "../utils/ft_utilities.hpp" // enable_if
 
 namespace ft {
@@ -79,11 +80,11 @@ class vector_iterator {
             return (tmp);
         }
 
-        vector_iterator     operator+(const difference_type n) {
+        vector_iterator     operator+(const difference_type n) const {
             return (vector_iterator(_p + n));
         }
 
-        vector_iterator     operator-(const difference_type n) {
+        vector_iterator     operator-(const difference_type n) const {
             return (vector_iterator(_p - n));
         }
 
@@ -372,12 +373,20 @@ template <
         const_reference back() const {
             return ( *(_array + _size - 1) );
         }
+
+        pointer         data() const {
+            return (_array);
+        }
         
         /*
         ** Modifiers
         */
         template <class InputIterator>
-        void       assign (InputIterator first, InputIterator last) {
+        void       assign (
+            InputIterator first,
+            InputIterator last,
+            typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0
+        ) {
             clear();
 
             size_type   new_size = static_cast<size_type>(last - first);
