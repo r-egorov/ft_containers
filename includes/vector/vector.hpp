@@ -136,18 +136,18 @@ template <
     ** Member types
     */
     public:
-        typedef T                                       value_type;
-        typedef Allocator                               allocator_type;
-        typedef std::size_t                             size_type;
-        typedef std::ptrdiff_t                          difference_type;
-        typedef value_type&                             reference;
-        typedef const value_type&                       const_reference;
-        typedef typename allocator_type::pointer        pointer;
-        typedef typename allocator_type::const_pointer  const_pointer;
-        typedef ft::vector_iterator<T, false>           iterator;
-        typedef ft::vector_iterator<T, true>            const_iterator;
-        typedef ft::reverse_iterator<iterator>          reverse_iterator;
-        typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
+        typedef T                                           value_type;
+        typedef Allocator                                   allocator_type;
+        typedef std::size_t                                 size_type;
+        typedef std::ptrdiff_t                              difference_type;
+        typedef typename allocator_type::reference          reference;
+        typedef typename allocator_type::const_reference    const_reference;
+        typedef typename allocator_type::pointer            pointer;
+        typedef typename allocator_type::const_pointer      const_pointer;
+        typedef ft::vector_iterator<T, false>               iterator;
+        typedef ft::vector_iterator<T, true>                const_iterator;
+        typedef ft::reverse_iterator<iterator>              reverse_iterator;
+        typedef ft::reverse_iterator<const_iterator>        const_reverse_iterator;
     /*
     ** Private fields
     */
@@ -320,8 +320,9 @@ template <
             
             pointer new_array = _allocator.allocate(n);
             try {
-                std::uninitialized_copy(_array, _array + _size, new_array);
-            } catch (std::exception &e) {
+                //std::uninitialized_copy(_array, _array + _size, new_array);
+                _uninit_copy(_array, _array + _size, new_array);
+            } catch (...) {
                 _allocator.deallocate(new_array, n);
                 throw;
             }
@@ -460,10 +461,12 @@ template <
                 pointer new_array = _allocator.allocate(new_capacity);
 
                 try {
-                    std::uninitialized_copy(begin(), position, new_array);
+                    //std::uninitialized_copy(begin(), position, new_array);
+                    _uninit_copy(begin(), position, new_array);
                     _allocator.construct(new_array + border, val);
-                    std::uninitialized_copy(position, end(), new_array + border + 1);
-                } catch (std::exception &e) {
+                    //std::uninitialized_copy(position, end(), new_array + border + 1);
+                    _uninit_copy(position, end(), new_array + border + 1);
+                } catch (...) {
                     _allocator.destroy(new_array + border);
                     _allocator.deallocate(new_array, new_capacity);
                     throw ;
@@ -511,12 +514,15 @@ template <
 
                 new_array = _allocator.allocate(new_capacity);
                 try {
-                    std::uninitialized_copy(begin(), position, new_array);
+                    // std::uninitialized_copy(begin(), position, new_array);
+                    _uninit_copy(begin(), position, new_array);
                     for (size_type i = border; i < border + n; i++) {
                         _allocator.construct(new_array + i, val);
                     }
-                    std::uninitialized_copy(position, end(), new_array + border + n);
-                } catch (std::exception &e) {
+                    //std::uninitialized_copy(position, end(), new_array + border + n);
+                    _uninit_copy(position, end(), new_array + border + n);
+                    
+                } catch (...) {
                     _allocator.deallocate(new_array, new_capacity);
                     throw ;
                 }
@@ -569,12 +575,13 @@ template <
 
                 new_array = _allocator.allocate(new_capacity);
                 try {
-                    std::uninitialized_copy(begin(), position, new_array);
-                    for (size_type i = border; i < border + n; i++, first++) {
-                        _allocator.construct(new_array + i, *first);
-                    }
-                    std::uninitialized_copy(position, end(), new_array + border + n);
-                } catch (std::exception &e) {
+                    // std::uninitialized_copy(begin(), position, new_array);
+                    // std::uninitialized_copy(first, last, new_array + border);
+                    // std::uninitialized_copy(position, end(), new_array + border + n);
+                    _uninit_copy(begin(), position, new_array);
+                    _uninit_copy(first, last, new_array + border);
+                    _uninit_copy(position, end(), new_array + border + n);
+                } catch (...) {
                     _allocator.deallocate(new_array, new_capacity);
                     throw ;
                 }
@@ -605,7 +612,7 @@ template <
                     _allocator.construct(_array + i - n, *(_array + i));
                     _allocator.destroy(_array + i);
                 }
-            } catch (std::exception &e) {
+            } catch (...) {
                 for (; i >= right_border; i--) {
                     _allocator.destroy(_array + i - n);
                 }
@@ -633,6 +640,35 @@ template <
         */
         allocator_type get_allocator() const {
             return (_allocator);
+        }
+    
+    /*
+    ** Helper functions
+    */
+    private:
+        template< class InputIt, class NoThrowForwardIt >
+        void _uninit_copy(InputIt first, InputIt last,
+                          NoThrowForwardIt d_first) {
+            NoThrowForwardIt    current = d_first;
+            try {
+                for (; first != last; ++first, ++current) {
+                    _allocator.construct(
+                        const_cast<pointer>(static_cast<const volatile pointer>(
+                            std::addressof(*current))
+                        ),
+                        *first
+                    );
+                }
+            } catch (...) {
+                for (; d_first != current; ++d_first) {
+                    _allocator.destroy(
+                        const_cast<pointer>(static_cast<const volatile pointer>(
+                            std::addressof(*d_first))
+                        )
+                    );
+                }
+                throw ;
+            }
         }
 };
 

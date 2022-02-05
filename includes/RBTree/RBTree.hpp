@@ -5,7 +5,7 @@
 # define BLACK true
 
 # include <memory>
-# include "ft_utilities.hpp"
+# include "../utils/ft_utilities.hpp"
 
 # include <string>
 # include <iostream>
@@ -360,18 +360,6 @@ template <
             _nil->right = _min(_root);
         }
         // Destructor
-        void    _destroyTree(node_pointer head) {
-            if (head->is_nil) {
-                return ;
-            }
-            _destroyTree(head->left);
-            _destroyTree(head->right);
-            _value_allocator.destroy(head->value);
-            _value_allocator.deallocate(head->value, 1);
-            _node_allocator.destroy(head);
-            _node_allocator.deallocate(head, 1);
-        }
-
         ~RBTree() {
             _destroyTree(this->_root);
             delete this->_nil;
@@ -402,18 +390,6 @@ template <
             _node_allocator.construct(node, node_type(val_copy));
             _insertNode(node);
             _size++;
-            // if first element to insert
-            if (_size == 1) {
-                this->_nil->right = node;  // min element
-                this->_nil->left = node;  // max element
-            } else {
-                // if less then minimum element
-                if (_comparator(*(node->value), *(_nil->right->value))) {
-                    this->_nil->right = node;
-                } else {
-                    this->_nil->left = node;
-                }
-            }
             return (iterator(node));
         }
 
@@ -461,44 +437,80 @@ template <
             if (_size == 0) {
                 return (iterator(_nil)); 
             }
-            return(iterator(_min(_root)));
+            return(iterator(_nil->right));
         }
 
         const_iterator           begin() const {
             if (_size == 0) {
                 return (const_iterator(_nil)); 
             }
-            return(const_iterator(_min(_root)));
+            return(const_iterator(_nil->right));
         }
 
         reverse_iterator        rbegin() {
-            if (_size == 0) {
-                return (reverse_iterator(_nil));
-            }
-            return (reverse_iterator(_max(_root)));
+            return (reverse_iterator(end()));
         }
 
         const_reverse_iterator  rbegin() const {
-            if (_size == 0) {
-                return (const_reverse_iterator(_nil));
-            }
-            return (const_reverse_iterator(_max(_root)));
+            return (const_reverse_iterator(end()));
         }
 
         reverse_iterator        rend() {
-            return (reverse_iterator(_nil));
+            return (reverse_iterator(begin()));
         }	
 
         const_reverse_iterator  rend() const {
-            return (const_reverse_iterator(_nil));
+            return (const_reverse_iterator(begin()));
         }
 
+        /*
+        ** Comparision operators (non-member)
+        */
+        template<class value, class comparator, class allocator>
+        friend bool operator==(
+            const RBTree<value,comparator,allocator>& lhs,
+            const RBTree<value,comparator,allocator>& rhs
+        );
+        
+        template<class value, class comparator, class allocator>
+        friend bool operator!=(
+            const RBTree<value,comparator,allocator>& lhs,
+            const RBTree<value,comparator,allocator>& rhs
+        );
+        
+        template<class value, class comparator, class allocator>
+        friend bool operator<(
+            const RBTree<value,comparator,allocator>& lhs,
+            const RBTree<value,comparator,allocator>& rhs
+        );
+
+        template<class value, class comparator, class allocator>
+        friend bool operator<=(
+            const RBTree<value,comparator,allocator>& lhs,
+            const RBTree<value,comparator,allocator>& rhs
+        );
+        
+        template<class value, class comparator, class allocator>
+        friend bool operator>(
+            const RBTree<value,comparator,allocator>& lhs,
+            const RBTree<value,comparator,allocator>& rhs
+        );
+
+        template<class value, class comparator, class allocator>
+        friend bool operator>=(
+            const RBTree<value,comparator,allocator>& lhs,
+            const RBTree<value,comparator,allocator>& rhs
+        );
+
+        // FIXME
         void    print() const {
             std::cout << "=========TREE=========" << std::endl;
             _print(this->_root, 0);
-            if (_size > 0)
-                std::cout << "min = " << *(_nil->right->value) << " , max = " << *(_nil->left->value) << std::endl;
-            std::cout << "======================" << std::endl;
+            if (_size > 0) {
+                std::cout << "nil->right = " << *(_nil->right->value) << " , nil->left = " << *(_nil->left->value) << std::endl;
+                std::cout << "min = " << *(_min(_root)->value) << " , max = " << *(_max(_root)->value) << std::endl;
+            }
+                std::cout << "======================" << std::endl;
         }
 
         size_type   size() const {
@@ -534,6 +546,18 @@ template <
             else {
                 std::cout << *head << std::endl;
             }
+        }
+   
+        void    _destroyTree(node_pointer head) {
+            if (head->is_nil) {
+                return ;
+            }
+            _destroyTree(head->left);
+            _destroyTree(head->right);
+            _value_allocator.destroy(head->value);
+            _value_allocator.deallocate(head->value, 1);
+            _node_allocator.destroy(head);
+            _node_allocator.deallocate(head, 1);
         }
 
         iterator    _searchValue(node_pointer head, const_reference val) const {
@@ -666,12 +690,30 @@ template <
             to_insert->left = this->_nil;
             to_insert->right = this->_nil;
             to_insert->color = RED;
+
+            if (_size == 0) {
+                this->_nil->right = to_insert;  // min element
+                this->_nil->left = to_insert;  // max element
+            } else {
+                // if greater then maximum element
+                if (to_insert == _nil->left->right) {
+                    this->_nil->left = to_insert;
+                } else if (to_insert == _nil->right->left) {
+                    this->_nil->right = to_insert;
+                }
+            }
+
             _insertFixup(to_insert);
         }
 
         pointer   _value(const_reference val) {
             pointer     created = _value_allocator.allocate(1);
-            _value_allocator.construct(created, val);
+            try {
+                _value_allocator.construct(created, val);
+            } catch (...) {
+                _value_allocator.deallocate(created, 1);
+                throw ;
+            }
             return (created);
         }
 
@@ -793,7 +835,61 @@ template <
             }
             x->color = BLACK;
         }
+        
 };
+
+
+template<class value, class comparator, class allocator>
+bool operator<(
+    const RBTree<value,comparator,allocator>& lhs,
+    const RBTree<value,comparator,allocator>& rhs
+) {
+    return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+}
+
+template<class value, class comparator, class allocator>
+bool operator>(
+    const RBTree<value,comparator,allocator>& lhs,
+    const RBTree<value,comparator,allocator>& rhs
+) {
+    return (rhs < lhs);
+}
+
+template<class value, class comparator, class allocator>
+bool operator==(
+    const RBTree<value,comparator,allocator>& lhs,
+    const RBTree<value,comparator,allocator>& rhs
+) {
+    if (lhs.size() == rhs.size()) {
+        return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+    }
+    return (false);
+}
+
+template<class value, class comparator, class allocator>
+bool operator!=(
+    const RBTree<value,comparator,allocator>& lhs,
+    const RBTree<value,comparator,allocator>& rhs
+) {
+    return (!(lhs == rhs));
+}
+
+template<class value, class comparator, class allocator>
+bool operator<=(
+    const RBTree<value,comparator,allocator>& lhs,
+    const RBTree<value,comparator,allocator>& rhs
+) {
+    return (!(rhs < lhs));
+}
+
+
+template<class value, class comparator, class allocator>
+bool operator>=(
+    const RBTree<value,comparator,allocator>& lhs,
+    const RBTree<value,comparator,allocator>& rhs
+) {
+    return (!(lhs < rhs));
+}
 
 }  // Namespace brace
 

@@ -45,6 +45,38 @@ void    print_vector(const C &vec, typename C::iterator& in_it) {
     std::cout << "+-----------------------------------------------------+"  << std::endl;
 }
 
+
+
+
+class B {
+public:
+	char *l;
+	int i;
+	B():l(nullptr), i(1) {};
+	B(const int &ex) {
+		this->i = ex;
+		this->l = new char('a');
+	};
+	virtual ~B() {
+		delete this->l;
+		this->l = nullptr;
+	};
+};
+
+class A : public B {
+public:
+	A():B(){};
+	A(const B* ex){
+		this->l = new char(*(ex->l));
+		this->i = ex->i;
+		if (ex->i == -1) throw "n";
+	}
+	~A() {
+		delete this->l;
+		this->l = nullptr;
+	};
+};
+
 template <class C>
 void    print_vector(const C &vec) {
     size_t i = 0;
@@ -55,199 +87,6 @@ void    print_vector(const C &vec) {
     }
     std::cout << "+-----------------------------------------------------+"  << std::endl;
 }
-
-// int main(void)
-// {
-//     Timer   timer;
-
-//     std::cout
-//         << "=======================\nTESTING STACK\n======================="
-//         << std::endl;
-    
-//     typedef ft::stack<MyClass> myclass_stack;
-//     myclass_stack   st;
-
-//     timer.start();
-    
-//     std::cout << "st.empty() = " << st.empty() << std::endl;
-//     std::string     strs[10] = {
-//         "I",
-//         "hope",
-//         "my",
-//         "stack",
-//         "is",
-//         "working",
-//         "as",
-//         "it",
-//         "should",
-//         ".",
-//     };
-
-//     for (int i = 0; i < 10; i++)
-//     {
-//         MyClass     obj(i, strs[i]);
-//         st.push(MyClass(obj));
-//         std::cout << "pushing my_class = " << obj << std::endl;
-//     }
-//     std::cout << "st.size() = " << st.size() << std::endl;
-//     std::cout << "st.empty() = " << st.empty() << std::endl;
-
-//     for (int i = 0; i < 5; i++)
-//     {
-//         std::cout << "popping last = " << st.top() << std::endl;
-//         st.pop();
-//     }
-//     std::cout << "st.size() = " << st.size() << std::endl;
-//     std::cout << "st.empty() = " << st.empty() << std::endl;
-
-//     for (int i = 0; i < 5; i++)
-//     {
-//         std::cout << "popping last = " << st.top() << std::endl;
-//         st.pop();
-//     }
-//     std::cout << "st.size() = " << st.size() << std::endl;
-//     std::cout << "st.empty() = " << st.empty() << std::endl;
-    
-//     timer.stop();
-
-//     typedef ft::stack<int>  int_stack;
-//     int_stack               int_st_1;
-//     int_stack               int_st_2;
-
-//     for(int i = 1; i < 100; i *= 10)
-//     {
-//         int_st_1.push(i);
-//         int_st_2.push(i);
-//     }
-//     if (int_st_1 == int_st_2)
-//     {
-//         std::cout << "IDENTICAL: int_st_1 == int_st_2" << std::endl;
-//     } else {
-//         std::cout << "DIFF: int_st_1 == int_st_2" << std::endl;
-//     }
-
-//     int_st_2.pop();
-//     std::cout << "int_st_2.pop()" << std::endl;
-    
-//     if (int_st_1 == int_st_2)
-//     {
-//         std::cout << "IDENTICAL: int_st_1 == int_st_2" << std::endl;
-//     } else {
-//         std::cout << "DIFF: int_st_1 == int_st_2" << std::endl;
-//     }
-
-//     std::cout
-//         << "========================\n"
-//         << std::endl;
-
-
-//     std::cout
-//         << "=======================\nTESTING VECTOR\n======================="
-//         << std::endl;
-
-//     timer.start();
-
-//     ft::vector<int>     my_vector_default;
-    
-//     // Should be working with enable_if
-//     // ft::vector<int>*     my_vector_second = new ft::vector<int>(4, 100);
-    
-
-//     ft::vector<int>*     my_vector_second = new ft::vector<int>(4, 100);
-    
-//     for (ft::vector<int>::iterator it = my_vector_second->begin(); it != my_vector_second->end(); it++) {
-//         std::cout << *it << " ";
-//     }
-//     std::cout << std::endl;
-
-//     // Test constructor with iterators
-//     int a[4] = {1, 2, 3, 5};
-//     std::vector<int> v(a, a + sizeof(a) / sizeof(a[0]));
-//     ft::vector<int> my (v.begin(), v.end());
-
-//     for (ft::vector<int>::iterator it = my.begin(); it != my.end(); it++) {
-//         std::cout << *it << " ";
-//     }
-//     std::cout << std::endl;
-
-//     // Test copy constructor
-//     ft::vector<int> my_copy(my);
-//     for (ft::vector<int>::iterator it = my_copy.begin(); it != my_copy.end(); it++) {
-//         std::cout << *it << " ";
-//     }
-//     std::cout << std::endl;
-
-//     ft::vector<int> new_copy = my_copy;
-//     for (ft::vector<int>::iterator it = new_copy.begin(); it != new_copy.end(); it++) {
-//         std::cout << *it << " ";
-//     }
-//     std::cout << std::endl;
-
-//     ft::vector<int> *n_copy = new ft::vector<int>(new_copy);
-
-//     for (ft::vector<int>::iterator it = n_copy->begin(); it != n_copy->end(); it++) {
-//         std::cout << *it << " ";
-//     }
-//     std::cout << std::endl;
-
-//     ft::vector<MyClass> vector_myclass1(10);
-
-//     MyClass& mc = vector_myclass1.front();
-//     mc.setN(15);
-//     mc.setS("front");
-
-//     MyClass& mc1 = vector_myclass1.back();
-//     mc1.setN(51);
-//     mc1.setS("back");
-
-//     ft::vector<MyClass> vector_myclass(vector_myclass1);
-
-//     std::cout << vector_myclass1.at(5) << std::endl;
-
-//     ft::vector<MyClass> vector_myclass_2(5);
-//     for (ft::vector<MyClass>::const_iterator it = vector_myclass_2.begin(); it != vector_myclass_2.end(); it++) {
-//         std::cout << *it << ", ";
-//     }
-//     std::cout << std::endl;
-    
-
-//     std::cout << "SSSSSSSSSSSSSSS" << std::endl;
-
-//     ft::vector<MyClass> newnewnew;
-//     for (int i = 0; i < 15; i++) {
-//         newnewnew.push_back(MyClass(i, strs[i % 10]));
-//     }
-//     vector_myclass_2.assign(newnewnew.begin(), newnewnew.end());
-//     for (ft::vector<MyClass>::const_iterator it = vector_myclass_2.begin(); it != vector_myclass_2.end(); it++) {
-//         std::cout << *it << ", ";
-//     }
-//     std::cout << std::endl;
-
-//     std::cout << "SSSSSSSSSSSSSSS" << std::endl;
-//     print_vector(vector_myclass_2);
-
-//     MyClass     new_val(7777, "new Class value!");
-//     // ft::vector<MyClass>::iterator ps = vector_myclass_2.insert(vector_myclass_2.begin() + 4, new_val);
-//     // print_vector(vector_myclass_2, ps);
-
-//     // print_vector(vector_myclass_2);
-//     vector_myclass = ft::vector<MyClass>();
-//     vector_myclass.push_back(MyClass(189, "Kvartira"));
-//     vector_myclass.push_back(MyClass(40, "Dom"));
-//     vector_myclass.push_back(MyClass(2, "Korpus"));
-//     print_vector(vector_myclass);
-//     print_vector(vector_myclass_2);
-//     vector_myclass.insert(vector_myclass.end(), vector_myclass_2.begin(), vector_myclass_2.begin() + 2);
-//     print_vector(vector_myclass_2);
-
-//     // ft::vector<MyClass>::iterator erit = vector_myclass_2.erase(vector_myclass_2.begin() + 4, vector_myclass_2.begin() + 10);
-    
-//     ft::vector<MyClass>::iterator erit = vector_myclass_2.erase(vector_myclass_2.end() - 1);
-//     print_vector(vector_myclass_2, erit);
-
-//     ft::vector<MyClass>::const_iterator const_erit = vector_myclass_2.begin();
-//     const_erit = erit;
-// }
 
 
 #include "RBTree.hpp"
@@ -266,133 +105,79 @@ namespace ft{
 }
 
 int main(void) {
-    // ft::pair<const int, int> pairs[6] = {
-    //     ft::pair<const int, int>(41, 41),
-    //     ft::pair<const int, int>(38, 38),
-    //     ft::pair<const int, int>(31, 31),
-    //     ft::pair<const int, int>(12, 12),
-    //     ft::pair<const int, int>(19, 19),
-    //     ft::pair<const int, int>(8,8),
-    // };
-    // ft::map<int, int> ftmap(pairs, pairs + 6);
-    // for (ft::map<int, int>::iterator it = ftmap.begin(); it != ftmap.end(); it++) {
-    //     std::cout << *it << std::endl;
-    // }
+    // std::map<int, int>      std_map;
+    // ft::map<int, int>       ft_map;
 
-    // ft::map<int, int>::iterator pos;
-    // pos = ftmap.insert(ft::pair<const int, int>(8,25)).first;
-    // std::cout << *pos << std::endl;
-
-    // pos = ftmap.insert(ft::pair<const int, int>(25,25)).first;
-    // std::cout << *pos << std::endl;
-
-    // ft::map<int, int>::iterator inserted = ftmap.insert(pos, ft::pair<const int, int>(8,25));
-    // std::cout << *inserted << std::endl;
-
-    // ft::pair<const int, int> another[3] = {
-    //     ft::pair<const int, int>(1, 1),
-    //     ft::pair<const int, int>(38, 256),
-    //     ft::pair<const int, int>(45, 45)
-    // };
-    // ft::map<int, int> ftmap2(another, another + 3);
-    // ftmap.insert(another, another + 3);
-    // print_map(ftmap);
-    // ft::map<int, int>::iterator position = ftmap.begin();
-    // position++;
-    // position++;
-    // position++;
-    // position++;
+	// std_map.insert(std::make_pair(16, 3));
+	// std_map.insert(std::make_pair(8, 3));
+	// std_map.insert(std::make_pair(23, 3));
+	// std_map.insert(std::make_pair(7, 3));
+	// std_map.insert(std::make_pair(19, 3));
+	// std_map.insert(std::make_pair(29, 3));
+	// std_map.insert(std::make_pair(41, 3));
+	// std_map.insert(std::make_pair(4, 3));
+	// std_map.insert(std::make_pair(11, 3));
     
-    // //ftmap.erase(ftmap.begin(), ftmap.end());
-    // print_map(ftmap);
-    // ftmap.print_tree();
+	// ft_map.insert(ft::make_pair(16, 3));
+	// ft_map.insert(ft::make_pair(8, 3));
+	// ft_map.insert(ft::make_pair(23, 3));
+	// ft_map.insert(ft::make_pair(7, 3));
+	// ft_map.insert(ft::make_pair(19, 3));
+	// ft_map.insert(ft::make_pair(29, 3));
+	// ft_map.insert(ft::make_pair(41, 3));
+	// ft_map.insert(ft::make_pair(4, 3));
+	// ft_map.insert(ft::make_pair(11, 3));
 
-    // ftmap.insert(ft::pair<const int, int>(361,361));
-    // ftmap.insert(ft::pair<const int, int>(-25,-25));
-    // ftmap.print_tree();
-
-    // ftmap.erase(361);
-    // ftmap.print_tree();
-    // ftmap.erase(-25);
-    // ftmap.print_tree();
-
-    // // for (ft::map<int, int>::iterator it = ftmap.begin(); it != ftmap.end(); it++) {
-    // //     std::cout << (*it) << std::endl;
-    // // }
-    // ft::map<int, int>::iterator itt = ftmap.begin();
-    // itt++;
-    // itt++;
-    // itt++;
-    // itt++;
-
-    // print_map(ftmap);
-    // std::cout << ftmap.size() << std::endl;
-    // print_map(ftmap2);
-    // std::cout << ftmap2.size() << std::endl;
-    // ftmap.swap(ftmap2);
-    // print_map(ftmap);
-    // std::cout << ftmap.size() << std::endl;
-    // print_map(ftmap2);
-    // std::cout << ftmap2.size() << std::endl;
-
-    // ft::map<std::string, int> ft_map;
-    // std::map<std::string, int> std_map;
-
-    // std::string        strs[10] = {
-    //     "one", "three", "five", "six", "seven", "eighty", "ninety", "hundred", "thousand", "million"
-    // };
-    // int                 ints[10] = {
-    //     1, 3, 5, 6, 7, 80, 90, 100, 1000, 1000000
-    // };
-
-    // for (size_t i = 0; i < 10; i++){
-    //     ft_map.insert(ft::make_pair(strs[i], ints[i]));
-    //     std_map.insert(std::make_pair(strs[i], ints[i]));
-    // }
-    // std::cout << "ft_map =\t";
-    // print_map(ft_map);
-    // std::cout << "std_map =\t";
     // print_map(std_map);
+    // print_map(ft_map);
 
-    // std::pair<std::map<std::string,int>::iterator,std::map<std::string,int>::iterator> std_ret;
-    // ft::pair<ft::map<std::string,int>::iterator,ft::map<std::string,int>::iterator> ft_ret;
+    // std::map<int, int>::reverse_iterator std_rit = std_map.rbegin();
+    // std::map<int, int>::reverse_iterator std_rit2 = std_map.rend();
 
-    // std_ret = std_map.equal_range("ninety");
-    // ft_ret = ft_map.equal_range("ninety");
+    // ft::map<int, int>::reverse_iterator ft_rit = ft_map.rbegin();
+    // ft::map<int, int>::reverse_iterator ft_rit2 = ft_map.rend();
 
-    // std::cout << "STD lower bound points to: ";
-    // std::cout << std_ret.first->first << " => " << std_ret.first->second << '\n';
+    // std_rit++;
+    // std_rit2--;
+    // ft_rit++;
+    // ft_rit2--;
 
-    // std::cout << "STD upper bound points to: ";
-    // std::cout << std_ret.second->first << " => " << std_ret.second->second << '\n';
+    // std::cout << "std it = k:" << std_rit->first << " v:" << std_rit->second << std::endl;
+    // std::cout << "ft it = k:" << ft_rit->first << " v:" << ft_rit->second << std::endl;
 
-    // std::cout << "FT lower bound points to: ";
-    // std::cout << ft_ret.first->first << " => " << ft_ret.first->second << '\n';
+    // std_rit++;
+    // ft_rit++;
 
-    // std::cout << "FT upper bound points to: ";
-    // std::cout << ft_ret.second->first << " => " << ft_ret.second->second << '\n';
+    // std::cout << "Std:\t"<< (*std_rit == *std_rit2) << std::endl;
+    // std::cout << "FT:\t" << (*ft_rit == *ft_rit2) << std::endl;
 
-    ft::vector<int>     ft_v;
-    std::vector<int>    std_v;
+    // std_rit2--;
+    // ft_rit2--;
 
-    std_v.assign(10000, 50);
-    ft_v.assign(10000, 50);
+    // std::cout << "std:\t" << std_rit->first << ", " << std_rit2->first << std::endl;
+    // std::cout << "ft:\t" << ft_rit->first << ", " << ft_rit2->first << std::endl;
 
-    std_v.resize(5000);
-    ft_v.resize(5000);
-    std::cout << "STD VEC s = " << std_v.size() << ", c = " << std_v.capacity() << "v[20] = " << std_v[20] << std::endl;
-    std::cout << "FT VEC s = " << ft_v.size() << ", c = " << ft_v.capacity() << "v[20] = " << ft_v[20] << std::endl;
-    std_v.resize(7000);
-    ft_v.resize(7000);
-    std::cout << "STD VEC s = " << std_v.size() << ", c = " << std_v.capacity() << "v[20] = " << std_v[20] << std::endl;
-    std::cout << "FT VEC s = " << ft_v.size() << ", c = " << ft_v.capacity() << "v[20] = " << ft_v[20] << std::endl;
-    std_v.resize(15000, 25);
-    ft_v.resize(15000, 25);
-    std::cout << "STD VEC s = " << std_v.size() << ", c = " << std_v.capacity() << "v[20] = " << std_v[20] << std::endl;
-    std::cout << "FT VEC s = " << ft_v.size() << ", c = " << ft_v.capacity() << "v[20] = " << ft_v[20] << std::endl;
+    // std::cout << "Std:\t"<< (*std_rit < *std_rit2) << std::endl;
+    // std::cout << "FT:\t" << (*ft_rit < *ft_rit2) << std::endl;
+
+    // std::cout << "Std:\t"<< (*std_rit > *std_rit2) << std::endl;
+    // std::cout << "FT:\t" << (*ft_rit > *ft_rit2) << std::endl;
+
+
+    // std::cout << "Std:\t"<< (*std_rit2 < *std_rit) << std::endl;
+    // std::cout << "FT:\t" << (*ft_rit2 < *ft_rit) << std::endl;
+
+
+    // std::cout << "Std:\t"<< (*std_rit2 > *std_rit) << std::endl;
+    // std::cout << "FT:\t" << (*ft_rit2 > *ft_rit) << std::endl;
+
+
+    // --std_rit;
+    // --ft_rit;
     
-    // std::cout << "STD VEC" << std::endl;
-    // print_vector(std_v);
-    // std::cout << "FT VEC" << std::endl;
-    // print_vector(ft_v);
+    // std::cout << "std it = k:" << std_rit->first << " v:" << std_rit->second << std::endl;
+    // std::cout << "ft it = k:" << ft_rit->first << " v:" << ft_rit->second << std::endl;
+
+    ft::vector<int> ft_v;
+    ft_v.reserve(1000);
 }

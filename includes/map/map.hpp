@@ -163,6 +163,14 @@ template<
             return ((*((this->insert(ft::make_pair(k,mapped_type()))).first)).second);
         }
 
+        mapped_type& at( const key_type& key ) {
+            iterator found = _tree.search(ft::make_pair(key, mapped_type()));
+            if (found != end()) {
+                return (found->second);
+            }
+            throw std::out_of_range("No element with such key in map!");
+        }
+
         /*
         ** Modifiers
         */
@@ -178,9 +186,7 @@ template<
 
         // With hint
         iterator                    insert(iterator position, const value_type& val) {
-            if (*position == val) {
-                return (position);
-            }
+            (void)position;
             iterator inserted = _tree.search(val);
             if (inserted != end()) {
                 return (inserted);
@@ -259,7 +265,7 @@ template<
 
         iterator                                lower_bound(const key_type& k) {
             iterator it = begin();
-            while (_comparator(it->first, k)) {
+            while (it != end() && _comparator(it->first, k)) {
                 it++;
             }
             return (it);
@@ -267,7 +273,7 @@ template<
 
         const_iterator                          lower_bound(const key_type& k) const {
             const_iterator it = begin();
-            while (_comparator(it->first, k)) {
+            while (it != end() && _comparator(it->first, k)) {
                 it++;
             }
             return (it);
@@ -275,7 +281,7 @@ template<
 
         iterator                                upper_bound(const key_type& k) {
             iterator it = begin();
-            while (!(_comparator(k, it->first))) {
+            while (it != end() && !(_comparator(k, it->first))) {
                 it++;
             }
             return (it);
@@ -283,7 +289,7 @@ template<
 
         const_iterator                          upper_bound(const key_type& k) const{
             const_iterator it = begin();
-            while (!(_comparator(k, it->first))) {
+            while (it != end() && !(_comparator(k, it->first))) {
                 it++;
             }
             return (it);
@@ -310,13 +316,76 @@ template<
         allocator_type  get_allocator() const {
             return (_allocator);
         }
+        
+        /*
+        ** Comparision operators (non-member)
+        */
+        template<class key, class value, class comparator, class allocator>
+        friend bool operator==(const ft::map<key, value, comparator, allocator>& lhs,
+                               const ft::map<key, value, comparator, allocator>& rhs);
+
+        template<class key, class value, class comparator, class allocator>
+        friend bool operator!=(const ft::map<key, value, comparator, allocator>& lhs,
+                               const ft::map<key, value, comparator, allocator>& rhs);
+
+        template<class key, class value, class comparator, class allocator>
+        friend bool operator<(const ft::map<key, value, comparator, allocator>& lhs,
+                              const ft::map<key, value, comparator, allocator>& rhs);
+
+        template<class key, class value, class comparator, class allocator>
+        friend bool operator<=(const ft::map<key, value, comparator, allocator>& lhs,
+                               const ft::map<key, value, comparator, allocator>& rhs);
+
+        template<class key, class value, class comparator, class allocator>
+        friend bool operator>(const ft::map<key, value, comparator, allocator>& lhs,
+                              const ft::map<key, value, comparator, allocator>& rhs);
+
+        template<class key, class value, class comparator, class allocator>
+        friend bool operator>=(const ft::map<key, value, comparator, allocator>& lhs,
+                               const ft::map<key, value, comparator, allocator>& rhs);
+
     //FIXME
         void print_tree() const {
             _tree.print();
         }
-
-
 };
+
+
+template<class key, class value, class comparator, class allocator>
+bool operator==(const ft::map<key, value, comparator, allocator>& lhs,
+                const ft::map<key, value, comparator, allocator>& rhs) {
+    return (lhs._tree == rhs._tree);
+}
+
+template<class key, class value, class comparator, class allocator>
+bool operator!=(const ft::map<key, value, comparator, allocator>& lhs,
+                const ft::map<key, value, comparator, allocator>& rhs) {
+    return (lhs._tree != rhs._tree);
+}
+
+template<class key, class value, class comparator, class allocator>
+bool operator<(const ft::map<key, value, comparator, allocator>& lhs,
+                const ft::map<key, value, comparator, allocator>& rhs) {
+    return (lhs._tree < rhs._tree);
+}
+
+template<class key, class value, class comparator, class allocator>
+bool operator<=(const ft::map<key, value, comparator, allocator>& lhs,
+                const ft::map<key, value, comparator, allocator>& rhs) {
+    return (lhs._tree <= rhs._tree);
+}
+
+template<class key, class value, class comparator, class allocator>
+bool operator>(const ft::map<key, value, comparator, allocator>& lhs,
+                const ft::map<key, value, comparator, allocator>& rhs) {
+    return (lhs._tree > rhs._tree);
+}
+
+template<class key, class value, class comparator, class allocator>
+bool operator>=(const ft::map<key, value, comparator, allocator>& lhs,
+                const ft::map<key, value, comparator, allocator>& rhs) {
+    return (lhs._tree >= rhs._tree);
+}
 
 } // Namespace brace
 
