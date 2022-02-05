@@ -178,6 +178,20 @@ int main(void) {
     // std::cout << "std it = k:" << std_rit->first << " v:" << std_rit->second << std::endl;
     // std::cout << "ft it = k:" << ft_rit->first << " v:" << ft_rit->second << std::endl;
 
-    ft::vector<int> ft_v;
-    ft_v.reserve(1000);
+
+	// std::cout << (ft::is_integral<float>() == std::is_integral<float>());
+	// std::cout << (ft::is_integral<int>() == std::is_integral<int>());
+	// std::cout << (ft::is_integral<bool>() == std::is_integral<bool>());
+	// std::cout << (ft::is_integral<char>() == std::is_integral<char>());
+	// std::cout << (ft::is_integral<signed char>() == std::is_integral<signed char>());
+	// std::cout << (ft::is_integral<unsigned char>() == std::is_integral<unsigned char>());
+	// std::cout << (ft::is_integral<wchar_t>() == std::is_integral<wchar_t>());
+	std::cout << (ft::is_integral<char16_t>() == std::is_integral<char16_t>());
+	std::cout << (ft::is_integral<short>() == std::is_integral<short>());
+	std::cout << (ft::is_integral<unsigned short>() == std::is_integral<unsigned short>());
+	std::cout << (ft::is_integral<unsigned int>() == std::is_integral<unsigned int>());
+	std::cout << (ft::is_integral<long>() == std::is_integral<long>());
+	std::cout << (ft::is_integral<unsigned long>() == std::is_integral<unsigned long>());
+	std::cout << (ft::is_integral<long long>() == std::is_integral<long long>());
+	std::cout << (ft::is_integral<unsigned long long>() == std::is_integral<unsigned long long>());
 }

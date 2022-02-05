@@ -28,7 +28,8 @@ class vector_iterator {
             typename ft::iterator_traits<const T*>::reference,
             typename ft::iterator_traits<T*>::reference
         >::type                                                             reference;
-
+        typedef pointer                                                     iterator_type;
+        
     protected:
         pointer      _p;
 

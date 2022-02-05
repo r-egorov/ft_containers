@@ -88,6 +88,10 @@ template<> struct is_integral<const unsigned short> : ft::true_type {};
 template<> struct is_integral<const unsigned int> : ft::true_type {};
 template<> struct is_integral<const unsigned long> : ft::true_type {};
 template<> struct is_integral<const unsigned long long> : ft::true_type {};
+template<> struct is_integral<signed char> : ft::true_type {};
+template<> struct is_integral<const signed char> : ft::true_type {};
+template<> struct is_integral<char16_t> : ft::true_type {};
+template<> struct is_integral<const char16_t> : ft::true_type {};
 
 
 /*
