@@ -3,3 +3,4 @@ objs/
 containers
 containers_leaks
 main
+.DS_Store

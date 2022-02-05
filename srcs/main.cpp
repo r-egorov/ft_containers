@@ -335,7 +335,29 @@ int main(void) {
     print_map(ftmap2);
     std::cout << ftmap2.size() << std::endl;
 
-    ft::map<int, int>::iterator found = ftmap2.lower_bound(31);
-    ftmap2.print_tree();
-    std::cout << "f = " << *(found.getNodePtr()) << std::endl;
+    ft::map<std::string, int> ft_map;
+    std::map<std::string, int> std_map;
+
+    std::string        strs[10] = {
+        "one", "three", "five", "six", "seven", "eighty", "ninety", "hundred", "thousand", "million"
+    };
+    int                 ints[10] = {
+        1, 3, 5, 6, 7, 80, 90, 100, 1000, 1000000
+    };
+
+    for (size_t i = 0; i < 10; i++){
+        ft_map.insert(ft::make_pair(strs[i], ints[i]));
+        std_map.insert(std::make_pair(strs[i], ints[i]));
+    }
+    std::cout << "ft_map =\t";
+    print_map(ft_map);
+    std::cout << "std_map =\t";
+    print_map(std_map);
+
+    
+   ft::map<std::string, int>::const_iterator ft_map_cit = ft_map.upper_bound("sssss");
+    std::map<std::string, int>::const_iterator std_map_cit = std_map.upper_bound("sssss");
+
+    std::cout << "std:\t" << std_map_cit->second << std::endl;
+    std::cout << "ft:\t" << ft_map_cit->second << std::endl;
 }

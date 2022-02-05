@@ -257,21 +257,35 @@ template<
         }
 
         iterator lower_bound (const key_type& k) {
-            iterator    found = find(k);
-            if (found != end()) {
-                return (++found);
-            } else {
-                return (found);
+            iterator it = begin();
+            while (_comparator(it->first, k)) {
+                it++;
             }
+            return (it);
         }
 
         const_iterator lower_bound (const key_type& k) const {
-            const_iterator    found = find(k);
-            if (found != end()) {
-                return (++found);
-            } else {
-                return (found);
+            const_iterator it = begin();
+            while (_comparator(it->first, k)) {
+                it++;
             }
+            return (it);
+        }
+
+        iterator        upper_bound (const key_type& k) {
+            iterator it = begin();
+            while (!(_comparator(k, it->first))) {
+                it++;
+            }
+            return (it);
+        }
+
+        const_iterator  upper_bound (const key_type& k) const{
+            const_iterator it = begin();
+            while (!(_comparator(k, it->first))) {
+                it++;
+            }
+            return (it);
         }
 
         allocator_type  get_allocator() const {
