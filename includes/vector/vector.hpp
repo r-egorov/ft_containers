@@ -285,7 +285,7 @@ template <
                 return ;
             
             if (n < _size) {
-                // reduces to its firs n elements, destroying elements beyond
+                // reduces to its first n elements, destroying elements beyond
                 for (size_type i = _size - 1; i > n - 1; --i) {
                     _allocator.destroy(_array + i);
                 }

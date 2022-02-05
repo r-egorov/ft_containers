@@ -27,34 +27,34 @@ void print_map(Map& m)
 // { return std::tolower(c1)<std::tolower(c2); }
 
 
-// template <class C>
-// void    print_vector(const C &vec, typename C::iterator& in_it) {
-//     size_t i = 0;
-//     std::cout << "+-------------------PRINTING VECTOR-------------------+" << std::endl;
-//     std::cout << "ft::vector, s = " << vec.size() << ", c = " << vec.capacity() << std::endl;
-//     for (typename C::const_iterator it = vec.begin(); it != vec.end(); it++) {
-//         if (&(*in_it) == &(*it)) {
-//             std::cout << "|" << i++ << "\t| " << *it << " <------ INPUT ITERATOR \n";
-//         } else {
-//             std::cout << "|" << i++ << "\t| " << *it << "\n";
-//         }
-//     }
-//     if (&(*in_it) == &(*vec.end())) {
-//         std::cout << "end() <------ INPUT ITERATOR"  << std::endl;
-//     }
-//     std::cout << "+-----------------------------------------------------+"  << std::endl;
-// }
+template <class C>
+void    print_vector(const C &vec, typename C::iterator& in_it) {
+    size_t i = 0;
+    std::cout << "+-------------------PRINTING VECTOR-------------------+" << std::endl;
+    std::cout << "ft::vector, s = " << vec.size() << ", c = " << vec.capacity() << std::endl;
+    for (typename C::const_iterator it = vec.begin(); it != vec.end(); it++) {
+        if (&(*in_it) == &(*it)) {
+            std::cout << "|" << i++ << "\t| " << *it << " <------ INPUT ITERATOR \n";
+        } else {
+            std::cout << "|" << i++ << "\t| " << *it << "\n";
+        }
+    }
+    if (&(*in_it) == &(*vec.end())) {
+        std::cout << "end() <------ INPUT ITERATOR"  << std::endl;
+    }
+    std::cout << "+-----------------------------------------------------+"  << std::endl;
+}
 
-// template <class C>
-// void    print_vector(const C &vec) {
-//     size_t i = 0;
-//     std::cout << "+-------------------PRINTING VECTOR-------------------+" << std::endl;
-//     std::cout << "ft::vector, s = " << vec.size() << ", c = " << vec.capacity() << std::endl;
-//     for (typename C::const_iterator it = vec.begin(); it != vec.end(); it++) {
-//         std::cout << "|" << i++ << "\t| " << *it << "\n";
-//     }
-//     std::cout << "+-----------------------------------------------------+"  << std::endl;
-// }
+template <class C>
+void    print_vector(const C &vec) {
+    size_t i = 0;
+    std::cout << "+-------------------PRINTING VECTOR-------------------+" << std::endl;
+    std::cout << "ft::vector, s = " << vec.size() << ", c = " << vec.capacity() << std::endl;
+    for (typename C::const_iterator it = vec.begin(); it != vec.end(); it++) {
+        std::cout << "|" << i++ << "\t| " << *it << "\n";
+    }
+    std::cout << "+-----------------------------------------------------+"  << std::endl;
+}
 
 // int main(void)
 // {
@@ -372,15 +372,27 @@ int main(void) {
     // std::cout << "FT upper bound points to: ";
     // std::cout << ft_ret.second->first << " => " << ft_ret.second->second << '\n';
 
-    ft::vector<int>     ft_int_v;
+    ft::vector<int>     ft_v;
+    std::vector<int>    std_v;
 
-    ft_int_v.push_back(5);
+    std_v.assign(10000, 50);
+    ft_v.assign(10000, 50);
 
-    ft::vector<int>::reverse_iterator    it;
-
-    it++;
-    it--;
-    it = it + 1;
-    it = it - 1;
-
+    std_v.resize(5000);
+    ft_v.resize(5000);
+    std::cout << "STD VEC s = " << std_v.size() << ", c = " << std_v.capacity() << "v[20] = " << std_v[20] << std::endl;
+    std::cout << "FT VEC s = " << ft_v.size() << ", c = " << ft_v.capacity() << "v[20] = " << ft_v[20] << std::endl;
+    std_v.resize(7000);
+    ft_v.resize(7000);
+    std::cout << "STD VEC s = " << std_v.size() << ", c = " << std_v.capacity() << "v[20] = " << std_v[20] << std::endl;
+    std::cout << "FT VEC s = " << ft_v.size() << ", c = " << ft_v.capacity() << "v[20] = " << ft_v[20] << std::endl;
+    std_v.resize(15000, 25);
+    ft_v.resize(15000, 25);
+    std::cout << "STD VEC s = " << std_v.size() << ", c = " << std_v.capacity() << "v[20] = " << std_v[20] << std::endl;
+    std::cout << "FT VEC s = " << ft_v.size() << ", c = " << ft_v.capacity() << "v[20] = " << ft_v[20] << std::endl;
+    
+    // std::cout << "STD VEC" << std::endl;
+    // print_vector(std_v);
+    // std::cout << "FT VEC" << std::endl;
+    // print_vector(ft_v);
 }

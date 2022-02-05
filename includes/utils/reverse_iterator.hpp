@@ -52,7 +52,7 @@ class reverse_iterator {
 
         reference           operator*() const {
             Iterator    tmp = _base;
-            return (*tmp);
+            return (*--tmp);
         }
 
 
