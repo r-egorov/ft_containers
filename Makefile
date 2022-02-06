@@ -11,7 +11,8 @@ HEADERS_DIR		=	stack/ utils/ vector/ myclass/ timer/ RBTree/ map/
 HEADERS_DIR		:=	$(addprefix $(INCLUDES), $(HEADERS_DIR))
 INCLUDES_FLAGS	=	$(addprefix -I, $(HEADERS_DIR))
 
-SRCS			=	main.cpp MyClass.cpp Timer.cpp
+SRCS			=	main.cpp MyClass.cpp Timer.cpp \
+					test_vector.cpp
 OBJS			=	$(patsubst %.cpp,%.o,$(SRCS))
 
 OBJS			:=	$(addprefix $(OBJSDIR), $(OBJS))
@@ -26,10 +27,10 @@ $(NAME):			$(OBJS)
 -include $(DEPS)
 $(OBJSDIR)%.o:		$(SRCSDIR)%.cpp Makefile
 					@ mkdir -p $(OBJSDIR)
-					$(CC) $(CFLAGS) -MMD -c $< -o $@ $(INCLUDES_FLAGS)
+					$(CC) $(CFLAGS) -MMD -c $< -o $@ $(INCLUDES_FLAGS) -I$(INCLUDES)
 
 leaks:
-					$(CC) $(CFLAGS) -fsanitize=address $(SRCS) -o $(NAME)_leaks $(INCLUDES_FLAGS)
+					$(CC) $(CFLAGS) -fsanitize=address $(SRCS) -o $(NAME)_leaks $(INCLUDES_FLAGS) -I$(INCLUDES)
 
 releaks:			fclean leaks
 

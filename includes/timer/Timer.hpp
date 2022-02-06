@@ -19,6 +19,7 @@ class Timer
 
         void    start(void);
         void    stop(void);
+        long int    get_stop() const;
 };
 
 #endif

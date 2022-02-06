@@ -2,6 +2,8 @@
 # define VECTOR_HPP
 
 # include <memory>
+# include <stdexcept>
+# include <stddef.h>
 // # include "iterator_traits.hpp"
 // # include "reverse_iterator.hpp"
 // # include "ft_utilities.hpp" // enable_if
@@ -655,7 +657,7 @@ template <
                 for (; first != last; ++first, ++current) {
                     _allocator.construct(
                         const_cast<pointer>(static_cast<const volatile pointer>(
-                            std::addressof(*current))
+                            &(*current))
                         ),
                         *first
                     );
@@ -664,7 +666,7 @@ template <
                 for (; d_first != current; ++d_first) {
                     _allocator.destroy(
                         const_cast<pointer>(static_cast<const volatile pointer>(
-                            std::addressof(*d_first))
+                            &(*d_first))
                         )
                     );
                 }

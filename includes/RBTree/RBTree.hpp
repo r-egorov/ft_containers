@@ -5,6 +5,7 @@
 # define BLACK true
 
 # include <memory>
+# include <stddef.h>
 # include "../utils/ft_utilities.hpp"
 
 # include <string>
