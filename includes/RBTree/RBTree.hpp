@@ -514,6 +514,15 @@ template <
             return (_size);
         }
 
+        void        swap(RBTree& other) {
+            std::swap(_nil, other._nil);
+            std::swap(_root, other._root);
+            std::swap(_size, other._size);
+            std::swap(_value_allocator, other._value_allocator);
+            std::swap(_node_allocator, other._node_allocator);
+            std::swap(_comparator, other._comparator);
+        }
+
     /*
     ** Helper functions
     */

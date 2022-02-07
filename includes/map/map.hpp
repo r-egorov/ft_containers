@@ -222,9 +222,9 @@ template<
         }
 
         void        swap (map& x) {
-            map     tmp = *this;
-            *this = x;
-            x = tmp;
+            _tree.swap(x._tree);
+            std::swap(_comparator, x._comparator);
+            std::swap(_allocator, x._allocator);
         }
 
         void        clear() {
