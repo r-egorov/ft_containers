@@ -21,16 +21,17 @@
 
 # include "Timer.hpp"
 # include "vector.hpp"
+# include "stack.hpp"
 
 struct  test_result {
     long int    std_time;
     long int    ft_time;
     bool        passed;
 };
-typedef void (*unittest)(test_result*);
 typedef bool (*test)();
 
 bool    test_vector();
+bool    test_stack();
 void    print_header(const std::string& str, const char* color);
 void    print_test_result(const bool& res, const test_result& test_res);
 

@@ -12,7 +12,7 @@ HEADERS_DIR		:=	$(addprefix $(INCLUDES), $(HEADERS_DIR))
 INCLUDES_FLAGS	=	$(addprefix -I, $(HEADERS_DIR))
 
 SRCS			=	main.cpp MyClass.cpp Timer.cpp \
-					test_vector.cpp
+					test_vector.cpp		test_stack.cpp
 OBJS			=	$(patsubst %.cpp,%.o,$(SRCS))
 
 OBJS			:=	$(addprefix $(OBJSDIR), $(OBJS))

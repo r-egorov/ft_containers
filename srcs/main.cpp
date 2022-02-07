@@ -28,11 +28,12 @@ void    print_test_result(const bool& res, const test_result& test_res) {
 }
 
 bool        test_all() {
-    test        tests[1] = {
-        &test_vector
+    test        tests[2] = {
+        &test_vector,
+        &test_stack
     };
 
-    for (size_t i = 0; i < 1; i++) {
+    for (size_t i = 0; i < 2; i++) {
         bool res = tests[i]();
         if (!res) {
             return (false);
@@ -56,6 +57,7 @@ int         main(int argc, char** argv) {
     std::map<std::string, test>     tests;
 
     tests["vector"] = &test_vector;
+    tests["stack"] = &test_stack;
     tests["all"] = &test_all;
 
     tests[choice]();
