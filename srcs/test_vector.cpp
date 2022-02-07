@@ -392,8 +392,8 @@ void    test_rend(test_result* test_res) {
     // Tesing std
     timer.start();
     std::vector<int>::reverse_iterator std_it = std_v.rend();
-    std_res.push_back(*std_it);
     --std_it;
+    std_res.push_back(*std_it);
     std_it--;
     ++std_it;
     std_it -= 2;
@@ -404,8 +404,8 @@ void    test_rend(test_result* test_res) {
     // Testing ft
     timer.start();
     ft::vector<int>::reverse_iterator ft_it = ft_v.rend();
-    ft_res.push_back(*ft_it);
     --ft_it;
+    ft_res.push_back(*ft_it);
     ft_it--;
     ++ft_it;
     ft_it -= 2;
