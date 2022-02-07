@@ -1,5 +1,5 @@
 #include "tests.hpp"
-#define NUM_STACK_TESTS 4
+#define NUM_STACK_TESTS 4 
 
 
 void    test_default_constructor(

@@ -342,17 +342,13 @@ template <
             const allocator_type& key_alloc = allocator_type(),
             const comparator_type& compar = comparator_type()
         ) : _size(0), _value_allocator(key_alloc), _node_allocator(node_allocator_type()), _comparator(compar) {
-            _nil = new node_type();
-            _nil->is_nil = true;
-            _nil->color = BLACK;
+            _nil = _new_nil();
             _root = _nil;
         }
         RBTree(const RBTree& other)
             : _size(0), _value_allocator(other._value_allocator),
               _node_allocator(other._node_allocator), _comparator(other._comparator) {
-            _nil = new node_type();
-            _nil->is_nil = true;
-            _nil->color = BLACK;
+            _nil = _new_nil();
             _root = _nil;
             for (const_iterator it = other.begin(); it != other.end(); it++) {
                 insert(*it);
@@ -363,7 +359,7 @@ template <
         // Destructor
         ~RBTree() {
             _destroyTree(this->_root);
-            delete this->_nil;
+            _destroyNil();
         }
 
         // Operators
@@ -522,6 +518,19 @@ template <
     ** Helper functions
     */
     private:
+        node_pointer    _new_nil() {
+            node_pointer nil = _node_allocator.allocate(1);
+            _node_allocator.construct(nil, node_type());
+            nil->is_nil = true;
+            nil->color = BLACK;
+            return (nil);
+        }
+
+        void            _destroyNil() {
+            _node_allocator.destroy(this->_nil);
+            _node_allocator.deallocate(this->_nil, 1);
+        }
+
         void    _print(node_type *head, int tabs_count) const {
             std::string tabs("");
             for (int i = 0; i < tabs_count; i++)

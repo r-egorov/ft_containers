@@ -106,28 +106,35 @@ class vector_iterator {
         }
 
         // Comparison operators 
-        bool                operator==(const vector_iterator<T, is_const>& rhs) {
-            return (this->_p == rhs._p);
+        
+        friend bool    operator==(const vector_iterator& lhs,
+                                  const vector_iterator& rhs) {
+            return (lhs._p == rhs._p);
         }
 
-        bool                operator!=(const vector_iterator<T, is_const>& rhs) {
-            return (this->_p != rhs._p);
+        friend bool    operator!=(const vector_iterator& lhs,
+                                  const vector_iterator& rhs) {
+            return (lhs._p != rhs._p);
         }
 
-        bool                operator>=(const vector_iterator<T, is_const>& rhs) {
-            return (this->_p >= rhs._p);
+        friend bool    operator>=(const vector_iterator& lhs,
+                                  const vector_iterator& rhs) {
+            return (lhs._p >= rhs._p);
         }
 
-        bool                operator<=(const vector_iterator<T, is_const>& rhs) {
-            return (this->_p <= rhs._p);
+        friend bool    operator<=(const vector_iterator& lhs,
+                                  const vector_iterator& rhs) {
+            return (lhs._p <= rhs._p);
         }
 
-        bool                operator>(const vector_iterator<T, is_const>& rhs) {
-            return (this->_p > rhs._p);
+        friend bool    operator>(const vector_iterator& lhs,
+                                 const vector_iterator& rhs) {
+            return (lhs._p > rhs._p);
         }
 
-        bool                operator<(const vector_iterator<T, is_const>& rhs) {
-            return (this->_p < rhs._p);
+        friend bool    operator<(const vector_iterator& lhs,
+                                 const vector_iterator& rhs) {
+            return (lhs._p < rhs._p);
         }
 };
 

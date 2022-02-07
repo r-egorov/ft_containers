@@ -21,19 +21,20 @@ void    print_test_result(const bool& res, const test_result& test_res) {
         << " >>> TEST PASSED <<< " << std::string(margin, ' ') << "*" << RESET
         << std::endl;
     } else {
-	    std::cout << RED << "*" << std::string(margin, ' ')
+	    std::cout << RED_PRINT << "*" << std::string(margin, ' ')
         << " >>> TEST FAILED <<< " << std::string(margin, ' ') << "*" << RESET
         << std::endl;
     }
 }
 
 bool        test_all() {
-    test        tests[2] = {
+    test        tests[3] = {
         &test_vector,
-        &test_stack
+        &test_stack,
+        &test_map
     };
 
-    for (size_t i = 0; i < 2; i++) {
+    for (size_t i = 0; i < 3; i++) {
         bool res = tests[i]();
         if (!res) {
             return (false);
@@ -58,6 +59,7 @@ int         main(int argc, char** argv) {
 
     tests["vector"] = &test_vector;
     tests["stack"] = &test_stack;
+    tests["map"] = &test_map;
     tests["all"] = &test_all;
 
     tests[choice]();

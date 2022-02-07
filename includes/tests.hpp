@@ -9,7 +9,7 @@
 # define YELLOW "\e[93m"
 # define BLUE "\e[94m"
 # define BOLD "\e[1m"
-# define RED "\e[31m"
+# define RED_PRINT "\e[31m"
 
 # include <map>
 # include <vector>
@@ -22,6 +22,7 @@
 # include "Timer.hpp"
 # include "vector.hpp"
 # include "stack.hpp"
+# include "map.hpp"
 
 struct  test_result {
     long int    std_time;
@@ -32,6 +33,7 @@ typedef bool (*test)();
 
 bool    test_vector();
 bool    test_stack();
+bool    test_map();
 void    print_header(const std::string& str, const char* color);
 void    print_test_result(const bool& res, const test_result& test_res);
 

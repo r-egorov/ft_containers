@@ -1,5 +1,5 @@
 #include "tests.hpp"
-#define NUM_VECTOR_TESTS 20
+#define NUM_VECTOR_TESTS 21
 
 void    test_default_constructor(test_result* test_res) {
     print_header("Testing default constructor", BLUE);
@@ -861,19 +861,98 @@ void    test_swap(test_result* test_res) {
 
     // Tesing std
     timer.start();
+    std::vector<int>::iterator it = std_v.begin();
+    it++;
+    it++;
+    std_res.push_back(*it);
     std_v.swap(std_v_1);
     std_res.push_back(std_v_1.size());
     std_res.push_back(std_v_1[5]);
     std_res.push_back(std_v[50]);
+    it++;
+    std_res.push_back(*it);
     timer.stop();
     test_res->std_time = timer.get_stop();
 
     // Testing ft
     timer.start();
+    ft::vector<int>::iterator ftit = ft_v.begin();
+    ftit++;
+    ftit++;
+    ft_res.push_back(*ftit);
     ft_v.swap(ft_v_1);
     ft_res.push_back(ft_v_1.size());
     ft_res.push_back(ft_v_1[5]);
     ft_res.push_back(ft_v[50]);
+    ftit++;
+    ft_res.push_back(*ftit);
+    timer.stop();
+    test_res->ft_time = timer.get_stop();
+
+    std_res.push_back(std_v.size());
+    ft_res.push_back(ft_v.size());
+
+    if (std_res != ft_res) {
+        res = FAILED;
+    }
+
+    for (size_t i = 0; i < ft_v.size(); i++) {
+        if (std_v[i] != ft_v[i]) {
+            res = FAILED;
+        }
+    }
+    test_res->passed = res;
+}
+
+void    test_iterators(test_result* test_res) {
+    print_header("Testing iterators", BLUE);
+    Timer   timer;
+    bool res = PASSED;
+    std::vector<int>     std_res;
+    std::vector<int>     ft_res;
+
+    std::vector<int>     std_v;
+    ft::vector<int>     ft_v;
+    for (int i = 0; i < 10; i++) {
+        std_v.push_back(i);
+        ft_v.push_back(i);
+    }
+
+    // Tesing std
+    timer.start();
+    std::vector<int>::iterator it = std_v.begin();
+    std::vector<int>::const_iterator cit = std_v.begin();
+    it++;
+    it++;
+    std_res.push_back(*it);
+    std_res.push_back(*cit);
+    std_res.push_back(it == cit);
+    std_res.push_back(it > cit);
+    std_res.push_back(it < cit);
+    std_res.push_back(it <= cit);
+    std_res.push_back(it >= cit);
+    std_res.push_back(it != cit);
+    cit++;
+    std_res.push_back(*cit);
+    timer.stop();
+    test_res->std_time = timer.get_stop();
+
+    // Testing ft
+    timer.start();
+    ft::vector<int>::iterator ftit = ft_v.begin();
+    ft::vector<int>::const_iterator ftcit = ft_v.begin();
+    ftit++;
+    ftit++;
+    ft_res.push_back(*ftit);
+    ft_res.push_back(*ftcit);
+    ft_res.push_back(ftit == ftcit);
+    ft_res.push_back(ftit > ftcit);
+    ft_res.push_back(ftit < ftcit);
+    ft_res.push_back(ftit <= ftcit);
+    ft_res.push_back(ftit >= ftcit);
+    ft_res.push_back(ftit != ftcit);
+    ftcit++;
+    ft_res.push_back(*ftcit);
     timer.stop();
     test_res->ft_time = timer.get_stop();
 
@@ -917,7 +996,8 @@ bool    test_vector() {
         &test_range_insert,
         &test_erase_position,
         &test_erase_range,
-        &test_swap
+        &test_swap,
+        &test_iterators,
     };
 
     for (size_t i = 0; i < NUM_VECTOR_TESTS; i++) {
