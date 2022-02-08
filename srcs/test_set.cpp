@@ -507,8 +507,283 @@ static void    test_erase_key(
     test_res->passed = true;
 }
 
+static void    test_erase_range(
+    test_result* test_res,
+    std::vector<int>& std_res,
+    std::vector<int>& ft_res
+) {
+    print_header("Testing erase(range)", BLUE);
+    Timer       timer;
 
-#define NUM_SET_TESTS 11
+    std::set<int>   std_s;
+    ft::set<int>    ft_s;
+    for (int i = 4000; i > 0; i--) {
+        ft_s.insert(i * 100);
+        std_s.insert(i * 100);
+    }
+
+    timer.start();
+    std_res.push_back(std_s.size());
+    std_s.erase(std_s.begin(), std_s.find(1000));
+    std_res.push_back(std_s.size());
+    std_s.erase(std_s.find(1500), std_s.end());
+    std_res.push_back(std_s.size());
+    std_s.erase(std_s.begin(), std_s.end());
+    std_res.push_back(std_s.size());
+    timer.stop();
+    test_res->std_time = timer.get_stop();
+
+    
+    timer.start();
+    ft_res.push_back(ft_s.size());
+    ft_s.erase(ft_s.begin(), ft_s.find(1000));
+    ft_res.push_back(ft_s.size());
+    ft_s.erase(ft_s.find(1500), ft_s.end());
+    ft_res.push_back(ft_s.size());
+    ft_s.erase(ft_s.begin(), ft_s.end());
+    ft_res.push_back(ft_s.size());
+    timer.stop();
+    test_res->ft_time = timer.get_stop();
+
+    test_res->passed = true;
+}
+
+static void    test_clear(
+    test_result* test_res,
+    std::vector<int>& std_res,
+    std::vector<int>& ft_res
+) {
+    print_header("Testing clear()", BLUE);
+    Timer       timer;
+
+    std::set<int>   std_s;
+    ft::set<int>    ft_s;
+    for (int i = 4000; i > 0; i--) {
+        ft_s.insert(i * 100);
+        std_s.insert(i * 100);
+    }
+
+    timer.start();
+    std_res.push_back(std_s.size());
+    std_s.clear();
+    std_res.push_back(std_s.size());
+    std_res.push_back(std_s.begin() == std_s.end());
+    timer.stop();
+    test_res->std_time = timer.get_stop();
+
+    
+    timer.start();
+    ft_res.push_back(ft_s.size());
+    ft_s.clear();
+    ft_res.push_back(ft_s.size());
+    ft_res.push_back(ft_s.begin() == ft_s.end());
+    timer.stop();
+    test_res->ft_time = timer.get_stop();
+
+    test_res->passed = true;
+}
+
+static void    test_count(
+    test_result* test_res,
+    std::vector<int>& std_res,
+    std::vector<int>& ft_res
+) {
+    print_header("Testing count()", BLUE);
+    Timer       timer;
+
+    std::set<int>   std_s;
+    ft::set<int>    ft_s;
+    for (int i = 4000; i > 0; i--) {
+        ft_s.insert(i * 100);
+        std_s.insert(i * 100);
+    }
+
+    timer.start();
+    std_res.push_back(std_s.count(1111111));
+    std_res.push_back(std_s.count(500));
+    std_res.push_back(std_s.count(-200));
+    std_res.push_back(std_s.count(400));
+    timer.stop();
+    test_res->std_time = timer.get_stop();
+
+    
+    timer.start();
+    ft_res.push_back(ft_s.count(1111111));
+    ft_res.push_back(ft_s.count(500));
+    ft_res.push_back(ft_s.count(-200));
+    ft_res.push_back(ft_s.count(400));
+    timer.stop();
+    test_res->ft_time = timer.get_stop();
+
+    test_res->passed = true;
+}
+
+static void    test_lower_bound(
+    test_result* test_res,
+    std::vector<int>& std_res,
+    std::vector<int>& ft_res
+) {
+    print_header("Testing lower_bound()", BLUE);
+    Timer       timer;
+
+    std::set<int>   std_s;
+    ft::set<int>    ft_s;
+    for (int i = 4000; i > 0; i--) {
+        ft_s.insert(i * 100);
+        std_s.insert(i * 100);
+    }
+
+    std::set<int>::iterator     std_it;
+    std::set<int>::const_iterator     std_cit;
+    timer.start();
+    std_it = std_s.lower_bound(1111111);
+    std_cit = std_s.lower_bound(500);
+    std_res.push_back(std_it == std_s.end());
+    std_res.push_back(*std_cit);
+    std_it = std_s.lower_bound(10000);
+    std_cit = std_s.lower_bound(800);
+    std_res.push_back(std_it == std_s.end());
+    std_res.push_back(*std_cit);
+    std_it = std_s.lower_bound(1500);
+    std_cit = std_s.lower_bound(1500);
+    std_res.push_back(*std_it);
+    std_res.push_back(*std_cit);
+    timer.stop();
+    test_res->std_time = timer.get_stop();
+
+    
+    ft::set<int>::iterator     ft_it;
+    ft::set<int>::const_iterator     ft_cit;
+    timer.start();
+    ft_it = ft_s.lower_bound(1111111);
+    ft_cit = ft_s.lower_bound(500);
+    ft_res.push_back(ft_it == ft_s.end());
+    ft_res.push_back(*ft_cit);
+    ft_it = ft_s.lower_bound(10000);
+    ft_cit = ft_s.lower_bound(800);
+    ft_res.push_back(ft_it == ft_s.end());
+    ft_res.push_back(*ft_cit);
+    ft_it = ft_s.lower_bound(1500);
+    ft_cit = ft_s.lower_bound(1500);
+    ft_res.push_back(*ft_it);
+    ft_res.push_back(*ft_cit);
+    timer.stop();
+    test_res->ft_time = timer.get_stop();
+
+    test_res->passed = true;
+}
+
+static void    test_upper_bound(
+    test_result* test_res,
+    std::vector<int>& std_res,
+    std::vector<int>& ft_res
+) {
+    print_header("Testing upper_bound()", BLUE);
+    Timer       timer;
+
+    std::set<int>   std_s;
+    ft::set<int>    ft_s;
+    for (int i = 4000; i > 0; i--) {
+        ft_s.insert(i * 100);
+        std_s.insert(i * 100);
+    }
+
+    std::set<int>::iterator     std_it;
+    std::set<int>::const_iterator     std_cit;
+    timer.start();
+    std_it = std_s.upper_bound(1111111);
+    std_cit = std_s.upper_bound(500);
+    std_res.push_back(std_it == std_s.end());
+    std_res.push_back(*std_cit);
+    std_it = std_s.upper_bound(10000);
+    std_cit = std_s.upper_bound(800);
+    std_res.push_back(std_it == std_s.end());
+    std_res.push_back(*std_cit);
+    std_it = std_s.upper_bound(1500);
+    std_cit = std_s.upper_bound(1500);
+    std_res.push_back(*std_it);
+    std_res.push_back(*std_cit);
+    timer.stop();
+    test_res->std_time = timer.get_stop();
+
+    
+    ft::set<int>::iterator     ft_it;
+    ft::set<int>::const_iterator     ft_cit;
+    timer.start();
+    ft_it = ft_s.upper_bound(1111111);
+    ft_cit = ft_s.upper_bound(500);
+    ft_res.push_back(ft_it == ft_s.end());
+    ft_res.push_back(*ft_cit);
+    ft_it = ft_s.upper_bound(10000);
+    ft_cit = ft_s.upper_bound(800);
+    ft_res.push_back(ft_it == ft_s.end());
+    ft_res.push_back(*ft_cit);
+    ft_it = ft_s.upper_bound(1500);
+    ft_cit = ft_s.upper_bound(1500);
+    ft_res.push_back(*ft_it);
+    ft_res.push_back(*ft_cit);
+    timer.stop();
+    test_res->ft_time = timer.get_stop();
+
+    test_res->passed = true;
+}
+
+static void    test_equal_range(
+    test_result* test_res,
+    std::vector<int>& std_res,
+    std::vector<int>& ft_res
+) {
+    print_header("Testing equal_range()", BLUE);
+    Timer       timer;
+
+    std::set<int>   std_s;
+    ft::set<int>    ft_s;
+    for (int i = 4000; i > 0; i--) {
+        ft_s.insert(i * 100);
+        std_s.insert(i * 100);
+    }
+
+    std::pair<std::set<int>::iterator,std::set<int>::iterator>     std_pair;
+    std::pair<std::set<int>::const_iterator,std::set<int>::const_iterator>     std_cpair;
+    timer.start();
+    std_pair = std_s.equal_range(1000);
+    std_res.push_back(*(std_pair.first));
+    std_res.push_back(*(std_pair.second));
+    std_pair = std_s.equal_range(1);
+    std_res.push_back(*(std_pair.first));
+    std_res.push_back(*(std_pair.second));
+    std_pair = std_s.equal_range(4000);
+    std_res.push_back(std_pair.first == std_s.end());
+    std_res.push_back(std_pair.second == std_s.end());
+    std_pair = std_s.equal_range(5000);
+    std_res.push_back(std_pair.first == std_s.end());
+    std_res.push_back(std_pair.second == std_s.end());
+    timer.stop();
+    test_res->std_time = timer.get_stop();
+
+    
+    ft::pair<ft::set<int>::iterator,ft::set<int>::iterator>     ft_pair;
+    ft::pair<ft::set<int>::const_iterator,ft::set<int>::const_iterator>     ft_cpair;
+    timer.start();
+    ft_pair = ft_s.equal_range(1000);
+    ft_res.push_back(*(ft_pair.first));
+    ft_res.push_back(*(ft_pair.second));
+    ft_pair = ft_s.equal_range(1);
+    ft_res.push_back(*(ft_pair.first));
+    ft_res.push_back(*(ft_pair.second));
+    ft_pair = ft_s.equal_range(4000);
+    ft_res.push_back(ft_pair.first == ft_s.end());
+    ft_res.push_back(ft_pair.second == ft_s.end());
+    ft_pair = ft_s.equal_range(5000);
+    ft_res.push_back(ft_pair.first == ft_s.end());
+    ft_res.push_back(ft_pair.second == ft_s.end());
+    timer.stop();
+    test_res->ft_time = timer.get_stop();
+
+    test_res->passed = true;
+}
+
+#define NUM_SET_TESTS 17
 bool    test_set() {
     typedef void    (*unittest)(test_result*, std::vector<int>&, std::vector<int>&);
     bool res = PASSED;
@@ -526,7 +801,13 @@ bool    test_set() {
         &test_hint_insert,
         &test_range_insert,
         &test_erase_position,
-        &test_erase_key
+        &test_erase_key,
+        &test_erase_range,
+        &test_clear,
+        &test_count,
+        &test_lower_bound,
+        &test_upper_bound,
+        &test_equal_range
     };
 
     for (size_t i = 0; i < NUM_SET_TESTS; i++) {

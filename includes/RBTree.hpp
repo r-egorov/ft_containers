@@ -405,6 +405,18 @@ template <
             _deleteNode(finish);
         }
 
+        void        remove(const_iterator first, const_iterator last) {
+            node_pointer    current = first.getNodePtr();
+            node_pointer    finish = (--last).getNodePtr();
+
+            while (current != finish) {
+                node_pointer    next = current->successor();
+                _deleteNode(current);
+                current = next;
+            }
+            _deleteNode(finish);
+        }
+
         void        clear() {
             _destroyTree(this->_root);
             this->_root = this->_nil;
