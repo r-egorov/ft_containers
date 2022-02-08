@@ -182,8 +182,18 @@ template <
             const allocator_type& alloc = allocator_type()
         ) : _capacity(n), _size(n), _allocator(alloc) {
             _array = _allocator.allocate(_capacity);
-            for (size_type i = 0; i < _size; i++) {
-                _allocator.construct(_array + i, val);
+            size_type i = 0;
+            try {
+                while (i < _size) {
+                    _allocator.construct(_array + i, val);
+                    i++;
+                }
+            } catch (...) {
+                while (--i >= 0) {
+                    _allocator.destroy(_array + i);
+                }
+                _allocator.deallocate(_array, _capacity);
+                throw ;
             }
         }
 
@@ -198,8 +208,19 @@ template <
             _size = last - first;
             _capacity = last - first;
             _array = _allocator.allocate(_capacity);
-            for (size_type i = 0; first != last; first++, i++) {
-                _allocator.construct(_array + i, *first);
+            size_type i = 0;
+            try {
+                while (first != last) {
+                    _allocator.construct(_array + i, *first);
+                    first++;
+                    i++;
+                }
+            } catch (...) {
+                while (--i >= 0) {
+                    _allocator.destroy(_array + i);
+                }
+                _allocator.deallocate(_array, _capacity);
+                throw ;
             }
         }
 
@@ -208,8 +229,18 @@ template <
             _capacity(x._capacity), _size(x._size), _allocator(x._allocator) {
             _array = _allocator.allocate(_capacity);
             
-            for (size_type i = 0; i < _size; i++) {
-                _allocator.construct(_array + i, x[i]);
+            size_type i = 0;
+            try {
+                while (i < _size) {
+                    _allocator.construct(_array + i, x[i]);
+                    i++;
+                }
+            } catch (...) {
+                while (--i >= 0) {
+                    _allocator.destroy(_array + i);
+                }
+                _allocator.deallocate(_array, _capacity);
+                throw ;
             }
         }
         
@@ -232,8 +263,18 @@ template <
                 _array = _allocator.allocate(_capacity);
             }
 
-            for (size_type i = 0; i < _size; i++) {
-                _allocator.construct(_array + i, x[i]);
+            size_type i = 0;
+            try {
+                while (i < _size) {
+                    _allocator.construct(_array + i, x[i]);
+                    i++;
+                }
+            } catch (...) {
+                while (--i >= 0) {
+                    _allocator.destroy(_array + i);
+                }
+                _allocator.deallocate(_array, _capacity);
+                throw ;
             }
             return (*this);
         }
@@ -302,8 +343,19 @@ template <
                     reserve(n);
                 }
                 // content expanded, inserting n-_size elements at the end (copies of val)
-                for (size_type i = _size; i < n; ++i) {
-                    _allocator.construct(_array + i, val);
+                
+                size_type i = _size;
+                try {
+                    while (i < n) {
+                        _allocator.construct(_array + i, val);
+                        i++;
+                    }
+                } catch (...) {
+                    while (--i >= 0) {
+                        _allocator.destroy(_array + i);
+                    }
+                    _allocator.deallocate(_array, _capacity);
+                    throw ;
                 }
             }
             _size = n;
@@ -327,7 +379,6 @@ template <
             
             pointer new_array = _allocator.allocate(n);
             try {
-                //std::uninitialized_copy(_array, _array + _size, new_array);
                 _uninit_copy(_array, _array + _size, new_array);
             } catch (...) {
                 _allocator.deallocate(new_array, n);
@@ -404,11 +455,11 @@ template <
                 _array = _allocator.allocate(new_size);
                 _capacity = new_size;
             }
-
-            size_type   i = 0;
-            for (; first != last; ++first) {
-                _allocator.construct(_array + i, *first);
-                i++;
+            try {
+                _uninit_copy(first, last, _array);
+            } catch (...) {
+                _allocator.deallocate(_array, _capacity);
+                throw ;
             }
             _size = new_size;
         }
@@ -423,8 +474,18 @@ template <
                 _capacity = n;
             }
 
-            for (size_type i = 0; i < _size; ++i) {
-                _allocator.construct(_array + i, val);
+            size_type i = 0;
+            try {
+                while (i < _size) {
+                    _allocator.construct(_array + i, val);
+                    i++;
+                }
+            } catch (...) {
+                while (--i >= 0) {
+                    _allocator.destroy(_array + i);
+                }
+                _allocator.deallocate(_array, _capacity);
+                throw ;
             }
         }
     
@@ -468,10 +529,8 @@ template <
                 pointer new_array = _allocator.allocate(new_capacity);
 
                 try {
-                    //std::uninitialized_copy(begin(), position, new_array);
                     _uninit_copy(begin(), position, new_array);
                     _allocator.construct(new_array + border, val);
-                    //std::uninitialized_copy(position, end(), new_array + border + 1);
                     _uninit_copy(position, end(), new_array + border + 1);
                 } catch (...) {
                     _allocator.destroy(new_array + border);
@@ -521,14 +580,11 @@ template <
 
                 new_array = _allocator.allocate(new_capacity);
                 try {
-                    // std::uninitialized_copy(begin(), position, new_array);
                     _uninit_copy(begin(), position, new_array);
                     for (size_type i = border; i < border + n; i++) {
                         _allocator.construct(new_array + i, val);
                     }
-                    //std::uninitialized_copy(position, end(), new_array + border + n);
                     _uninit_copy(position, end(), new_array + border + n);
-                    
                 } catch (...) {
                     _allocator.deallocate(new_array, new_capacity);
                     throw ;
@@ -582,9 +638,6 @@ template <
 
                 new_array = _allocator.allocate(new_capacity);
                 try {
-                    // std::uninitialized_copy(begin(), position, new_array);
-                    // std::uninitialized_copy(first, last, new_array + border);
-                    // std::uninitialized_copy(position, end(), new_array + border + n);
                     _uninit_copy(begin(), position, new_array);
                     _uninit_copy(first, last, new_array + border);
                     _uninit_copy(position, end(), new_array + border + n);
