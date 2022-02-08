@@ -273,28 +273,14 @@ class RBTreeIterator {
 
         
         // Comparison operators 
-        bool                operator==(const RBTreeIterator<T, is_const>& rhs) {
-            return (this->_p == rhs._p);
+        friend bool    operator==(const RBTreeIterator& lhs,
+                                  const RBTreeIterator& rhs) {
+            return (lhs._p == rhs._p);
         }
 
-        bool                operator!=(const RBTreeIterator<T, is_const>& rhs) {
-            return (this->_p != rhs._p);
-        }
-
-        bool                operator>=(const RBTreeIterator<T, is_const>& rhs) {
-            return (this->_p >= rhs._p);
-        }
-
-        bool                operator<=(const RBTreeIterator<T, is_const>& rhs) {
-            return (this->_p <= rhs._p);
-        }
-
-        bool                operator>(const RBTreeIterator<T, is_const>& rhs) {
-            return (this->_p > rhs._p);
-        }
-
-        bool                operator<(const RBTreeIterator<T, is_const>& rhs) {
-            return (this->_p < rhs._p);
+        friend bool    operator!=(const RBTreeIterator& lhs,
+                                  const RBTreeIterator& rhs) {
+            return (lhs._p != rhs._p);
         }
 };
 

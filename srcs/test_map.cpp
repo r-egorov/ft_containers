@@ -140,7 +140,66 @@ void    test_swap(
 }
 
 
-#define NUM_MAP_TESTS 4 
+
+void    test_iterators(
+    test_result* test_res,
+    std::vector<int>& std_res,
+    std::vector<int>& ft_res
+) {
+    print_header("Testing iterators", BLUE);
+    Timer       timer;
+
+    std::map<int,int>   std_m;
+    ft::map<int,int>   ft_m;
+    for (int i = 4000; i > 0; i--) {
+        ft_m[i] = i * 100;
+        std_m[i] = i * 100;
+    }
+
+    timer.start();
+    std::map<int,int>::iterator std_it = std_m.begin();
+    std::map<int,int>::const_iterator std_cit = std_m.begin();
+    std_it++;
+    ++std_it;
+    std_cit++;
+    std_cit++;
+    ++std_cit;
+    --std_cit;
+    std_cit--;
+    std_res.push_back(std_it->first);
+    std_res.push_back(std_cit->first);
+    std_res.push_back(std_it->second);
+    std_res.push_back(std_cit->second);
+    std_res.push_back(std_it == std_cit);
+    std_res.push_back(std_it != std_cit);
+    timer.stop();
+    test_res->std_time = timer.get_stop();
+
+    
+    timer.start();
+    ft::map<int,int>::iterator ft_it = ft_m.begin();
+    ft::map<int,int>::const_iterator ft_cit = ft_m.begin();
+    ft_it++;
+    ++ft_it;
+    ft_cit++;
+    ft_cit++;
+    ++ft_cit;
+    --ft_cit;
+    ft_cit--;
+    ft_res.push_back(ft_it->first);
+    ft_res.push_back(ft_cit->first);
+    ft_res.push_back(ft_it->second);
+    ft_res.push_back(ft_cit->second);
+    ft_res.push_back(ft_it == ft_cit);
+    ft_res.push_back(ft_it != ft_cit);
+    timer.stop();
+    test_res->ft_time = timer.get_stop();
+
+    test_res->passed = true;
+}
+
+
+#define NUM_MAP_TESTS 5 
 bool    test_map() {
     typedef void    (*unittest)(test_result*, std::vector<int>&, std::vector<int>&);
     bool res = PASSED;
@@ -151,7 +210,8 @@ bool    test_map() {
         &test_default_constructor_empty,
         &test_range_constructor,
         &test_assignation_operator,
-        &test_swap
+        &test_swap,
+        &test_iterators
     };
 
     for (size_t i = 0; i < NUM_MAP_TESTS; i++) {
