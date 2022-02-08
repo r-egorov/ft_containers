@@ -388,6 +388,11 @@ template <
             _deleteNode(to_delete);
         }
 
+        void        remove(const_iterator pos) {
+            node_pointer    to_delete = pos.getNodePtr();
+            _deleteNode(to_delete);
+        }
+
         void        remove(iterator first, iterator last) {
             node_pointer    current = first.getNodePtr();
             node_pointer    finish = (--last).getNodePtr();

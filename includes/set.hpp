@@ -205,7 +205,7 @@ template <class T,
 
         iterator                                lower_bound(const key_type& k) const {
             iterator it = begin();
-            while (it != end() && _comparator(*it, k)) {
+            while (it != end() && _comp(*it, k)) {
                 it++;
             }
             return (it);
@@ -213,7 +213,7 @@ template <class T,
 
         iterator                                upper_bound(const key_type& k) const {
             iterator it = begin();
-            while (it != end() && !(_comparator(k, *it))) {
+            while (it != end() && !(_comp(k, *it))) {
                 it++;
             }
             return (it);
@@ -222,7 +222,7 @@ template <class T,
         ft::pair<iterator,iterator>             equal_range(const key_type& k) const {
             iterator    lower = lower_bound(k);
             if (lower != end()) {
-                if (!_comparator(k, *lower))
+                if (!_comp(k, *lower))
                     return (ft::make_pair(lower, ++lower));
             }
             return (ft::make_pair(lower, lower));
