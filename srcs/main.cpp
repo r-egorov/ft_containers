@@ -11,11 +11,9 @@ void    print_header(const std::string& str, const char* color) {
 	std::cout << RESET;
 }
 
-void    print_test_result(const bool& res, const test_result& test_res) {
+void    print_passed_failed(const bool& res) {
 	int margin = (40 - 21) / 2;
 
-    std::cout << "STD TIME: " << test_res.std_time << " ms\t";
-    std::cout << "FT TIME: " << test_res.ft_time << " ms" << std::endl;
     if (res == PASSED) {
 	    std::cout << GREEN << "*" << std::string(margin, ' ')
         << " >>> TEST PASSED <<< " << std::string(margin, ' ') << "*" << RESET
@@ -25,6 +23,12 @@ void    print_test_result(const bool& res, const test_result& test_res) {
         << " >>> TEST FAILED <<< " << std::string(margin, ' ') << "*" << RESET
         << std::endl;
     }
+}
+
+void    print_test_result(const bool& res, const test_result& test_res) {
+    std::cout << "STD TIME: " << test_res.std_time << " ms\t";
+    std::cout << "FT TIME: " << test_res.ft_time << " ms" << std::endl;
+    print_passed_failed(res);
 }
 
 bool        test_all() {
@@ -62,7 +66,9 @@ int         main(int argc, char** argv) {
     tests["map"] = &test_map;
     tests["all"] = &test_all;
 
-    tests[choice]();
+    bool res;
+    res = tests[choice]();
+    print_passed_failed(res);
 
     return (0);
 }

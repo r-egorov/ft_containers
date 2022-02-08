@@ -6,7 +6,7 @@
 
 # include <memory>
 # include <stddef.h>
-# include "../utils/ft_utilities.hpp"
+# include "ft_utilities.hpp"
 
 # include <string>
 # include <iostream>
@@ -485,17 +485,6 @@ template <
             const RBTree<value,comparator,allocator>& rhs
         );
 
-        // FIXME
-        void    print() const {
-            std::cout << "=========TREE=========" << std::endl;
-            _print(this->_root, 0);
-            if (_size > 0) {
-                std::cout << "nil->right = " << *(_nil->right->value) << " , nil->left = " << *(_nil->left->value) << std::endl;
-                std::cout << "min = " << *(_min(_root)->value) << " , max = " << *(_max(_root)->value) << std::endl;
-            }
-                std::cout << "======================" << std::endl;
-        }
-
         size_type   size() const {
             return (_size);
         }
@@ -524,33 +513,6 @@ template <
         void            _destroyNil() {
             _node_allocator.destroy(this->_nil);
             _node_allocator.deallocate(this->_nil, 1);
-        }
-
-        void    _print(node_type *head, int tabs_count) const {
-            std::string tabs("");
-            for (int i = 0; i < tabs_count; i++)
-                tabs += " ";
-            std::cout << tabs;
-
-            if (!head->is_nil) {
-                if (!head->p->is_nil) {
-                    if (head == head->p->left) {
-                        std::cout << "L: ";
-                    } else {
-                        std::cout << "R: ";
-                    }
-                } else {
-                    std::cout << "*: ";
-                }
-                std::cout << *head << ", n: " << head << ", v: " << head->value << std::endl;
-
-                tabs_count += 2;
-                _print(head->left, tabs_count);
-                _print(head->right, tabs_count);
-            }
-            else {
-                std::cout << *head << std::endl;
-            }
         }
    
         void    _destroyTree(node_pointer head) {
