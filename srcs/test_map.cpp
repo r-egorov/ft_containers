@@ -866,7 +866,52 @@ void    test_equal_range(
     test_res->passed = true;
 }
 
-#define NUM_MAP_TESTS 18
+static void    test_comparision_operators(
+    test_result* test_res,
+    std::vector<int>& std_res,
+    std::vector<int>& ft_res
+) {
+    print_header("Testing comp operators", BLUE);
+    Timer       timer;
+
+    std::map<int,int>   std_m;
+    ft::map<int,int>   ft_m;
+    for (int i = 4000; i > 0; i--) {
+        ft_m[i] = i * 100;
+        std_m[i] = i * 100;
+    }
+    
+    std::map<int,int>   std_reference;
+    ft::map<int,int>   ft_reference;
+    for (int i = 0; i < 5; i++) {
+        std_reference[i * 100] = i;
+        ft_reference[i * 100] = i;
+    }
+
+    timer.start();
+    std_res.push_back(std_m == std_reference);
+    std_res.push_back(std_m != std_reference);
+    std_res.push_back(std_m <= std_reference);
+    std_res.push_back(std_m < std_reference);
+    std_res.push_back(std_m >= std_reference);
+    std_res.push_back(std_m > std_reference);
+    timer.stop();
+    test_res->std_time = timer.get_stop();
+
+    timer.start();
+    ft_res.push_back(ft_m == ft_reference);
+    ft_res.push_back(ft_m != ft_reference);
+    ft_res.push_back(ft_m <= ft_reference);
+    ft_res.push_back(ft_m < ft_reference);
+    ft_res.push_back(ft_m >= ft_reference);
+    ft_res.push_back(ft_m > ft_reference);
+    timer.stop();
+    test_res->ft_time = timer.get_stop();
+
+    test_res->passed = true;
+}
+
+#define NUM_MAP_TESTS 19
 bool    test_map() {
     typedef void    (*unittest)(test_result*, std::vector<int>&, std::vector<int>&);
     bool res = PASSED;
@@ -891,7 +936,8 @@ bool    test_map() {
         &test_upper_bound,
         &test_equal_range,
         &test_swap,
-        &test_iterators
+        &test_iterators,
+        &test_comparision_operators
     };
 
     for (size_t i = 0; i < NUM_MAP_TESTS; i++) {

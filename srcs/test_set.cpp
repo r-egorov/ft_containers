@@ -783,7 +783,52 @@ static void    test_equal_range(
     test_res->passed = true;
 }
 
-#define NUM_SET_TESTS 17
+static void    test_comparision_operators(
+    test_result* test_res,
+    std::vector<int>& std_res,
+    std::vector<int>& ft_res
+) {
+    print_header("Testing comp operators", BLUE);
+    Timer       timer;
+
+    std::set<int>   std_s;
+    ft::set<int>   ft_s;
+    for (int i = 4000; i > 0; i--) {
+        ft_s.insert(i * 100);
+        std_s.insert(i * 100);
+    }
+    
+    std::set<int>   std_reference;
+    ft::set<int>   ft_reference;
+    for (int i = 0; i < 5; i++) {
+        std_reference.insert(i);
+        ft_reference.insert(i);
+    }
+
+    timer.start();
+    std_res.push_back(std_s == std_reference);
+    std_res.push_back(std_s != std_reference);
+    std_res.push_back(std_s <= std_reference);
+    std_res.push_back(std_s < std_reference);
+    std_res.push_back(std_s >= std_reference);
+    std_res.push_back(std_s > std_reference);
+    timer.stop();
+    test_res->std_time = timer.get_stop();
+
+    timer.start();
+    ft_res.push_back(ft_s == ft_reference);
+    ft_res.push_back(ft_s != ft_reference);
+    ft_res.push_back(ft_s <= ft_reference);
+    ft_res.push_back(ft_s < ft_reference);
+    ft_res.push_back(ft_s >= ft_reference);
+    ft_res.push_back(ft_s > ft_reference);
+    timer.stop();
+    test_res->ft_time = timer.get_stop();
+
+    test_res->passed = true;
+}
+
+#define NUM_SET_TESTS 18
 bool    test_set() {
     typedef void    (*unittest)(test_result*, std::vector<int>&, std::vector<int>&);
     bool res = PASSED;
@@ -807,7 +852,8 @@ bool    test_set() {
         &test_count,
         &test_lower_bound,
         &test_upper_bound,
-        &test_equal_range
+        &test_equal_range,
+        &test_comparision_operators
     };
 
     for (size_t i = 0; i < NUM_SET_TESTS; i++) {

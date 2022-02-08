@@ -862,30 +862,42 @@ void    test_swap(test_result* test_res) {
     // Tesing std
     timer.start();
     std::vector<int>::iterator it = std_v.begin();
+    std::vector<int>::iterator it1 = std_v_1.begin();
     it++;
     it++;
+    it1++;
+    it1++;
     std_res.push_back(*it);
+    std_res.push_back(*it1);
     std_v.swap(std_v_1);
     std_res.push_back(std_v_1.size());
     std_res.push_back(std_v_1[5]);
     std_res.push_back(std_v[50]);
     it++;
+    it1++;
     std_res.push_back(*it);
+    std_res.push_back(*it1);
     timer.stop();
     test_res->std_time = timer.get_stop();
 
     // Testing ft
     timer.start();
     ft::vector<int>::iterator ftit = ft_v.begin();
+    ft::vector<int>::iterator ftit2 = ft_v_1.begin();
     ftit++;
     ftit++;
+    ftit2++;
+    ftit2++;
     ft_res.push_back(*ftit);
+    ft_res.push_back(*ftit2);
     ft_v.swap(ft_v_1);
     ft_res.push_back(ft_v_1.size());
     ft_res.push_back(ft_v_1[5]);
     ft_res.push_back(ft_v[50]);
     ftit++;
+    ftit2++;
     ft_res.push_back(*ftit);
+    ft_res.push_back(*ftit2);
     timer.stop();
     test_res->ft_time = timer.get_stop();
 
