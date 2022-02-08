@@ -1,5 +1,5 @@
 #include "tests.hpp"
-#define NUM_VECTOR_TESTS 21
+#define NUM_VECTOR_TESTS 22
 
 void    test_default_constructor(test_result* test_res) {
     print_header("Testing default constructor", BLUE);
@@ -971,6 +971,65 @@ void    test_iterators(test_result* test_res) {
     test_res->passed = res;
 }
 
+void    test_comparision(test_result* test_res) {
+    print_header("Testing comparision operators", BLUE);
+    Timer   timer;
+    bool res = PASSED;
+    std::vector<int>     std_res;
+    std::vector<int>     ft_res;
+
+    std::vector<int>     std_reference;
+    ft::vector<int>     ft_reference;
+    for (int i = 400; i > 0; i--) {
+        std_reference.push_back(i);
+        ft_reference.push_back(i);
+    }
+
+    std::vector<int>     std_v;
+    ft::vector<int>     ft_v;
+    for (int i = 0; i < 10; i++) {
+        std_v.push_back(i);
+        ft_v.push_back(i);
+    }
+
+    // Tesing std
+    timer.start();
+    std_res.push_back(std_v == std_reference);
+    std_res.push_back(std_v != std_reference);
+    std_res.push_back(std_v < std_reference);
+    std_res.push_back(std_v <= std_reference);
+    std_res.push_back(std_v >= std_reference);
+    std_res.push_back(std_v > std_reference);
+    timer.stop();
+    test_res->std_time = timer.get_stop();
+
+    // Testing ft
+    timer.start();
+    ft_res.push_back(ft_v == ft_reference);
+    ft_res.push_back(ft_v != ft_reference);
+    ft_res.push_back(ft_v < ft_reference);
+    ft_res.push_back(ft_v <= ft_reference);
+    ft_res.push_back(ft_v >= ft_reference);
+    ft_res.push_back(ft_v > ft_reference);
+    timer.stop();
+    test_res->ft_time = timer.get_stop();
+
+    std_res.push_back(std_v.size());
+    ft_res.push_back(ft_v.size());
+
+    if (std_res != ft_res) {
+        res = FAILED;
+    }
+
+    for (size_t i = 0; i < ft_v.size(); i++) {
+        if (std_v[i] != ft_v[i]) {
+            res = FAILED;
+        }
+    }
+    test_res->passed = res;
+}
+
+
 bool    test_vector() {
     typedef void (*unittest)(test_result*);
     bool res = PASSED;
@@ -998,6 +1057,7 @@ bool    test_vector() {
         &test_erase_range,
         &test_swap,
         &test_iterators,
+        &test_comparision
     };
 
     for (size_t i = 0; i < NUM_VECTOR_TESTS; i++) {

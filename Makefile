@@ -10,7 +10,7 @@ INCLUDES		=	includes/
 
 SRCS			=	main.cpp 			Timer.cpp \
 					test_vector.cpp		test_stack.cpp \
-					test_map.cpp
+					test_map.cpp		test_set.cpp
 OBJS			=	$(patsubst %.cpp,%.o,$(SRCS))
 
 OBJS			:=	$(addprefix $(OBJSDIR), $(OBJS))

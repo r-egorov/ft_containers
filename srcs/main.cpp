@@ -32,13 +32,14 @@ void    print_test_result(const bool& res, const test_result& test_res) {
 }
 
 bool        test_all() {
-    test        tests[3] = {
+    test        tests[4] = {
         &test_vector,
         &test_stack,
-        &test_map
+        &test_map,
+        &test_set
     };
 
-    for (size_t i = 0; i < 3; i++) {
+    for (size_t i = 0; i < 4; i++) {
         bool res = tests[i]();
         if (!res) {
             return (false);
@@ -64,6 +65,7 @@ int         main(int argc, char** argv) {
     tests["vector"] = &test_vector;
     tests["stack"] = &test_stack;
     tests["map"] = &test_map;
+    tests["set"] = &test_set;
     tests["all"] = &test_all;
 
     bool res;

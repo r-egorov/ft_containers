@@ -51,7 +51,7 @@ template<
     */
     public:
         typedef value_comp                              value_compare;
-    //private:
+    private:
         typedef RBTree<value_type, allocator_type, value_compare>   tree_type;
     public:
         typedef typename tree_type::iterator                iterator;
@@ -342,10 +342,9 @@ template<
         friend bool operator>=(const ft::map<key, value, comparator, allocator>& lhs,
                                const ft::map<key, value, comparator, allocator>& rhs);
 
-    //FIXME
-        void print_tree() const {
-            _tree.print();
-        }
+        template<class key, class value, class comparator, class allocator>
+        void swap(const ft::map<key, value, comparator, allocator>& lhs,
+                  const ft::map<key, value, comparator, allocator>& rhs);
 };
 
 
@@ -383,6 +382,12 @@ template<class key, class value, class comparator, class allocator>
 bool operator>=(const ft::map<key, value, comparator, allocator>& lhs,
                 const ft::map<key, value, comparator, allocator>& rhs) {
     return (lhs._tree >= rhs._tree);
+}
+
+template<class key, class value, class comparator, class allocator>
+void swap(const ft::map<key, value, comparator, allocator>& lhs,
+          const ft::map<key, value, comparator, allocator>& rhs) {
+    lhs.swap(rhs);
 }
 
 } // Namespace brace

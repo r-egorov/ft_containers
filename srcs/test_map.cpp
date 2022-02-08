@@ -1,6 +1,6 @@
 #include "tests.hpp"
 
-void    test_default_constructor_empty(
+static void    test_default_constructor_empty(
     test_result* test_res,
     std::vector<int>& std_res,
     std::vector<int>& ft_res
@@ -138,8 +138,6 @@ void    test_swap(
 
     test_res->passed = true;
 }
-
-
 
 void    test_iterators(
     test_result* test_res,
@@ -838,8 +836,8 @@ void    test_equal_range(
     std_res.push_back((std_pair.first)->first);
     std_res.push_back((std_pair.first)->second);
     std_pair = std_m.equal_range(4000);
-    std_res.push_back((std_pair.first)->first);
-    std_res.push_back((std_pair.first)->second);
+    std_res.push_back(std_pair.first == std_m.end());
+    std_res.push_back(std_pair.second == std_m.end());
     std_pair = std_m.equal_range(5000);
     std_res.push_back(std_pair.first == std_m.end());
     std_res.push_back(std_pair.second == std_m.end());
@@ -857,8 +855,8 @@ void    test_equal_range(
     ft_res.push_back((ft_pair.first)->first);
     ft_res.push_back((ft_pair.first)->second);
     ft_pair = ft_m.equal_range(4000);
-    ft_res.push_back((ft_pair.first)->first);
-    ft_res.push_back((ft_pair.first)->second);
+    ft_res.push_back(ft_pair.first == ft_m.end());
+    ft_res.push_back(ft_pair.second == ft_m.end());
     ft_pair = ft_m.equal_range(5000);
     ft_res.push_back(ft_pair.first == ft_m.end());
     ft_res.push_back(ft_pair.second == ft_m.end());
