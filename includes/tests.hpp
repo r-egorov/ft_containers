@@ -20,11 +20,11 @@
 # include <iomanip>
 # include <sstream>
 
-# include "Timer.hpp"
-# include "vector.hpp"
-# include "stack.hpp"
-# include "map.hpp"
-# include "set.hpp"
+# include "./Timer.hpp"
+# include "./vector.hpp"
+# include "./stack.hpp"
+# include "./map.hpp"
+# include "./set.hpp"
 
 struct  test_result {
     long int    std_time;
