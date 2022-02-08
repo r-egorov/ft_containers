@@ -2,7 +2,7 @@
 # define SET_HPP
 
 # include <memory>
-# include "./RBTree.hpp"
+# include "RBTree.hpp"
 
 namespace ft {
 
@@ -65,7 +65,7 @@ template <class T,
         ~set() {}
 
         set& operator= (const set& other) {
-            if (this != *other) {
+            if (this != &other) {
                 this->_tree = other._tree;
             }
             return (*this);

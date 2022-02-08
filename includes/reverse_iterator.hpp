@@ -1,7 +1,7 @@
 #ifndef REVERSE_ITERATOR
 # define REVERSE_ITERATOR
 
-# include "./iterator_traits.hpp"
+# include "iterator_traits.hpp"
 
 namespace ft {
 

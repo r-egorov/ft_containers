@@ -4,7 +4,7 @@
 # include <memory>
 # include <stdexcept>
 # include <stddef.h>
-# include "./ft_utilities.hpp"
+# include "ft_utilities.hpp"
 
 namespace ft {
 
@@ -55,7 +55,7 @@ class vector_iterator {
         // Access operators
         reference           operator*() const { return *_p; }
         pointer             operator->() const { return _p; }
-        reference           operator[](const difference_type n) const { return (_p + n); }
+        reference           operator[](const difference_type n) const { return (*(_p + n)); }
 
         // Increment/Decrement
         vector_iterator&    operator++() {
@@ -88,7 +88,7 @@ class vector_iterator {
             return (vector_iterator(_p - n));
         }
 
-        difference_type     operator-(const vector_iterator& other) {
+        difference_type     operator-(const vector_iterator& other) const {
             return (_p - other._p);
         }
 
@@ -205,8 +205,9 @@ template <
             const allocator_type& alloc = allocator_type(),
             typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type* = 0
         ) : _allocator(alloc) {
-            _size = last - first;
-            _capacity = last - first;
+            difference_type     diff = std::distance(first, last);
+            _size = static_cast<size_type>(diff);
+            _capacity = static_cast<size_type>(diff);
             _array = _allocator.allocate(_capacity);
             size_type i = 0;
             try {
@@ -448,7 +449,7 @@ template <
         ) {
             clear();
 
-            size_type   new_size = static_cast<size_type>(last - first);
+            size_type   new_size = static_cast<size_type>(std::distance(first, last));
 
             if (new_size > _capacity) {
                 _allocator.deallocate(_array, _capacity);
@@ -613,7 +614,7 @@ template <
                 throw std::out_of_range("inserting position is out of range");
                 
             size_type   border = static_cast<size_type>(position - begin());
-            size_type   n = static_cast<size_type>(last - first);
+            size_type   n = static_cast<size_type>(std::distance(first, last));
 
             if (_size + n <= _capacity) {
                 size_type i = _size; // index of the last element
@@ -660,7 +661,7 @@ template <
         iterator erase (iterator first, iterator last) {
             size_type   left_border = static_cast<size_type>(first - begin());
             size_type   right_border = static_cast<size_type>(last - begin());
-            size_type   n = static_cast<size_type>(last - first);
+            size_type   n = static_cast<size_type>(std::distance(first, last));
 
             size_type   i = left_border;
             for (; i < right_border; i++) {
